@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🐐 GoatTutor NG – Study Smarter</title>
+    <title>🐐 GoatTutor NG</title>
     <style>
         * {
             margin: 0;
@@ -22,15 +22,13 @@
         .container {
             width: 100%;
             max-width: 900px;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
         }
         .card {
             background: #1e293b;
             border-radius: 24px;
             padding: 30px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, .35);
+            box-shadow: 0 20px 60px rgba(0,0,0,.35);
+            margin-bottom: 24px;
         }
         .logo {
             font-size: 3rem;
@@ -55,6 +53,7 @@
         }
         textarea {
             width: 100%;
+            height: 150px;
             border: none;
             outline: none;
             resize: vertical;
@@ -63,18 +62,17 @@
             font-size: 1rem;
             background: #0f172a;
             color: white;
-            min-height: 100px;
         }
         textarea::placeholder {
             color: #94a3b8;
         }
-        .options {
+        .options, .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             gap: 10px;
             margin-top: 20px;
         }
-        .option {
+        .option, .feature {
             background: #334155;
             padding: 15px;
             border-radius: 12px;
@@ -83,7 +81,7 @@
             text-align: center;
             font-size: 0.95rem;
         }
-        .option:hover {
+        .option:hover, .feature:hover {
             transform: translateY(-2px);
         }
         .selected {
@@ -123,37 +121,18 @@
             font-size: 0.8rem;
             margin-top: 4px;
         }
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        .feature {
-            background: #0f172a;
-            padding: 12px;
-            border-radius: 12px;
-            text-align: center;
-            color: #cbd5e1;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-        .feature:hover {
-            background: #172554;
-        }
         .row {
             display: flex;
             gap: 8px;
             margin-top: 8px;
             flex-wrap: wrap;
+            align-items: center;
         }
-        .row input,
-        .row select {
+        .row input, .row select {
             flex: 1;
             min-width: 80px;
         }
-        input,
-        select {
+        input, select {
             width: 100%;
             padding: 10px 12px;
             margin-top: 6px;
@@ -164,8 +143,7 @@
             font-size: 0.9rem;
             outline: none;
         }
-        input:focus,
-        select:focus {
+        input:focus, select:focus {
             border-color: #3b82f6;
         }
         .small {
@@ -180,11 +158,25 @@
             font-family: 'Courier New', monospace;
             color: #fbbf24;
         }
+        .quote {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 12px;
+            background: #0f172a;
+            text-align: center;
+            color: #cbd5e1;
+        }
+        .footer {
+            margin-top: 10px;
+            text-align: center;
+            font-size: .9rem;
+            color: #94a3b8;
+        }
         .dash-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
-            margin-top: 6px;
+            margin: 10px 0;
         }
         .dash-card {
             background: #0f172a;
@@ -205,618 +197,519 @@
             letter-spacing: 0.5px;
             margin-top: 2px;
         }
-        .quote {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 12px;
-            background: #0f172a;
-            text-align: center;
-            color: #cbd5e1;
-        }
-        .footer {
-            text-align: center;
-            font-size: 0.9rem;
-            color: #94a3b8;
-            margin-top: 10px;
-        }
         @media (max-width: 600px) {
-            h1 {
-                font-size: 2rem;
-            }
-            .logo {
-                font-size: 2.5rem;
-            }
-            .timer {
-                font-size: 32px;
-            }
+            h1 { font-size: 2rem; }
+            .logo { font-size: 2.5rem; }
+            .timer { font-size: 32px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+<div class="container">
 
-        <!-- ========= HERO CARD (AI Interface) ========= -->
-        <div class="card">
-            <div class="logo">🐐</div>
-            <h1>GoatTutor NG</h1>
-            <p class="tagline">
-                Explain am like I'm a goat.<br>
-                Simple explanations, exam‑focused tutorials, memory tricks and likely CBT questions.
-            </p>
+    <!-- ===== ORIGINAL PROMO CARD (untouched) ===== -->
+    <div class="card">
+        <div class="logo">🐐</div>
+        <h1>GoatTutor NG</h1>
+        <p class="tagline">
+            Explain am like I'm a goat.<br>
+            Simple explanations, exam‑focused tutorials, memory tricks and likely CBT questions.
+        </p>
 
-            <div class="features" id="courseShortcuts">
-                <div class="feature" onclick="fillTopic('BIO 102')">BIO 102</div>
-                <div class="feature" onclick="fillTopic('PHY 102')">PHY 102</div>
-                <div class="feature" onclick="fillTopic('CHM 102')">CHM 102</div>
-                <div class="feature" onclick="fillTopic('COS 102')">COS 102</div>
-                <div class="feature" onclick="fillTopic('MTH 102')">MTH 102</div>
-                <div class="feature" onclick="fillTopic('GST 112')">GST 112</div>
-                <div class="feature" onclick="scrollToSection('gpaCard')">📊 CGPA Tool</div>
-            </div>
+        <div class="features">
+            <div class="feature" onclick="fillTopic('BIO 102')">BIO 102</div>
+            <div class="feature" onclick="fillTopic('PHY 102')">PHY 102</div>
+            <div class="feature" onclick="fillTopic('CHM 102')">CHM 102</div>
+            <div class="feature" onclick="fillTopic('COS 102')">COS 102</div>
+            <div class="feature" onclick="fillTopic('MTH 102')">MTH 102</div>
+            <div class="feature" onclick="fillTopic('GST 112')">GST 112</div>
+            <div class="feature" onclick="scrollToSection('gpaCard')">📊 CGPA Calculator</div>
+        </div>
 
-            <textarea id="topic" placeholder="Paste your lecture note, topic, or course title here...
+        <textarea id="topic" placeholder="Paste your lecture note, topic, or course title here...
 Example:
 Ampere-Maxwell Law
 CHM 102 Organic Chemistry
 Electromagnetism
 Atomic Structure"></textarea>
 
-            <div class="options" id="modeOptions">
-                <div class="option selected" onclick="selectMode(this,'tutorial')">📚 Full Tutorial</div>
-                <div class="option" onclick="selectMode(this,'summary')">📝 Summary Notes</div>
-                <div class="option" onclick="selectMode(this,'mcq')">🎯 Exam MCQs</div>
-                <div class="option" onclick="selectMode(this,'revision')">⚡ Crash Revision</div>
-                <div class="option" onclick="selectMode(this,'exam')">🔥 Exam Tomorrow</div>
-            </div>
-
-            <button onclick="teachMe()">🚀 Teach Me</button>
-            <button onclick="copyPrompt()" class="secondary">📋 Copy Prompt</button>
-
-            <div class="quote" id="quote">📚 Read today so exam won't read you tomorrow.</div>
+        <div class="options" id="modeOptions">
+            <div class="option selected" onclick="selectMode(this,'tutorial')">📚 Full Tutorial</div>
+            <div class="option" onclick="selectMode(this,'summary')">📝 Summary Notes</div>
+            <div class="option" onclick="selectMode(this,'mcq')">🎯 Exam MCQs</div>
+            <div class="option" onclick="selectMode(this,'revision')">⚡ Crash Revision</div>
+            <div class="option" onclick="selectMode(this,'exam')">🔥 Exam Tomorrow</div>
         </div>
 
-        <!-- ========= ACADEMIC DASHBOARD ========= -->
-        <div class="card">
-            <h2>📊 Academic Dashboard</h2>
-            <div class="dash-grid">
-                <div class="dash-card">
-                    <div class="value" id="dashGPA">--</div>
-                    <div class="label">GPA (Current)</div>
-                </div>
-                <div class="dash-card">
-                    <div class="value" id="dashCGPA">--</div>
-                    <div class="label">CGPA</div>
-                </div>
-                <div class="dash-card">
-                    <div class="value" id="dashDegree">--</div>
-                    <div class="label">Degree Class</div>
-                </div>
-                <div class="dash-card">
-                    <div class="value" id="dashStanding">--</div>
-                    <div class="label">Standing</div>
-                </div>
-            </div>
-            <div class="small" style="margin-top:10px;">
-                🔥 Study Streak: <strong><span id="streakDisplay">0</span> Days</strong> |
-                ⏱ Total Study: <strong><span id="hoursDisplay">0</span> hrs</strong> |
-                📅 Sessions: <strong><span id="sessionCountDisplay">0</span></strong>
-            </div>
+        <button onclick="teachMe()">🚀 Teach Me</button>
+        <button onclick="copyPrompt()" class="secondary">📋 Copy Prompt</button>
+
+        <div class="features" style="margin-top:20px;">
+            <div class="feature">🎓 University Level</div>
+            <div class="feature">😂 Funny Analogies</div>
+            <div class="feature">🧠 Memory Tricks</div>
+            <div class="feature">📖 Exam Focus</div>
         </div>
 
-        <!-- ========= GPA CALCULATOR (with course codes & semesters) ========= -->
-        <div class="card" id="gpaCard">
-            <h2>📚 GPA Calculator</h2>
-            <div class="row">
-                <input type="text" id="semName" placeholder="Semester e.g. 100L First Sem">
-                <button onclick="saveSemester()" class="small-btn" style="flex:0;">💾 Save Semester</button>
-                <button onclick="deleteSemester()" class="small-btn danger" style="flex:0;">🗑 Delete</button>
-            </div>
-            <select id="semesterSelect" onchange="loadSemester()" style="margin-top:8px;"></select>
-            <div id="gpaBox" style="margin-top:10px;">
-                <!-- dynamic rows -->
-            </div>
-            <button onclick="addGPA()" class="secondary">➕ Add Course</button>
-            <button onclick="calcGPA()">📊 Calculate GPA</button>
-            <div id="gpaOut" style="margin-top:8px;font-weight:600;color:#fbbf24;"></div>
-        </div>
+        <div class="quote" id="quote">📚 Read today so exam won't read you tomorrow.</div>
 
-        <!-- ========= CGPA CALCULATOR (auto from all semesters) ========= -->
-        <div class="card">
-            <h2>📈 CGPA Calculator</h2>
-            <button onclick="calcCGPA()">📊 Calculate CGPA from All Saved Semesters</button>
-            <div id="cgpaOut" style="margin-top:8px;font-weight:600;color:#fbbf24;"></div>
-        </div>
-
-        <!-- ========= STUDY TIMER ========= -->
-        <div class="card">
-            <h2>⏱ Study Tracker</h2>
-            <div class="timer" id="time">25:00</div>
-            <div class="row" style="justify-content:center;">
-                <button onclick="startTimer()" class="small-btn">▶ Start</button>
-                <button onclick="pauseTimer()" class="small-btn secondary">⏸ Pause</button>
-                <button onclick="resetTimer()" class="small-btn danger">↺ Reset</button>
-            </div>
-            <div class="small" style="text-align:center;margin-top:6px;">
-                Session: <span id="sessionTimerStatus">Idle</span> |
-                Pomodoro: <span id="pomodoroCount">0</span> completed
-            </div>
-        </div>
-
-        <!-- ========= WEEKLY PLANNER ========= -->
-        <div class="card">
-            <h2>📅 Weekly Planner</h2>
-            <textarea id="plan" placeholder="Write your weekly study plan..."></textarea>
-            <button onclick="savePlan()">💾 Save Plan</button>
-            <button onclick="loadPlan()" class="secondary">📂 Load Saved Plan</button>
-            <button onclick="clearPlan()" class="danger">🗑 Clear Planner</button>
-            <div class="small" id="planStatus" style="margin-top:6px;"></div>
-        </div>
-
-        <!-- ========= SMART ANALYZER ========= -->
-        <div class="card">
-            <h2>📊 Smart Analyzer</h2>
-            <button onclick="analyze()">🔍 Run Full Analysis</button>
-            <div class="card" style="margin-top:10px;background:#0f172a;padding:15px;" id="analysisBox">
-                <span class="small">No analysis yet. Click to see your performance insights.</span>
-            </div>
-        </div>
-
-        <!-- ========= EXAM COUNTDOWN ========= -->
-        <div class="card">
-            <h2>⏳ Exam Countdown</h2>
-            <div class="row">
-                <input type="date" id="examDate" style="flex:2;">
-                <input type="text" id="examLabel" placeholder="Exam name e.g. MATH 101" style="flex:2;">
-            </div>
-            <button onclick="setCountdown()">🎯 Set Countdown</button>
-            <div class="timer" id="countdownDisplay" style="font-size:2rem;margin:10px 0;">--:--:--:--</div>
-            <div class="small" id="countdownLabel" style="text-align:center;">No exam set</div>
-            <button onclick="clearCountdown()" class="secondary">🔄 Clear Countdown</button>
-        </div>
+        <div class="quote">🚀 Now with CGPA Calculator • Study Timer • Planner • Countdown</div>
 
         <div class="footer">Made by Students, for Students 🇳🇬</div>
     </div>
 
-    <script>
-        (function() {
-            // ---------- GLOBAL STATE ----------
-            let mode = "tutorial";
-            let gpaCount = 0;
-            let timerSeconds = 1500; // 25 minutes
-            let timerInterval = null;
-            let pomodoroCompleted = parseInt(localStorage.getItem('pomodoroCount')) || 0;
-            let sessionActive = false;
-            let semesters = JSON.parse(localStorage.getItem('semesters')) || {};
-            let currentSem = localStorage.getItem('currentSem') || '';
+    <!-- ===== NEW TOOLS (preserving layout) ===== -->
 
-            // ---------- HERO QUOTES ----------
-            const quotes = [
-                "📚 Read today so exam won't read you tomorrow.",
-                "🐐 Small reading every day beats overnight reading.",
-                "🎓 Your CGPA is watching your decisions.",
-                "🔥 Consistency beats motivation.",
-                "🧠 If you can explain it simply, you understand it."
-            ];
-            document.getElementById('quote').innerHTML = quotes[Math.floor(Math.random() * quotes.length)];
+    <!-- Academic Dashboard -->
+    <div class="card">
+        <h2>📊 Academic Dashboard</h2>
+        <div class="dash-grid">
+            <div class="dash-card"><div class="value" id="dashGPA">--</div><div class="label">Current GPA</div></div>
+            <div class="dash-card"><div class="value" id="dashCGPA">--</div><div class="label">CGPA</div></div>
+            <div class="dash-card"><div class="value" id="dashDegree">--</div><div class="label">Degree Class</div></div>
+            <div class="dash-card"><div class="value" id="dashStanding">--</div><div class="label">Standing</div></div>
+        </div>
+        <div class="small">
+            🔥 Study Streak: <strong><span id="streakDisplay">0</span> Days</strong><br>
+            ⏱ Total Study: <strong><span id="hoursDisplay">0</span> hrs</strong> |
+            📅 Sessions: <strong><span id="sessionCountDisplay">0</span></strong>
+        </div>
+    </div>
 
-            // ---------- HERO FUNCTIONS ----------
-            window.fillTopic = function(topic) {
-                document.getElementById('topic').value = topic;
+    <!-- GPA Calculator with Semester Management -->
+    <div class="card" id="gpaCard">
+        <h2>📚 GPA Calculator (Semester‑wise)</h2>
+        <div class="row">
+            <input type="text" id="semName" placeholder="Semester e.g. 100L First Sem">
+            <button onclick="saveSemester()" class="small-btn">💾 Save</button>
+            <button onclick="deleteSemester()" class="small-btn danger">🗑 Delete</button>
+        </div>
+        <select id="semesterSelect" onchange="loadSemester()" style="margin-top:8px;"></select>
+        <div id="gpaBox" style="margin-top:10px;"></div>
+        <button onclick="addGPA()" class="secondary">➕ Add Course</button>
+        <button onclick="calcGPA()">📊 Calculate GPA</button>
+        <div id="gpaOut" style="margin-top:8px;font-weight:600;color:#fbbf24;"></div>
+    </div>
+
+    <!-- Auto-CGPA -->
+    <div class="card">
+        <h2>📈 CGPA Calculator</h2>
+        <button onclick="calcCGPA()">📊 Auto‑Calculate from All Semesters</button>
+        <div id="cgpaOut" style="margin-top:8px;font-weight:600;color:#fbbf24;"></div>
+    </div>
+
+    <!-- Study Timer -->
+    <div class="card">
+        <h2>⏱ Study Tracker</h2>
+        <div class="timer" id="time">25:00</div>
+        <div class="row" style="justify-content:center;">
+            <button onclick="startTimer()" class="small-btn">▶ Start</button>
+            <button onclick="pauseTimer()" class="small-btn secondary">⏸ Pause</button>
+            <button onclick="resetTimer()" class="small-btn danger">↺ Reset</button>
+        </div>
+        <div class="small" style="text-align:center;margin-top:6px;">
+            Session: <span id="sessionTimerStatus">Idle</span> |
+            Pomodoro: <span id="pomodoroCount">0</span> completed
+        </div>
+    </div>
+
+    <!-- Weekly Planner -->
+    <div class="card">
+        <h2>📅 Weekly Planner</h2>
+        <textarea id="plan" style="height:120px;" placeholder="Write your weekly study plan..."></textarea>
+        <button onclick="savePlan()">💾 Save Plan</button>
+        <button onclick="loadPlan()" class="secondary">📂 Load</button>
+        <button onclick="clearPlan()" class="danger">🗑 Clear</button>
+        <div class="small" id="planStatus" style="margin-top:6px;"></div>
+    </div>
+
+    <!-- Smart Analyzer -->
+    <div class="card">
+        <h2>📊 Smart Analyzer</h2>
+        <button onclick="analyze()">🔍 Run Full Analysis</button>
+        <div class="card" style="margin-top:10px;background:#0f172a;padding:15px;" id="analysisBox">
+            <span class="small">No analysis yet. Click to see your performance insights.</span>
+        </div>
+    </div>
+
+    <!-- Exam Countdown -->
+    <div class="card">
+        <h2>⏳ Exam Countdown</h2>
+        <div class="row">
+            <input type="date" id="examDate" style="flex:2;">
+            <input type="text" id="examLabel" placeholder="Exam name e.g. MATH 101" style="flex:2;">
+        </div>
+        <button onclick="setCountdown()">🎯 Set Countdown</button>
+        <div class="timer" id="countdownDisplay" style="font-size:2rem;margin:10px 0;">--:--:--:--</div>
+        <div class="small" id="countdownLabel" style="text-align:center;">No exam set</div>
+        <button onclick="clearCountdown()" class="secondary">🔄 Clear</button>
+    </div>
+
+</div>
+
+<script>
+    (function() {
+        // ---------- ORIGINAL PROMO FUNCTIONS ----------
+        let mode = "tutorial";
+
+        const quotes = [
+            "📚 Read today so exam won't read you tomorrow.",
+            "🐐 Small reading every day beats overnight reading.",
+            "🎓 Your CGPA is watching your decisions.",
+            "🔥 Consistency beats motivation.",
+            "🧠 If you can explain it simply, you understand it."
+        ];
+        document.getElementById('quote').innerHTML = quotes[Math.floor(Math.random() * quotes.length)];
+
+        window.fillTopic = function(topic) {
+            document.getElementById('topic').value = topic;
+        };
+
+        window.selectMode = function(element, value) {
+            mode = value;
+            document.querySelectorAll('#modeOptions .option').forEach(item => item.classList.remove('selected'));
+            element.classList.add('selected');
+        };
+
+        window.teachMe = function() {
+            const topic = document.getElementById('topic').value.trim();
+            if (!topic) {
+                alert("Please enter a topic first.");
+                return;
+            }
+            const instructions = {
+                tutorial: `Act as GoatTutor AI. Teach this topic like a professional university tutor. Requirements: Explain from beginner to advanced, use simple language, funny analogies, Nigerian student examples, memory tricks, highlight likely exam questions, end with 10 MCQs and answers. Topic:`,
+                summary: `Summarize this topic into exam-ready notes. Requirements: Short and comprehensive, important formulas, key definitions, most likely exam points. Topic:`,
+                mcq: `Generate 20 university-level MCQs. Requirements: Tough exam standard, include calculations where needed, provide answers after each question. Topic:`,
+                revision: `Create a crash revision guide. Requirements: Everything needed for an exam tomorrow, key points only, memory tricks, likely questions. Topic:`,
+                exam: `Create an emergency exam guide. Requirements: Most important concepts only, memory tricks, common exam questions, key formulas, topics likely to appear. Topic:`
             };
+            const instruction = instructions[mode] || instructions.tutorial;
+            window.open("https://chatgpt.com/?q=" + encodeURIComponent(instruction + topic), "_blank");
+        };
 
-            window.selectMode = function(element, value) {
-                mode = value;
-                document.querySelectorAll('#modeOptions .option').forEach(item => item.classList.remove('selected'));
-                element.classList.add('selected');
-            };
+        window.copyPrompt = function() {
+            const topic = document.getElementById('topic').value.trim();
+            if (!topic) { alert("Enter a topic first."); return; }
+            navigator.clipboard.writeText(topic).then(() => alert("Topic copied!"));
+        };
 
-            window.teachMe = function() {
-                const topic = document.getElementById('topic').value.trim();
-                if (!topic) {
-                    alert("Please enter a topic first.");
-                    return;
-                }
-                const instructions = {
-                    tutorial: `Act as GoatTutor AI. Teach this topic like a professional university tutor. Requirements: Explain from beginner to advanced, use simple language, funny analogies, Nigerian student examples, memory tricks, highlight likely exam questions, end with 10 MCQs and answers. Topic:`,
-                    summary: `Summarize this topic into exam-ready notes. Requirements: Short and comprehensive, important formulas, key definitions, most likely exam points. Topic:`,
-                    mcq: `Generate 20 university-level MCQs. Requirements: Tough exam standard, include calculations where needed, provide answers after each question. Topic:`,
-                    revision: `Create a crash revision guide. Requirements: Everything needed for an exam tomorrow, key points only, memory tricks, likely questions. Topic:`,
-                    exam: `Create an emergency exam guide. Requirements: Most important concepts only, memory tricks, common exam questions, key formulas, topics likely to appear. Topic:`
-                };
-                const instruction = instructions[mode] || instructions.tutorial;
-                const url = "https://chatgpt.com/?q=" + encodeURIComponent(instruction + topic);
-                window.open(url, "_blank");
-            };
+        window.scrollToSection = function(id) {
+            document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+        };
 
-            window.copyPrompt = function() {
-                const topic = document.getElementById('topic').value.trim();
-                if (!topic) {
-                    alert("Enter a topic first.");
-                    return;
-                }
-                navigator.clipboard.writeText(topic).then(() => alert("Topic copied!"));
-            };
+        // ---------- ACADEMIC TOOLS STATE ----------
+        let gpaCount = 0;
+        let timerSeconds = 1500;
+        let timerInterval = null;
+        let pomodoroCompleted = parseInt(localStorage.getItem('pomodoroCount')) || 0;
+        let sessionActive = false;
+        let semesters = JSON.parse(localStorage.getItem('semesters')) || {};
+        let currentSem = localStorage.getItem('currentSem') || '';
 
-            // ---------- UTILS ----------
-            window.scrollToSection = function(id) {
-                document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-            };
+        function getDegreeClass(cgpa) {
+            cgpa = parseFloat(cgpa);
+            if (isNaN(cgpa)) return 'N/A';
+            if (cgpa >= 4.50) return '🥇 First Class';
+            if (cgpa >= 3.50) return '🥈 2nd Class Upper';
+            if (cgpa >= 2.40) return '🥉 2nd Class Lower';
+            if (cgpa >= 1.50) return '📘 Third Class';
+            if (cgpa >= 1.00) return '📗 Pass';
+            return '⚠️ Below Pass';
+        }
+        function getStanding(cgpa) {
+            cgpa = parseFloat(cgpa);
+            if (isNaN(cgpa)) return 'N/A';
+            if (cgpa >= 3.50) return '✅ Good';
+            if (cgpa >= 2.40) return '⚠️ Average';
+            return '🔴 Needs Improvement';
+        }
 
-            // ---------- DEGREE CLASSIFICATION ----------
-            function getDegreeClass(cgpa) {
-                cgpa = parseFloat(cgpa);
-                if (isNaN(cgpa)) return 'N/A';
-                if (cgpa >= 4.50) return '🥇 First Class';
-                if (cgpa >= 3.50) return '🥈 2nd Class Upper';
-                if (cgpa >= 2.40) return '🥉 2nd Class Lower';
-                if (cgpa >= 1.50) return '📘 Third Class';
-                if (cgpa >= 1.00) return '📗 Pass';
-                return '⚠️ Below Pass';
+        function updateStreak() {
+            const today = new Date().toDateString();
+            const lastVisit = localStorage.getItem('lastVisit');
+            let streak = parseInt(localStorage.getItem('streak')) || 0;
+            if (lastVisit !== today) {
+                const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+                streak = (lastVisit === yesterday.toDateString()) ? streak+1 : 1;
+                localStorage.setItem('streak', streak);
+                localStorage.setItem('lastVisit', today);
             }
+            document.getElementById('streakDisplay').innerText = streak;
+        }
+        function updateStudyHours() {
+            const mins = parseInt(localStorage.getItem('studyMinutes')) || 0;
+            document.getElementById('hoursDisplay').innerText = (mins/60).toFixed(1);
+        }
+        function addStudyMinutes(minutes) {
+            const curr = parseInt(localStorage.getItem('studyMinutes')) || 0;
+            localStorage.setItem('studyMinutes', curr + minutes);
+            updateStudyHours();
+        }
+        function getSessionCount() {
+            return (JSON.parse(localStorage.getItem('sessionLog')) || []).length;
+        }
+        function updateSessionCountDisplay() {
+            document.getElementById('sessionCountDisplay').innerText = getSessionCount();
+        }
 
-            function getStanding(cgpa) {
-                cgpa = parseFloat(cgpa);
-                if (isNaN(cgpa)) return 'N/A';
-                if (cgpa >= 3.50) return '✅ Good Standing';
-                if (cgpa >= 2.40) return '⚠️ Average';
-                return '🔴 Needs Improvement';
-            }
+        function updateDash() {
+            const gpa = localStorage.getItem('gpa_'+currentSem) || '--';
+            const cgpa = localStorage.getItem('cgpa') || '--';
+            document.getElementById('dashGPA').innerText = gpa==='--'?'--':parseFloat(gpa).toFixed(2);
+            document.getElementById('dashCGPA').innerText = cgpa==='--'?'--':parseFloat(cgpa).toFixed(2);
+            document.getElementById('dashDegree').innerText = getDegreeClass(cgpa);
+            document.getElementById('dashStanding').innerText = getStanding(cgpa);
+            updateStreak();
+            updateStudyHours();
+            updateSessionCountDisplay();
+        }
 
-            // ---------- STREAK & STUDY HOURS ----------
-            function updateStreak() {
-                const today = new Date().toDateString();
-                const lastVisit = localStorage.getItem('lastVisit');
-                let streak = parseInt(localStorage.getItem('streak')) || 0;
-                if (lastVisit !== today) {
-                    const yesterday = new Date();
-                    yesterday.setDate(yesterday.getDate() - 1);
-                    streak = (lastVisit === yesterday.toDateString()) ? streak + 1 : 1;
-                    localStorage.setItem('streak', streak);
-                    localStorage.setItem('lastVisit', today);
-                }
-                document.getElementById('streakDisplay').innerText = streak;
-            }
-
-            function updateStudyHours() {
-                const minutes = parseInt(localStorage.getItem('studyMinutes')) || 0;
-                document.getElementById('hoursDisplay').innerText = (minutes / 60).toFixed(1);
-            }
-
-            function addStudyMinutes(minutes) {
-                const current = parseInt(localStorage.getItem('studyMinutes')) || 0;
-                localStorage.setItem('studyMinutes', current + minutes);
-                updateStudyHours();
-            }
-
-            function getSessionCount() {
-                const log = JSON.parse(localStorage.getItem('sessionLog')) || [];
-                return log.length;
-            }
-
-            function updateSessionCountDisplay() {
-                document.getElementById('sessionCountDisplay').innerText = getSessionCount();
-            }
-
-            // ---------- DASHBOARD UPDATE ----------
-            function updateDash() {
-                const gpa = localStorage.getItem('gpa_' + currentSem) || '--';
-                const cgpa = localStorage.getItem('cgpa') || '--';
-                document.getElementById('dashGPA').innerText = gpa === '--' ? '--' : parseFloat(gpa).toFixed(2);
-                document.getElementById('dashCGPA').innerText = cgpa === '--' ? '--' : parseFloat(cgpa).toFixed(2);
-                document.getElementById('dashDegree').innerText = getDegreeClass(cgpa);
-                document.getElementById('dashStanding').innerText = getStanding(cgpa);
-                updateStreak();
-                updateStudyHours();
-                updateSessionCountDisplay();
-            }
-
-            // ---------- SEMESTER MANAGEMENT ----------
-            function updateSemesterDropdown() {
-                const sel = document.getElementById('semesterSelect');
-                sel.innerHTML = '';
-                Object.keys(semesters).forEach(s => {
-                    const opt = document.createElement('option');
-                    opt.value = s;
-                    opt.textContent = s;
-                    sel.appendChild(opt);
-                });
+        function updateSemesterDropdown() {
+            const sel = document.getElementById('semesterSelect');
+            sel.innerHTML = '';
+            Object.keys(semesters).forEach(s => {
+                const opt = document.createElement('option'); opt.value = s; opt.textContent = s; sel.appendChild(opt);
+            });
+            sel.value = currentSem;
+            if (!currentSem && Object.keys(semesters).length) {
+                currentSem = Object.keys(semesters)[0];
                 sel.value = currentSem;
-                if (!currentSem && Object.keys(semesters).length > 0) {
-                    currentSem = Object.keys(semesters)[0];
-                    sel.value = currentSem;
-                    localStorage.setItem('currentSem', currentSem);
+                localStorage.setItem('currentSem', currentSem);
+            }
+        }
+
+        window.saveSemester = function() {
+            const name = document.getElementById('semName').value.trim();
+            if (!name) return alert('Enter semester name.');
+            if (!semesters[name]) semesters[name] = [];
+            currentSem = name;
+            localStorage.setItem('semesters', JSON.stringify(semesters));
+            localStorage.setItem('currentSem', currentSem);
+            updateSemesterDropdown();
+            loadSemester();
+            document.getElementById('semName').value = '';
+        };
+
+        window.deleteSemester = function() {
+            if (!currentSem) return alert('No semester selected.');
+            if (!confirm(`Delete "${currentSem}" and its courses?`)) return;
+            delete semesters[currentSem];
+            localStorage.setItem('semesters', JSON.stringify(semesters));
+            localStorage.removeItem('gpa_'+currentSem);
+            currentSem = Object.keys(semesters)[0] || '';
+            localStorage.setItem('currentSem', currentSem);
+            updateSemesterDropdown();
+            loadSemester();
+            updateDash();
+        };
+
+        window.loadSemester = function() {
+            currentSem = document.getElementById('semesterSelect').value;
+            localStorage.setItem('currentSem', currentSem);
+            document.getElementById('gpaBox').innerHTML = '';
+            gpaCount = 0;
+            const courses = semesters[currentSem] || [];
+            if (courses.length === 0) addGPA();
+            else courses.forEach(c => addGPA(c.code, c.unit, c.grade));
+            updateDash();
+        };
+
+        window.addGPA = function(code="", unit="", grade="5") {
+            gpaCount++;
+            const d = document.createElement('div');
+            d.className = 'row'; d.id = 'gpaRow'+gpaCount;
+            d.innerHTML = `
+                <input type="text" id="course${gpaCount}" placeholder="Course Code" value="${code}">
+                <input type="number" id="unit${gpaCount}" placeholder="Units" value="${unit}" min="0" step="0.5">
+                <select id="grade${gpaCount}">
+                    <option value="5">A</option><option value="4">B</option><option value="3">C</option>
+                    <option value="2">D</option><option value="1">E</option><option value="0">F</option>
+                </select>
+                <button onclick="removeGPARow(${gpaCount})" class="small-btn danger" style="flex:0;">✕</button>
+            `;
+            document.getElementById('gpaBox').appendChild(d);
+            document.getElementById('grade'+gpaCount).value = grade;
+        };
+
+        window.removeGPARow = function(id) {
+            const row = document.getElementById('gpaRow'+id);
+            if (row) row.remove();
+        };
+
+        window.calcGPA = function() {
+            if (!currentSem) return alert('Create a semester first.');
+            let total=0, units=0;
+            const courses=[];
+            for (let i=1; i<=gpaCount; i++) {
+                const codeEl = document.getElementById('course'+i);
+                const unitEl = document.getElementById('unit'+i);
+                const gradeEl = document.getElementById('grade'+i);
+                if (!codeEl || !unitEl || !gradeEl) continue;
+                const code = codeEl.value.trim();
+                const u = parseFloat(unitEl.value);
+                const g = parseFloat(gradeEl.value);
+                if (!isNaN(u) && !isNaN(g) && u>0 && code!=='') {
+                    total += u*g; units += u;
+                    courses.push({code, unit:u, grade:g});
                 }
             }
+            if (units===0) return alert('Enter valid course details.');
+            const gpa = (total/units).toFixed(2);
+            semesters[currentSem] = courses;
+            localStorage.setItem('semesters', JSON.stringify(semesters));
+            localStorage.setItem('gpa_'+currentSem, gpa);
+            document.getElementById('gpaOut').innerText = `GPA for ${currentSem}: ${gpa}`;
+            updateDash();
+        };
 
-            window.saveSemester = function() {
-                const name = document.getElementById('semName').value.trim();
-                if (!name) return alert('Enter a semester name.');
-                if (!semesters[name]) semesters[name] = [];
-                currentSem = name;
-                localStorage.setItem('semesters', JSON.stringify(semesters));
-                localStorage.setItem('currentSem', currentSem);
-                updateSemesterDropdown();
-                loadSemester();
-                document.getElementById('semName').value = '';
-            };
+        window.calcCGPA = function() {
+            let total=0, units=0;
+            Object.keys(semesters).forEach(sem => {
+                semesters[sem].forEach(c => { total += c.unit*c.grade; units += c.unit; });
+            });
+            if (units===0) return alert('No semester data.');
+            const cgpa = (total/units).toFixed(2);
+            localStorage.setItem('cgpa', cgpa);
+            document.getElementById('cgpaOut').innerText = `CGPA: ${cgpa} – ${getDegreeClass(cgpa)}`;
+            updateDash();
+        };
 
-            window.deleteSemester = function() {
-                if (!currentSem) return alert('No semester selected.');
-                if (!confirm(`Delete semester "${currentSem}" and all its courses?`)) return;
-                delete semesters[currentSem];
-                localStorage.setItem('semesters', JSON.stringify(semesters));
-                localStorage.removeItem('gpa_' + currentSem);
-                currentSem = Object.keys(semesters)[0] || '';
-                localStorage.setItem('currentSem', currentSem);
-                updateSemesterDropdown();
-                loadSemester();
-                updateDash();
-            };
-
-            window.loadSemester = function() {
-                currentSem = document.getElementById('semesterSelect').value;
-                localStorage.setItem('currentSem', currentSem);
-                document.getElementById('gpaBox').innerHTML = '';
-                gpaCount = 0;
-                const courses = semesters[currentSem] || [];
-                if (courses.length === 0) {
-                    addGPA(); // start with one empty row
-                } else {
-                    courses.forEach(c => addGPA(c.code, c.unit, c.grade));
-                }
-            };
-
-            // ---------- GPA ROWS ----------
-            window.addGPA = function(code = "", unit = "", grade = "5") {
-                gpaCount++;
-                const d = document.createElement('div');
-                d.className = 'row';
-                d.id = 'gpaRow' + gpaCount;
-                d.innerHTML = `
-                    <input type="text" id="course${gpaCount}" placeholder="Course Code" value="${code}">
-                    <input type="number" id="unit${gpaCount}" placeholder="Unit" value="${unit}" min="0" step="0.5">
-                    <select id="grade${gpaCount}">
-                        <option value="5">A</option>
-                        <option value="4">B</option>
-                        <option value="3">C</option>
-                        <option value="2">D</option>
-                        <option value="1">E</option>
-                        <option value="0">F</option>
-                    </select>
-                    <button onclick="removeGPARow(${gpaCount})" class="small-btn danger" style="flex:0;">✕</button>
-                `;
-                document.getElementById('gpaBox').appendChild(d);
-                document.getElementById('grade' + gpaCount).value = grade;
-            };
-
-            window.removeGPARow = function(id) {
-                const row = document.getElementById('gpaRow' + id);
-                if (row) row.remove();
-            };
-
-            window.calcGPA = function() {
-                if (!currentSem) return alert('No semester selected. Create one first.');
-                let total = 0,
-                    units = 0;
-                const courses = [];
-                for (let i = 1; i <= gpaCount; i++) {
-                    const codeEl = document.getElementById('course' + i);
-                    const unitEl = document.getElementById('unit' + i);
-                    const gradeEl = document.getElementById('grade' + i);
-                    if (!codeEl || !unitEl || !gradeEl) continue;
-                    const code = codeEl.value.trim();
-                    const u = parseFloat(unitEl.value);
-                    const g = parseFloat(gradeEl.value);
-                    if (!isNaN(u) && !isNaN(g) && u > 0 && code !== '') {
-                        total += u * g;
-                        units += u;
-                        courses.push({ code, unit: u, grade: g });
-                    }
-                }
-                if (units === 0) return alert('Enter at least one valid course with code and units.');
-                const gpa = (total / units).toFixed(2);
-                semesters[currentSem] = courses;
-                localStorage.setItem('semesters', JSON.stringify(semesters));
-                localStorage.setItem('gpa_' + currentSem, gpa);
-                document.getElementById('gpaOut').innerText = `GPA for ${currentSem}: ${gpa}`;
-                updateDash();
-            };
-
-            // ---------- CGPA (auto from all semesters) ----------
-            window.calcCGPA = function() {
-                let total = 0,
-                    units = 0;
-                Object.keys(semesters).forEach(sem => {
-                    semesters[sem].forEach(c => {
-                        total += c.unit * c.grade;
-                        units += c.unit;
-                    });
-                });
-                if (units === 0) return alert('No semester data found. Add courses first.');
-                const cgpa = (total / units).toFixed(2);
-                localStorage.setItem('cgpa', cgpa);
-                document.getElementById('cgpaOut').innerText = `CGPA: ${cgpa} – ${getDegreeClass(cgpa)}`;
-                updateDash();
-            };
-
-            // ---------- PLANNER ----------
-            window.savePlan = function() {
-                localStorage.setItem('plan', document.getElementById('plan').value);
-                document.getElementById('planStatus').innerText = 'Plan saved ✔';
-            };
-            window.loadPlan = function() {
-                const saved = localStorage.getItem('plan') || '';
-                document.getElementById('plan').value = saved;
-                document.getElementById('planStatus').innerText = saved ? 'Plan loaded.' : 'No saved plan.';
-            };
-            window.clearPlan = function() {
-                if (confirm('Clear the planner?')) {
-                    document.getElementById('plan').value = '';
-                    document.getElementById('planStatus').innerText = 'Planner cleared.';
-                }
-            };
-
-            // ---------- ANALYZER ----------
-            window.analyze = function() {
-                const gpa = parseFloat(localStorage.getItem('gpa_' + currentSem)) || 0;
-                const cgpa = parseFloat(localStorage.getItem('cgpa')) || 0;
-                const streak = parseInt(localStorage.getItem('streak')) || 0;
-                const minutes = parseInt(localStorage.getItem('studyMinutes')) || 0;
-                const sessions = getSessionCount();
-                let msg = '<strong>📊 Analysis Results:</strong><br><br>';
-                msg += `🎓 Current GPA: ${gpa > 0 ? gpa.toFixed(2) : 'N/A'}<br>`;
-                msg += `📈 CGPA: ${cgpa > 0 ? cgpa.toFixed(2) : 'N/A'}<br>`;
-                msg += `🏆 Degree Class: ${getDegreeClass(cgpa)}<br>`;
-                msg += `🔥 Streak: ${streak} days<br>`;
-                msg += `⏱ Study Time: ${(minutes/60).toFixed(1)} hrs<br>`;
-                msg += `📝 Sessions: ${sessions}<br><br>`;
-                if (gpa >= 4.5) msg += '🌟 Excellent! Keep dominating.';
-                else if (gpa >= 3.5) msg += '👍 Good. Push for First Class.';
-                else if (gpa >= 2.4) msg += '⚠️ Average. Increase study hours.';
-                else if (gpa > 0) msg += '🔴 Needs serious improvement.';
-                else msg += '📌 No GPA yet. Start calculating.';
-                document.getElementById('analysisBox').innerHTML = msg;
-            };
-
-            // ---------- COUNTDOWN ----------
-            window.setCountdown = function() {
-                const dateVal = document.getElementById('examDate').value;
-                const label = document.getElementById('examLabel').value.trim() || 'Exam';
-                if (!dateVal) return alert('Select a date.');
-                const examDate = new Date(dateVal + 'T00:00:00');
-                if (examDate <= new Date()) return alert('Choose a future date.');
-                localStorage.setItem('examDate', examDate.toISOString());
-                localStorage.setItem('examLabel', label);
-                updateCountdownDisplay();
-            };
-            window.clearCountdown = function() {
-                localStorage.removeItem('examDate');
-                localStorage.removeItem('examLabel');
-                document.getElementById('examDate').value = '';
-                document.getElementById('examLabel').value = '';
-                updateCountdownDisplay();
-            };
-            function updateCountdownDisplay() {
-                const examDateStr = localStorage.getItem('examDate');
-                const label = localStorage.getItem('examLabel') || 'Exam';
-                const display = document.getElementById('countdownDisplay');
-                const labelEl = document.getElementById('countdownLabel');
-                if (!examDateStr) {
-                    display.innerText = '--:--:--:--';
-                    labelEl.innerText = 'No exam set';
-                    return;
-                }
-                const diff = new Date(examDateStr) - new Date();
-                if (diff <= 0) {
-                    display.innerText = '🎉 TIME!';
-                    labelEl.innerText = label + ' is here!';
-                    return;
-                }
-                const days = Math.floor(diff / 86400000);
-                const hours = Math.floor((diff % 86400000) / 3600000);
-                const minutes = Math.floor((diff % 3600000) / 60000);
-                const seconds = Math.floor((diff % 60000) / 1000);
-                display.innerText = `${days.toString().padStart(2,'0')}:${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
-                labelEl.innerText = label + ' — ' + days + ' days remaining';
+        // Planner
+        window.savePlan = function() {
+            localStorage.setItem('plan', document.getElementById('plan').value);
+            document.getElementById('planStatus').innerText = 'Plan saved ✔';
+        };
+        window.loadPlan = function() {
+            const saved = localStorage.getItem('plan')||'';
+            document.getElementById('plan').value = saved;
+            document.getElementById('planStatus').innerText = saved ? 'Plan loaded.' : 'No saved plan.';
+        };
+        window.clearPlan = function() {
+            if (confirm('Clear the planner?')) {
+                document.getElementById('plan').value = '';
+                document.getElementById('planStatus').innerText = 'Planner cleared.';
             }
-            setInterval(() => {
-                if (document.getElementById('countdownDisplay').innerText !== '--:--:--:--' || localStorage.getItem('examDate')) {
-                    updateCountdownDisplay();
+        };
+
+        // Analyzer
+        window.analyze = function() {
+            const gpa = parseFloat(localStorage.getItem('gpa_'+currentSem))||0;
+            const cgpa = parseFloat(localStorage.getItem('cgpa'))||0;
+            const streak = parseInt(localStorage.getItem('streak'))||0;
+            const mins = parseInt(localStorage.getItem('studyMinutes'))||0;
+            const sessions = getSessionCount();
+            let msg = '<strong>📊 Analysis:</strong><br><br>';
+            msg += `GPA: ${gpa>0?gpa.toFixed(2):'N/A'}<br>CGPA: ${cgpa>0?cgpa.toFixed(2):'N/A'}<br>`;
+            msg += `Class: ${getDegreeClass(cgpa)}<br>Streak: ${streak} days<br>`;
+            msg += `Study time: ${(mins/60).toFixed(1)} hrs<br>Sessions: ${sessions}<br><br>`;
+            if (gpa>=4.5) msg += '🌟 Excellent!';
+            else if (gpa>=3.5) msg += '👍 Good. Push for First Class.';
+            else if (gpa>=2.4) msg += '⚠️ Average. Increase study hours.';
+            else if (gpa>0) msg += '🔴 Needs serious improvement.';
+            else msg += '📌 No GPA yet.';
+            document.getElementById('analysisBox').innerHTML = msg;
+        };
+
+        // Countdown
+        window.setCountdown = function() {
+            const dateVal = document.getElementById('examDate').value;
+            const label = document.getElementById('examLabel').value.trim()||'Exam';
+            if (!dateVal) return alert('Select a date.');
+            const examDate = new Date(dateVal+'T00:00:00');
+            if (examDate <= new Date()) return alert('Future date required.');
+            localStorage.setItem('examDate', examDate.toISOString());
+            localStorage.setItem('examLabel', label);
+            updateCountdownDisplay();
+        };
+        window.clearCountdown = function() {
+            localStorage.removeItem('examDate');
+            localStorage.removeItem('examLabel');
+            document.getElementById('examDate').value = '';
+            document.getElementById('examLabel').value = '';
+            updateCountdownDisplay();
+        };
+        function updateCountdownDisplay() {
+            const examStr = localStorage.getItem('examDate');
+            const label = localStorage.getItem('examLabel')||'Exam';
+            const disp = document.getElementById('countdownDisplay');
+            const labelEl = document.getElementById('countdownLabel');
+            if (!examStr) { disp.innerText='--:--:--:--'; labelEl.innerText='No exam set'; return; }
+            const diff = new Date(examStr) - new Date();
+            if (diff<=0) { disp.innerText='🎉 TIME!'; labelEl.innerText=label+' is here!'; return; }
+            const d = Math.floor(diff/86400000);
+            const h = Math.floor((diff%86400000)/3600000);
+            const m = Math.floor((diff%3600000)/60000);
+            const s = Math.floor((diff%60000)/1000);
+            disp.innerText = `${d.toString().padStart(2,'0')}:${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+            labelEl.innerText = label + ' — ' + d + ' days';
+        }
+        setInterval(updateCountdownDisplay, 1000);
+
+        // Timer
+        function updateTimerDisplay() {
+            const m = Math.floor(timerSeconds/60);
+            const s = timerSeconds%60;
+            document.getElementById('time').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        }
+        window.startTimer = function() {
+            if (timerInterval) return;
+            if (!sessionActive) { sessionActive=true; document.getElementById('sessionTimerStatus').innerText='🔴 Active'; }
+            timerInterval = setInterval(() => {
+                timerSeconds--; updateTimerDisplay();
+                if (timerSeconds<=0) {
+                    clearInterval(timerInterval); timerInterval=null;
+                    pomodoroCompleted++; localStorage.setItem('pomodoroCount', pomodoroCompleted);
+                    document.getElementById('pomodoroCount').innerText = pomodoroCompleted;
+                    addStudyMinutes(25); logSession(25);
+                    document.getElementById('sessionTimerStatus').innerText='✅ Completed';
+                    sessionActive=false; updateSessionCountDisplay(); updateDash();
                 }
             }, 1000);
+        };
+        window.pauseTimer = function() {
+            clearInterval(timerInterval); timerInterval=null;
+            if (sessionActive) {
+                document.getElementById('sessionTimerStatus').innerText='⏸ Paused';
+                const elapsed = 1500 - timerSeconds;
+                const mins = Math.floor(elapsed/60);
+                if (mins>0) { addStudyMinutes(mins); logSession(mins); updateSessionCountDisplay(); updateDash(); }
+                sessionActive=false;
+            }
+        };
+        window.resetTimer = function() {
+            clearInterval(timerInterval); timerInterval=null;
+            if (sessionActive) { const elapsed=1500-timerSeconds; const mins=Math.floor(elapsed/60); if(mins>0){addStudyMinutes(mins);logSession(mins);updateSessionCountDisplay();updateDash();} }
+            timerSeconds=1500; sessionActive=false;
+            document.getElementById('sessionTimerStatus').innerText='Idle';
+            updateTimerDisplay();
+        };
+        function logSession(minutes) {
+            if (minutes<=0) return;
+            const log = JSON.parse(localStorage.getItem('sessionLog')) || [];
+            log.push({duration:minutes, date:new Date().toLocaleString(), type:'Study Session'});
+            if (log.length>50) log.shift();
+            localStorage.setItem('sessionLog', JSON.stringify(log));
+        }
 
-            // ---------- TIMER ----------
-            function updateTimerDisplay() {
-                const m = Math.floor(timerSeconds / 60);
-                const s = timerSeconds % 60;
-                document.getElementById('time').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        // INIT
+        function initAll() {
+            updateTimerDisplay();
+            document.getElementById('pomodoroCount').innerText = pomodoroCompleted;
+            if (Object.keys(semesters).length && !currentSem) {
+                currentSem = Object.keys(semesters)[0];
+                localStorage.setItem('currentSem', currentSem);
             }
-            window.startTimer = function() {
-                if (timerInterval) return;
-                if (!sessionActive) {
-                    sessionActive = true;
-                    document.getElementById('sessionTimerStatus').innerText = '🔴 Active';
-                }
-                timerInterval = setInterval(() => {
-                    timerSeconds--;
-                    updateTimerDisplay();
-                    if (timerSeconds <= 0) {
-                        clearInterval(timerInterval);
-                        timerInterval = null;
-                        pomodoroCompleted++;
-                        localStorage.setItem('pomodoroCount', pomodoroCompleted);
-                        document.getElementById('pomodoroCount').innerText = pomodoroCompleted;
-                        addStudyMinutes(25);
-                        logSession(25);
-                        document.getElementById('sessionTimerStatus').innerText = '✅ Completed';
-                        sessionActive = false;
-                        updateSessionCountDisplay();
-                        updateDash();
-                    }
-                }, 1000);
-            };
-            window.pauseTimer = function() {
-                clearInterval(timerInterval);
-                timerInterval = null;
-                if (sessionActive) {
-                    document.getElementById('sessionTimerStatus').innerText = '⏸ Paused';
-                    const elapsed = 1500 - timerSeconds;
-                    const mins = Math.floor(elapsed / 60);
-                    if (mins > 0) {
-                        addStudyMinutes(mins);
-                        logSession(mins);
-                        updateSessionCountDisplay();
-                        updateDash();
-                    }
-                    sessionActive = false;
-                }
-            };
-            window.resetTimer = function() {
-                clearInterval(timerInterval);
-                timerInterval = null;
-                if (sessionActive) {
-                    const elapsed = 1500 - timerSeconds;
-                    const mins = Math.floor(elapsed / 60);
-                    if (mins > 0) {
-                        addStudyMinutes(mins);
-                        logSession(mins);
-                        updateSessionCountDisplay();
-                        updateDash();
-                    }
-                }
-                timerSeconds = 1500;
-                sessionActive = false;
-                document.getElementById('sessionTimerStatus').innerText = 'Idle';
-                updateTimerDisplay();
-            };
-            function logSession(minutes) {
-                if (minutes <= 0) return;
-                const log = JSON.parse(localStorage.getItem('sessionLog')) || [];
-                log.push({ duration: minutes, date: new Date().toLocaleString(), type: 'Study Session' });
-                if (log.length > 50) log.shift();
-                localStorage.setItem('sessionLog', JSON.stringify(log));
-            }
-
-            // ---------- INITIALIZATION ----------
-            function init() {
-                updateTimerDisplay();
-                document.getElementById('pomodoroCount').innerText = pomodoroCompleted;
-                // restore semesters and current
-                if (Object.keys(semesters).length > 0 && !currentSem) {
-                    currentSem = Object.keys(semesters)[0];
-                    localStorage.setItem('currentSem', currentSem);
-                }
-                updateSemesterDropdown();
-                if (currentSem) loadSemester();
-                else addGPA(); // at least one empty row
-                updateDash();
-                loadPlan();
-                // CGPA display
-                const cgpa = localStorage.getItem('cgpa');
-                if (cgpa) document.getElementById('cgpaOut').innerText = `CGPA: ${cgpa} – ${getDegreeClass(cgpa)}`;
-            }
-            init();
-        })();
-    </script>
+            updateSemesterDropdown();
+            if (currentSem) loadSemester(); else addGPA();
+            updateDash();
+            loadPlan();
+            const cgpa = localStorage.getItem('cgpa');
+            if (cgpa) document.getElementById('cgpaOut').innerText = `CGPA: ${cgpa} – ${getDegreeClass(cgpa)}`;
+            updateCountdownDisplay();
+        }
+        initAll();
+    })();
+</script>
 </body>
 </html>
