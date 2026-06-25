@@ -2,29 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>GoatTutor NG v6 🐐</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
-
         body {
             background: #0f172a;
             color: #e2e8f0;
             min-height: 100vh;
             overflow-x: hidden;
         }
-
-        /* TOP BAR */
         .topbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 16px;
+            padding: 10px 16px;
             background: #1e293b;
             position: sticky;
             top: 0;
@@ -34,41 +31,38 @@
         }
         .topbar .logo {
             font-weight: 700;
-            font-size: 1.15rem;
-            letter-spacing: -0.3px;
+            font-size: 1.1rem;
         }
         .topbar .menuBtn {
-            font-size: 24px;
-            cursor: pointer;
+            font-size: 28px;
             background: none;
             border: none;
             color: #e2e8f0;
-            padding: 6px 10px;
+            padding: 6px 12px;
             border-radius: 8px;
-            transition: background 0.2s;
-            width: auto;
+            cursor: pointer;
+            min-height: 44px;
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .topbar .menuBtn:hover {
             background: #334155;
         }
-
-        /* SIDEBAR OVERLAY */
         .sidebar-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.55);
+            background: rgba(0, 0, 0, 0.6);
             z-index: 90;
             display: none;
-            transition: opacity 0.3s;
         }
         .sidebar-overlay.show {
             display: block;
         }
-
-        /* SIDEBAR */
         .sidebar {
             position: fixed;
             top: 0;
@@ -77,7 +71,7 @@
             height: 100%;
             background: #0f172a;
             padding: 20px 14px;
-            transition: left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1.2);
+            transition: left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             border-right: 1px solid #334155;
             z-index: 100;
             display: flex;
@@ -89,12 +83,11 @@
             left: 0;
         }
         .sidebar h3 {
-            font-size: 1rem;
-            color: #94a3b8;
-            margin-bottom: 6px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
             font-size: 0.75rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
         }
         .sidebar button {
             width: 100%;
@@ -110,6 +103,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            min-height: 48px;
         }
         .sidebar button:hover {
             background: #334155;
@@ -131,19 +125,15 @@
             background: #b91c1c;
             transform: none;
         }
-
-        /* MAIN CONTAINER */
         .container {
-            padding: 14px;
-            max-width: 700px;
+            padding: 12px 14px;
+            max-width: 720px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
             gap: 12px;
             padding-bottom: 40px;
         }
-
-        /* CARDS */
         .card {
             background: #1e293b;
             padding: 14px 16px;
@@ -161,9 +151,8 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            flex-wrap: wrap;
         }
-
-        /* INPUTS */
         input,
         textarea,
         select {
@@ -175,9 +164,9 @@
             background: #0f172a;
             color: #e2e8f0;
             font-size: 0.9rem;
-            transition: border 0.2s;
             outline: none;
             resize: vertical;
+            min-height: 44px;
         }
         input:focus,
         textarea:focus,
@@ -188,11 +177,9 @@
         textarea {
             min-height: 70px;
         }
-
-        /* BUTTONS */
         button {
             width: 100%;
-            padding: 11px;
+            padding: 12px 14px;
             margin-top: 8px;
             border: none;
             border-radius: 10px;
@@ -202,7 +189,11 @@
             font-weight: 600;
             font-size: 0.9rem;
             transition: all 0.2s;
-            letter-spacing: 0.2px;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
         button:hover {
             background: #2563eb;
@@ -226,12 +217,11 @@
         }
         button.small-btn {
             width: auto;
-            padding: 8px 14px;
+            padding: 8px 16px;
             font-size: 0.8rem;
             margin-top: 4px;
+            min-height: 34px;
         }
-
-        /* ROW */
         .row {
             display: flex;
             gap: 8px;
@@ -240,50 +230,30 @@
         }
         .row input,
         .row select {
-            flex: 1;
+            flex: 1 1 0;
             min-width: 80px;
         }
-
-        /* TIMER */
-        .timer {
-            font-size: 44px;
-            text-align: center;
-            margin: 10px 0;
-            font-weight: 700;
-            letter-spacing: 2px;
-            font-variant-numeric: tabular-nums;
-            font-family: 'Courier New', monospace;
-            color: #fbbf24;
-        }
-        .timer-row {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-        .timer-row button {
-            flex: 1;
+        .row button {
+            flex: 1 1 0;
             min-width: 70px;
         }
-
-        /* PAGE SECTIONS */
         .page-section {
             display: none;
         }
         .page-section.active {
             display: block;
         }
-        .page-section.visible {
-            display: block;
+        .small {
+            font-size: 0.75rem;
+            color: #94a3b8;
         }
-
-        /* DASHBOARD CARDS GRID */
         .dash-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
             margin-top: 6px;
         }
-        @media (max-width: 400px) {
+        @media (max-width:400px) {
             .dash-grid {
                 grid-template-columns: 1fr;
             }
@@ -307,8 +277,6 @@
             letter-spacing: 0.5px;
             margin-top: 2px;
         }
-
-        /* NOTIFICATIONS */
         .notification-toast {
             position: fixed;
             top: 16px;
@@ -337,73 +305,50 @@
             right: 10px;
             cursor: pointer;
             font-size: 1.2rem;
-            color: #94a3b8;
             background: none;
             border: none;
-            width: auto;
-            padding: 0;
-            margin: 0;
-        }
-
-        /* COUNTDOWN */
-        .countdown-display {
-            font-size: 1.8rem;
-            font-weight: 700;
-            text-align: center;
-            color: #f87171;
-            letter-spacing: 1px;
-            font-family: 'Courier New', monospace;
-        }
-        .countdown-label {
-            text-align: center;
-            font-size: 0.75rem;
-            color: #94a3b8;
-            margin-top: 2px;
-        }
-
-        /* HISTORY LIST */
-        .history-list {
-            max-height: 180px;
-            overflow-y: auto;
-            margin-top: 8px;
-            font-size: 0.8rem;
-            color: #cbd5e1;
-        }
-        .history-list .history-item {
-            background: #0f172a;
-            padding: 8px 10px;
-            border-radius: 8px;
-            margin-top: 4px;
-            display: flex;
-            justify-content: space-between;
-            border: 1px solid #334155;
-        }
-
-        /* SMALL TEXT */
-        .small {
-            font-size: 0.75rem;
             color: #94a3b8;
         }
-
-        /* RESPONSIVE */
-        @media (max-width: 600px) {
-            .timer {
-                font-size: 32px;
+        @media (max-width:600px) {
+            .row {
+                flex-direction: column;
             }
-            .dash-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 6px;
+            .row input,
+            .row select,
+            .row button {
+                flex: 1 1 100%;
+                min-width: 0;
             }
-            .dash-card .value {
-                font-size: 1.3rem;
+            .sidebar {
+                width: 260px;
+                left: -260px;
+                padding: 16px 12px;
+            }
+            .sidebar button {
+                font-size: 0.9rem;
+                padding: 10px 12px;
+                min-height: 44px;
             }
             .container {
-                padding: 8px;
-                gap: 8px;
+                padding: 8px 10px;
+                gap: 10px;
             }
             .card {
-                padding: 10px 12px;
+                padding: 12px 14px;
             }
+        }
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
         }
     </style>
 </head>
@@ -415,13 +360,13 @@
     <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
         <h3>📋 Navigation</h3>
-        <button class="active-nav" onclick="navigateTo('main')" id="navMain">🏠 Home Dashboard</button>
-        <button onclick="navigateTo('planner')" id="navPlanner">📅 Weekly Planner</button>
-        <button onclick="navigateTo('analyzer')" id="navAnalyzer">📊 Smart Analyzer</button>
-        <button onclick="navigateTo('gpaHistory')" id="navGPAHistory">📜 GPA History</button>
-        <button onclick="navigateTo('countdown')" id="navCountdown">⏳ Exam Countdown</button>
-        <button onclick="navigateTo('sessionLog')" id="navSessionLog">📝 Session Log</button>
-        <button class="close-btn" onclick="closeMenu()">✕ Close Menu</button>
+        <button class="active-nav" onclick="navigateTo('main')" id="navMain">🏠 Home</button>
+        <button onclick="navigateTo('research')" id="navResearch">🔍 Summarizer</button>
+        <button onclick="navigateTo('performance')" id="navPerformance">📊 Analyzer</button>
+        <button onclick="navigateTo('assignment')" id="navAssignment">💡 Ideas</button>
+        <button onclick="navigateTo('wellness')" id="navWellness">🧘 Wellness</button>
+        <button onclick="navigateTo('bookshelf')" id="navBookshelf">📚 Bookshelf</button>
+        <button class="close-btn" onclick="closeMenu()">✕ Close</button>
     </div>
 
     <!-- NOTIFICATION TOAST -->
@@ -433,208 +378,213 @@
     <!-- TOP BAR -->
     <div class="topbar">
         <div class="logo">🐐 GoatTutor NG v6</div>
-        <button class="menuBtn" onclick="toggleMenu()" aria-label="Open menu">☰</button>
+        <button class="menuBtn" onclick="toggleMenu()">☰</button>
     </div>
 
     <!-- MAIN CONTENT -->
     <div class="container">
 
-        <!-- ============ MAIN SECTION (AI + Dashboard + GPA + Timer) ============ -->
+        <!-- ========== HOME ========== -->
         <div class="page-section active" id="sectionMain">
 
-            <!-- AI CORE -->
+            <!-- Dashboard -->
             <div class="card">
-                <h3>🧠 AI Study Interface</h3>
-                <textarea id="topic" placeholder="Enter topic (e.g., Calculus, Organic Chemistry, Python loops)..."></textarea>
-                <select id="mode">
-                    <option value="tutorial">📖 Tutorial</option>
-                    <option value="summary">📝 Summary</option>
-                    <option value="mcq">❓ MCQ Quiz</option>
-                    <option value="revision">🔄 Revision Notes</option>
-                    <option value="flashcards">🃏 Flashcards</option>
-                </select>
-                <button onclick="askAI()">🚀 Ask AI Now</button>
-            </div>
-
-            <!-- DASHBOARD 2.0 -->
-            <div class="card">
-                <h3>📊 Academic Dashboard</h3>
+                <h3>📊 Dashboard</h3>
                 <div class="dash-grid">
-                    <div class="dash-card">
-                        <div class="value" id="dashGPA">--</div>
-                        <div class="label">GPA</div>
-                    </div>
-                    <div class="dash-card">
-                        <div class="value" id="dashCGPA">--</div>
-                        <div class="label">CGPA</div>
-                    </div>
-                    <div class="dash-card">
-                        <div class="value" id="dashDegree">--</div>
-                        <div class="label">Degree Class</div>
-                    </div>
-                    <div class="dash-card">
-                        <div class="value" id="dashStanding">--</div>
-                        <div class="label">Standing</div>
-                    </div>
+                    <div class="dash-card"><div class="value" id="dashGPA">--</div><div class="label">GPA</div></div>
+                    <div class="dash-card"><div class="value" id="dashCGPA">--</div><div class="label">CGPA</div></div>
+                    <div class="dash-card"><div class="value" id="dashDegree">--</div><div class="label">Degree</div></div>
+                    <div class="dash-card"><div class="value" id="dashStanding">--</div><div class="label">Standing</div></div>
                 </div>
-                <div class="small" style="margin-top:10px;">
-                    🔥 Study Streak: <strong><span id="streakDisplay">0</span> Days</strong>
-                </div>
-                <div class="small">
-                    ⏱ Total Study: <strong><span id="hoursDisplay">0</span> hrs</strong>
-                </div>
-                <div class="small">
-                    📅 Sessions: <strong><span id="sessionCountDisplay">0</span></strong>
-                </div>
+                <div class="small" style="margin-top:10px;">🔥 Streak: <strong><span id="streakDisplay">0</span> days</strong></div>
+                <div class="small">⏱ Study: <strong><span id="hoursDisplay">0</span> hrs</strong></div>
+                <div class="small">📅 Sessions: <strong><span id="sessionCountDisplay">0</span></strong></div>
             </div>
 
-            <!-- ========== NEW SEMESTER-BASED GPA SECTION ========== -->
+            <!-- Quick links to new features -->
             <div class="card">
-                <h3>📚 GPA Calculator – Semester View</h3>
-                
-                <!-- Semester Title -->
+                <h3>🚀 New Tools</h3>
+                <div class="dash-grid">
+                    <div class="dash-card" onclick="navigateTo('research')" style="cursor:pointer;">
+                        <div class="value" style="font-size:1.2rem;">🔍</div>
+                        <div class="label">Summarizer</div>
+                    </div>
+                    <div class="dash-card" onclick="navigateTo('performance')" style="cursor:pointer;">
+                        <div class="value" style="font-size:1.2rem;">📊</div>
+                        <div class="label">Analyzer</div>
+                    </div>
+                    <div class="dash-card" onclick="navigateTo('assignment')" style="cursor:pointer;">
+                        <div class="value" style="font-size:1.2rem;">💡</div>
+                        <div class="label">Ideas</div>
+                    </div>
+                    <div class="dash-card" onclick="navigateTo('wellness')" style="cursor:pointer;">
+                        <div class="value" style="font-size:1.2rem;">🧘</div>
+                        <div class="label">Wellness</div>
+                    </div>
+                    <div class="dash-card" onclick="navigateTo('bookshelf')" style="cursor:pointer;">
+                        <div class="value" style="font-size:1.2rem;">📚</div>
+                        <div class="label">Bookshelf</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== RESEARCH SUMMARIZER ========== -->
+        <div class="page-section" id="sectionResearch">
+            <div class="card">
+                <h3>🔍 Research Paper Summarizer</h3>
+                <p class="small">Paste academic text – get a simplified summary instantly.</p>
+                <textarea id="researchText" placeholder="Paste research abstract, journal article, or complex text..." style="min-height:100px;"></textarea>
                 <div class="row">
-                    <input type="text" id="semesterTitle" placeholder="Semester (e.g., 100L First Sem)" style="flex:2;">
+                    <select id="summaryLength" style="flex:1;">
+                        <option value="short">Short (3-5 sentences)</option>
+                        <option value="medium" selected>Medium (8-12)</option>
+                        <option value="detailed">Detailed (15-20)</option>
+                    </select>
+                    <button onclick="summarizeResearch()">📄 Summarize</button>
                 </div>
+                <div id="researchResult" style="margin-top:8px;padding:10px;background:#0f172a;border-radius:8px;display:none;">
+                    <div style="font-weight:600;color:#fbbf24;">📝 Summary</div>
+                    <div id="researchSummary" style="font-size:0.85rem;margin-top:4px;color:#cbd5e1;"></div>
+                    <div style="margin-top:6px;font-size:0.75rem;color:#94a3b8;">🔑 <span id="researchKeywords">Keywords</span></div>
+                    <button onclick="copyResearchSummary()" class="secondary small-btn" style="width:auto;margin-top:4px;">📋 Copy</button>
+                </div>
+            </div>
+        </div>
 
-                <!-- Course List Container -->
-                <div id="semesterCourseBox" style="margin-top:8px;">
-                    <!-- Default first course row -->
-                    <div class="row course-row" id="courseRow1">
-                        <input type="text" id="cname1" placeholder="Course Name (e.g., CHM 101)" style="flex:2;">
-                        <input type="number" id="cunit1" placeholder="Units" min="0" step="0.5" style="flex:1;">
-                        <select id="cgrade1" style="flex:1;">
-                            <option value="5">A (5.0)</option>
-                            <option value="4">B (4.0)</option>
-                            <option value="3">C (3.0)</option>
-                            <option value="2">D (2.0)</option>
-                            <option value="1">E (1.0)</option>
-                            <option value="0">F (0.0)</option>
-                        </select>
-                        <button onclick="removeCourseRow(1)" class="danger small-btn" style="width:auto;flex:0;">✕</button>
+        <!-- ========== EXAM PERFORMANCE ANALYZER ========== -->
+        <div class="page-section" id="sectionPerformance">
+            <div class="card">
+                <h3>📊 Exam Performance Analyzer</h3>
+                <p class="small">Add your results and discover strengths & weaknesses.</p>
+                <div class="row">
+                    <input type="text" id="perfSubject" placeholder="Subject" style="flex:2;">
+                    <input type="number" id="perfScore" placeholder="Score (%)" min="0" max="100" style="flex:1;">
+                    <select id="perfExamType" style="flex:1;">
+                        <option value="test">Test</option>
+                        <option value="midterm">Midterm</option>
+                        <option value="exam">Exam</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <button onclick="addPerformance()" class="secondary">➕ Add</button>
+                    <button onclick="analyzePerformance()">📊 Analyze</button>
+                </div>
+                <div id="performanceList" style="margin-top:8px;max-height:100px;overflow-y:auto;"></div>
+                <div id="performanceResult" style="margin-top:8px;padding:10px;background:#0f172a;border-radius:8px;display:none;">
+                    <div style="font-weight:600;color:#fbbf24;">📊 Analysis</div>
+                    <div id="perfAnalysis" style="font-size:0.85rem;margin-top:4px;color:#cbd5e1;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== ASSIGNMENT IDEA GENERATOR ========== -->
+        <div class="page-section" id="sectionAssignment">
+            <div class="card">
+                <h3>💡 Assignment Idea Generator</h3>
+                <p class="small">Stuck? Get fresh ideas and outlines.</p>
+                <div class="row">
+                    <input type="text" id="assignSubject" placeholder="Subject" style="flex:2;">
+                    <input type="text" id="assignTopic" placeholder="Topic (optional)" style="flex:2;">
+                </div>
+                <div class="row">
+                    <select id="assignType" style="flex:1;">
+                        <option value="essay">Essay</option>
+                        <option value="research">Research Paper</option>
+                        <option value="case study">Case Study</option>
+                        <option value="presentation">Presentation</option>
+                        <option value="project">Project</option>
+                    </select>
+                    <button onclick="generateAssignmentIdea()">💡 Generate</button>
+                </div>
+                <div id="assignmentResult" style="margin-top:8px;padding:10px;background:#0f172a;border-radius:8px;display:none;">
+                    <div style="font-weight:600;color:#fbbf24;">💡 Ideas</div>
+                    <div id="assignmentIdeas" style="font-size:0.85rem;margin-top:4px;color:#cbd5e1;"></div>
+                    <button onclick="copyAssignmentIdeas()" class="secondary small-btn" style="width:auto;margin-top:4px;">📋 Copy</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== STUDY BREAK & WELLNESS ========== -->
+        <div class="page-section" id="sectionWellness">
+            <div class="card">
+                <h3>🧘 Study Break & Wellness Tracker</h3>
+                <p class="small">Avoid burnout – track your sessions and breaks.</p>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px;">
+                    <div style="background:#0f172a;padding:8px;border-radius:6px;text-align:center;border:1px solid #334155;">
+                        <div style="font-size:0.6rem;color:#94a3b8;">Study Sessions</div>
+                        <div style="font-size:1.2rem;font-weight:700;color:#3b82f6;" id="wellnessSessions">0</div>
+                    </div>
+                    <div style="background:#0f172a;padding:8px;border-radius:6px;text-align:center;border:1px solid #334155;">
+                        <div style="font-size:0.6rem;color:#94a3b8;">Breaks Taken</div>
+                        <div style="font-size:1.2rem;font-weight:700;color:#22c55e;" id="wellnessBreaks">0</div>
+                    </div>
+                    <div style="background:#0f172a;padding:8px;border-radius:6px;text-align:center;border:1px solid #334155;">
+                        <div style="font-size:0.6rem;color:#94a3b8;">Stress Level</div>
+                        <div style="font-size:1.2rem;font-weight:700;color:#fbbf24;" id="wellnessStress">--</div>
                     </div>
                 </div>
-
-                <!-- Action Buttons Row -->
                 <div class="row">
-                    <button onclick="addCourseRow()" class="secondary" style="flex:1;">➕ Add Course</button>
-                    <button onclick="saveSemester()" style="flex:1;">💾 Save Semester</button>
-                    <button onclick="deleteSemester()" class="danger" style="flex:1;">🗑 Delete</button>
+                    <button onclick="startStudySession()" class="secondary">📚 Study</button>
+                    <button onclick="startBreak()">🧘 Break</button>
+                    <button onclick="logStressLevel()">😰 Log Stress</button>
                 </div>
-
-                <!-- Calculate GPA Button & Result -->
-                <button onclick="calcSemesterGPA()" class="secondary" style="margin-top:4px;">📊 Calculate GPA</button>
-                <div id="semesterGpaOut" style="margin-top:6px;font-weight:600;color:#fbbf24;text-align:center;"></div>
-            </div>
-
-            <!-- ========== SAVED SEMESTERS LIST ========== -->
-            <div class="card" id="savedSemestersCard">
-                <h3>📂 Saved Semesters</h3>
-                <div id="savedSemestersList">
-                    <span class="small">No semesters saved yet. Add courses and click "Save Semester".</span>
-                </div>
-                <button onclick="clearAllSemesters()" class="danger small-btn" style="width:auto;margin-top:8px;">🗑 Clear All</button>
-            </div>
-
-            <!-- STUDY TIMER -->
-            <div class="card">
-                <h3>⏱ Study Tracker</h3>
-                <div class="timer" id="time">25:00</div>
-                <div class="timer-row">
-                    <button onclick="startTimer()">▶ Start</button>
-                    <button onclick="pauseTimer()" class="secondary">⏸ Pause</button>
-                    <button onclick="resetTimer()" class="danger">↺ Reset</button>
-                </div>
-                <div class="small" style="text-align:center;margin-top:6px;">
-                    Session: <span id="sessionTimerStatus">Idle</span> |
-                    Pomodoro: <span id="pomodoroCount">0</span> completed
+                <div id="breakRecommendation" style="margin-top:6px;padding:8px;background:#0f172a;border-radius:6px;text-align:center;font-size:0.85rem;color:#94a3b8;">
+                    Click "Study" to start tracking your session.
                 </div>
             </div>
         </div>
 
-        <!-- ============ PLANNER SECTION ============ -->
-        <div class="page-section" id="sectionPlanner">
+        <!-- ========== DIGITAL BOOKSHELF ========== -->
+        <div class="page-section" id="sectionBookshelf">
             <div class="card">
-                <h3>📅 Weekly Study Planner</h3>
-                <textarea id="plan" placeholder="Write your weekly study plan here...&#10;&#10;Example:&#10;Monday - Math 2hrs&#10;Tuesday - Physics 1.5hrs&#10;Wednesday - Review & Practice..."></textarea>
-                <button onclick="savePlan()">💾 Save Plan</button>
-                <button onclick="loadPlan()" class="secondary">📂 Load Saved Plan</button>
-                <button onclick="clearPlan()" class="danger">🗑 Clear Plan</button>
-                <div class="small" id="planStatus" style="margin-top:6px;"></div>
-            </div>
-        </div>
-
-        <!-- ============ ANALYZER SECTION ============ -->
-        <div class="page-section" id="sectionAnalyzer">
-            <div class="card">
-                <h3>📊 Smart Performance Analyzer</h3>
-                <button onclick="analyze()">🔍 Run Full Analysis</button>
-                <div class="card" style="margin-top:10px;background:#0f172a;" id="analysisBox">
-                    <span class="small">No analysis yet. Click "Run Full Analysis" to begin.</span>
-                </div>
-                <button onclick="resetAnalysis()" class="secondary" style="margin-top:6px;">🔄 Reset Analysis</button>
-            </div>
-        </div>
-
-        <!-- ============ GPA HISTORY SECTION (now shows saved semesters) ============ -->
-        <div class="page-section" id="sectionGPAHistory">
-            <div class="card">
-                <h3>📜 GPA History (Saved Semesters)</h3>
-                <div id="gpaHistoryList">
-                    <!-- This will be populated by renderSavedSemesters() -->
-                </div>
-                <button onclick="clearAllSemesters()" class="danger" style="margin-top:8px;">🗑 Clear All History</button>
-            </div>
-        </div>
-
-        <!-- ============ COUNTDOWN SECTION ============ -->
-        <div class="page-section" id="sectionCountdown">
-            <div class="card">
-                <h3>⏳ Exam Countdown</h3>
+                <h3>📚 Digital Bookshelf</h3>
+                <p class="small">Organize your study resources.</p>
                 <div class="row">
-                    <input type="date" id="examDate" style="flex:2;">
-                    <input type="text" id="examLabel" placeholder="Exam name (e.g., MATH 101)" style="flex:2;">
+                    <input type="text" id="bookTitle" placeholder="Resource Title" style="flex:2;">
+                    <input type="text" id="bookLink" placeholder="Link (optional)" style="flex:2;">
                 </div>
-                <button onclick="setCountdown()">🎯 Set Countdown</button>
-                <div class="countdown-display" id="countdownDisplay">--:--:--:--</div>
-                <div class="countdown-label" id="countdownLabel">No exam set</div>
-                <button onclick="clearCountdown()" class="secondary" style="margin-top:4px;">🔄 Clear Countdown</button>
-            </div>
-        </div>
-
-        <!-- ============ SESSION LOG SECTION ============ -->
-        <div class="page-section" id="sectionSessionLog">
-            <div class="card">
-                <h3>📝 Study Session Log</h3>
-                <div class="history-list" id="sessionLogList">
-                    <span class="small">No sessions recorded yet. Use the Study Tracker to log sessions.</span>
+                <div class="row">
+                    <select id="bookCourse" style="flex:1;">
+                        <option value="">Select Course</option>
+                        <option value="CHM 101">CHM 101</option>
+                        <option value="PHY 101">PHY 101</option>
+                        <option value="MTH 101">MTH 101</option>
+                        <option value="BIO 101">BIO 101</option>
+                        <option value="GST 101">GST 101</option>
+                        <option value="General">General</option>
+                    </select>
+                    <select id="bookType" style="flex:1;">
+                        <option value="PDF">PDF/Book</option>
+                        <option value="Video">Video</option>
+                        <option value="Website">Website</option>
+                        <option value="Other">Other</option>
+                    </select>
                 </div>
-                <button onclick="clearSessionLog()" class="danger" style="margin-top:8px;">🗑 Clear Log</button>
-                <button onclick="exportSessionLog()" class="secondary" style="margin-top:4px;">📋 Copy Log</button>
+                <div class="row">
+                    <input type="number" id="bookRating" placeholder="Rating (1-5)" min="1" max="5" style="flex:1;">
+                    <button onclick="addBook()" class="secondary">➕ Add</button>
+                </div>
+                <input type="text" id="bookSearch" placeholder="Search resources..." style="margin-top:6px;" onkeyup="searchBooks()">
+                <div id="bookList" style="margin-top:8px;max-height:150px;overflow-y:auto;"></div>
             </div>
         </div>
 
     </div>
 
     <script>
-        /* ============ GLOBAL STATE ============ */
-        let timerSeconds = 1500; // 25 minutes default
-        let timerInterval = null;
-        let pomodoroCompleted = parseInt(localStorage.getItem('pomodoroCount')) || 0;
-        let currentSection = 'main';
-        let sessionActive = false;
+        /* ============================================================
+           GOATTUTOR v6 – ALL FEATURES IN ONE BLOCK
+           ============================================================ */
 
-        /* ============ MENU & NAVIGATION ============ */
+        // ─── GLOBAL ───
+        let currentSection = 'main';
+        let studySessionStart = null;
+
+        // ─── MENU ───
         function toggleMenu() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            const isOpen = sidebar.classList.contains('open');
-            if (isOpen) {
-                closeMenu();
-            } else {
-                sidebar.classList.add('open');
-                overlay.classList.add('show');
-            }
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('sidebarOverlay').classList.toggle('show');
         }
 
         function closeMenu() {
@@ -644,687 +594,397 @@
 
         const sectionMap = {
             'main': 'sectionMain',
-            'planner': 'sectionPlanner',
-            'analyzer': 'sectionAnalyzer',
-            'gpaHistory': 'sectionGPAHistory',
-            'countdown': 'sectionCountdown',
-            'sessionLog': 'sectionSessionLog'
+            'research': 'sectionResearch',
+            'performance': 'sectionPerformance',
+            'assignment': 'sectionAssignment',
+            'wellness': 'sectionWellness',
+            'bookshelf': 'sectionBookshelf'
         };
-
         const navMap = {
             'main': 'navMain',
-            'planner': 'navPlanner',
-            'analyzer': 'navAnalyzer',
-            'gpaHistory': 'navGPAHistory',
-            'countdown': 'navCountdown',
-            'sessionLog': 'navSessionLog'
+            'research': 'navResearch',
+            'performance': 'navPerformance',
+            'assignment': 'navAssignment',
+            'wellness': 'navWellness',
+            'bookshelf': 'navBookshelf'
         };
 
         function navigateTo(section) {
             closeMenu();
             currentSection = section;
-
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
-
-            const targetId = sectionMap[section];
-            if (targetId) {
-                const target = document.getElementById(targetId);
-                if (target) target.classList.add('active');
-            }
-
+            const target = document.getElementById(sectionMap[section]);
+            if (target) target.classList.add('active');
             document.querySelectorAll('.sidebar button').forEach(b => b.classList.remove('active-nav'));
-            const navBtnId = navMap[section];
-            if (navBtnId) {
-                const navBtn = document.getElementById(navBtnId);
-                if (navBtn) navBtn.classList.add('active-nav');
-            }
-
+            const navBtn = document.getElementById(navMap[section]);
+            if (navBtn) navBtn.classList.add('active-nav');
             window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            if (section === 'planner') loadPlan(true);
-            if (section === 'gpaHistory') renderSavedSemesters(); // reuse the saved semesters render
-            if (section === 'sessionLog') renderSessionLog();
-            if (section === 'countdown') updateCountdownDisplay();
+            // Refresh content for specific sections
+            if (section === 'performance') renderPerformance();
+            if (section === 'bookshelf') renderBooks();
         }
 
-        /* ============ NOTIFICATIONS ============ */
-        function showNotification(message, duration = 3500) {
+        // ─── NOTIFICATIONS ───
+        function showNotification(msg, dur) {
             const toast = document.getElementById('notificationToast');
-            const text = document.getElementById('notificationText');
-            text.textContent = message;
+            document.getElementById('notificationText').textContent = msg;
             toast.classList.add('show');
-            clearTimeout(toast._timeout);
-            toast._timeout = setTimeout(() => {
-                toast.classList.remove('show');
-            }, duration);
+            clearTimeout(toast._t);
+            toast._t = setTimeout(() => toast.classList.remove('show'), dur || 3500);
         }
 
         function hideNotification() {
             document.getElementById('notificationToast').classList.remove('show');
         }
 
-        /* ============ AI ============ */
-        function askAI() {
-            const t = document.getElementById('topic').value.trim();
-            const m = document.getElementById('mode').value;
-            if (!t) {
-                showNotification('⚠️ Please enter a topic first!');
-                return;
-            }
-            const prompt = `Act as GoatTutor AI, an expert academic tutor. Mode: ${m}. Topic: ${t}. Provide a clear, detailed, and helpful response suitable for a student. Format the response nicely.`;
-            window.open('https://chatgpt.com/?q=' + encodeURIComponent(prompt), '_blank');
-            showNotification('🚀 Opening AI with your topic...');
-            logQuickAction('AI Query: ' + t + ' (' + m + ')');
-        }
-
-        /* ============ DEGREE CLASSIFICATION ============ */
+        // ─── DASHBOARD HELPERS ───
         function getDegreeClass(cgpa) {
             cgpa = parseFloat(cgpa);
             if (isNaN(cgpa)) return 'N/A';
-            if (cgpa >= 4.50) return '🥇 First Class';
-            if (cgpa >= 3.50) return '🥈 2nd Class Upper';
-            if (cgpa >= 2.40) return '🥉 2nd Class Lower';
-            if (cgpa >= 1.50) return '📘 Third Class';
+            if (cgpa >= 4.50) return '🥇 First';
+            if (cgpa >= 3.50) return '🥈 2:1';
+            if (cgpa >= 2.40) return '🥉 2:2';
+            if (cgpa >= 1.50) return '📘 Third';
             if (cgpa >= 1.00) return '📗 Pass';
-            return '⚠️ Below Pass';
+            return '⚠️ Below';
         }
 
         function getStanding(cgpa) {
             cgpa = parseFloat(cgpa);
             if (isNaN(cgpa)) return 'N/A';
-            if (cgpa >= 3.50) return '✅ Good Standing';
+            if (cgpa >= 3.50) return '✅ Good';
             if (cgpa >= 2.40) return '⚠️ Average';
-            return '🔴 Needs Improvement';
+            return '🔴 Improve';
         }
 
-        /* ============ STUDY STREAK ============ */
-        function updateStreak() {
-            const today = new Date().toDateString();
-            const lastVisit = localStorage.getItem('lastVisit');
-            let streak = parseInt(localStorage.getItem('streak')) || 0;
-
-            if (lastVisit !== today) {
-                const yesterday = new Date();
-                yesterday.setDate(yesterday.getDate() - 1);
-                if (lastVisit === yesterday.toDateString()) {
-                    streak++;
-                } else {
-                    streak = 1;
-                }
-                localStorage.setItem('streak', streak);
-                localStorage.setItem('lastVisit', today);
-                if (streak > 1) {
-                    showNotification('🔥 Study Streak: ' + streak + ' days! Keep going!');
-                }
-            }
-            document.getElementById('streakDisplay').innerText = localStorage.getItem('streak') || 1;
-        }
-
-        /* ============ STUDY HOURS ============ */
-        function updateStudyHours() {
-            const minutes = parseInt(localStorage.getItem('studyMinutes')) || 0;
-            document.getElementById('hoursDisplay').innerText = (minutes / 60).toFixed(1);
-        }
-
-        function addStudyMinutes(minutes) {
-            const current = parseInt(localStorage.getItem('studyMinutes')) || 0;
-            localStorage.setItem('studyMinutes', current + minutes);
-            updateStudyHours();
-        }
-
-        /* ============ SESSION COUNT ============ */
-        function getSessionCount() {
-            const log = JSON.parse(localStorage.getItem('sessionLog')) || [];
-            return log.length;
-        }
-
-        function updateSessionCountDisplay() {
-            document.getElementById('sessionCountDisplay').innerText = getSessionCount();
-        }
-
-        /* ============ DASHBOARD UPDATE ============ */
         function updateDash() {
-            // GPA and CGPA are now stored from semesters; read them
             const gpa = localStorage.getItem('gpa') || '--';
             const cgpa = localStorage.getItem('cgpa') || '--';
-            const degree = getDegreeClass(cgpa);
-            const standing = getStanding(cgpa);
-
             document.getElementById('dashGPA').innerText = gpa === '--' ? '--' : parseFloat(gpa).toFixed(2);
             document.getElementById('dashCGPA').innerText = cgpa === '--' ? '--' : parseFloat(cgpa).toFixed(2);
-            document.getElementById('dashDegree').innerText = degree;
-            document.getElementById('dashStanding').innerText = standing;
-
-            updateStreak();
-            updateStudyHours();
-            updateSessionCountDisplay();
-        }
-
-        /* ============ SEMESTER-BASED GPA SYSTEM ============ */
-
-        let courseRowCounter = 1;
-
-        function getSavedSemesters() {
-            try {
-                return JSON.parse(localStorage.getItem('semesters')) || [];
-            } catch {
-                return [];
-            }
-        }
-
-        function saveSemestersToStorage(semesters) {
-            localStorage.setItem('semesters', JSON.stringify(semesters));
-        }
-
-        function addCourseRow() {
-            courseRowCounter++;
-            const container = document.getElementById('semesterCourseBox');
-            const row = document.createElement('div');
-            row.className = 'row course-row';
-            row.id = 'courseRow' + courseRowCounter;
-            row.innerHTML = `
-                <input type="text" id="cname${courseRowCounter}" placeholder="Course Name" style="flex:2;">
-                <input type="number" id="cunit${courseRowCounter}" placeholder="Units" min="0" step="0.5" style="flex:1;">
-                <select id="cgrade${courseRowCounter}" style="flex:1;">
-                    <option value="5">A (5.0)</option>
-                    <option value="4">B (4.0)</option>
-                    <option value="3">C (3.0)</option>
-                    <option value="2">D (2.0)</option>
-                    <option value="1">E (1.0)</option>
-                    <option value="0">F (0.0)</option>
-                </select>
-                <button onclick="removeCourseRow(${courseRowCounter})" class="danger small-btn" style="width:auto;flex:0;">✕</button>
-            `;
-            container.appendChild(row);
-        }
-
-        function removeCourseRow(id) {
-            const row = document.getElementById('courseRow' + id);
-            if (row) {
-                const rows = document.querySelectorAll('#semesterCourseBox .course-row');
-                if (rows.length <= 1) {
-                    showNotification('⚠️ You need at least one course.');
-                    return;
-                }
-                row.remove();
-            }
-        }
-
-        function getCurrentSemesterData() {
-            const title = document.getElementById('semesterTitle').value.trim() || 'Unnamed Semester';
-            const rows = document.querySelectorAll('#semesterCourseBox .course-row');
-            const courses = [];
-            let valid = false;
-
-            rows.forEach(row => {
-                const id = row.id.replace('courseRow', '');
-                const nameEl = document.getElementById('cname' + id);
-                const unitEl = document.getElementById('cunit' + id);
-                const gradeEl = document.getElementById('cgrade' + id);
-
-                if (nameEl && unitEl && gradeEl) {
-                    const name = nameEl.value.trim() || 'Course';
-                    const units = parseFloat(unitEl.value);
-                    const gradePoint = parseFloat(gradeEl.value);
-
-                    if (!isNaN(units) && units > 0) {
-                        valid = true;
-                        courses.push({
-                            name: name,
-                            units: units,
-                            gradePoint: gradePoint,
-                            grade: gradeEl.options[gradeEl.selectedIndex].text.split(' ')[0]
-                        });
-                    }
-                }
-            });
-
-            return { title, courses, valid };
-        }
-
-        function calcSemesterGPA() {
-            const data = getCurrentSemesterData();
-            if (!data.valid || data.courses.length === 0) {
-                document.getElementById('semesterGpaOut').innerHTML = '⚠️ Please add at least one valid course with units.';
-                showNotification('⚠️ No valid courses to calculate.');
-                return;
-            }
-
-            let totalPoints = 0;
-            let totalUnits = 0;
-            data.courses.forEach(c => {
-                totalPoints += c.units * c.gradePoint;
-                totalUnits += c.units;
-            });
-
-            const gpa = (totalPoints / totalUnits).toFixed(2);
-            document.getElementById('semesterGpaOut').innerHTML = `📊 Semester GPA: <strong>${gpa}</strong> / 5.0 (${totalUnits} units)`;
-            return { gpa: parseFloat(gpa), totalUnits };
-        }
-
-        function saveSemester() {
-            const data = getCurrentSemesterData();
-            if (!data.valid || data.courses.length === 0) {
-                showNotification('⚠️ Add at least one valid course with units before saving.');
-                return;
-            }
-
-            let totalPoints = 0;
-            let totalUnits = 0;
-            data.courses.forEach(c => {
-                totalPoints += c.units * c.gradePoint;
-                totalUnits += c.units;
-            });
-            const gpa = parseFloat((totalPoints / totalUnits).toFixed(2));
-
-            const semester = {
-                id: Date.now(),
-                title: data.title,
-                courses: data.courses,
-                gpa: gpa,
-                totalUnits: totalUnits,
-                date: new Date().toLocaleString()
-            };
-
-            const semesters = getSavedSemesters();
-            semesters.push(semester);
-            saveSemestersToStorage(semesters);
-
-            // Clear the form after saving (optional)
-            document.getElementById('semesterTitle').value = '';
-            document.getElementById('semesterCourseBox').innerHTML = '';
-            courseRowCounter = 0;
-            addCourseRow(); // creates row with id 1
-
-            document.getElementById('semesterGpaOut').innerHTML = `✅ Saved! GPA: ${gpa.toFixed(2)} — ${data.title}`;
-            renderSavedSemesters();
-            updateDashFromSemesters();
-            showNotification(`💾 Semester "${data.title}" saved with GPA ${gpa.toFixed(2)}`);
-        }
-
-        function deleteSemester(id) {
-            let semesters = getSavedSemesters();
-            if (semesters.length === 0) {
-                showNotification('⚠️ No semesters to delete.');
-                return;
-            }
-
-            let targetId = id;
-            if (!targetId) {
-                const last = semesters[semesters.length - 1];
-                if (!confirm(`Delete semester "${last.title}" (GPA: ${last.gpa.toFixed(2)})?`)) return;
-                targetId = last.id;
-            }
-
-            semesters = semesters.filter(s => s.id !== targetId);
-            saveSemestersToStorage(semesters);
-            renderSavedSemesters();
-            updateDashFromSemesters();
-            showNotification('🗑 Semester deleted.');
-        }
-
-        function clearAllSemesters() {
-            if (!confirm('Delete ALL saved semesters? This cannot be undone.')) return;
-            saveSemestersToStorage([]);
-            renderSavedSemesters();
-            updateDashFromSemesters();
-            showNotification('🗑 All semesters cleared.');
-        }
-
-        function renderSavedSemesters() {
-            const semesters = getSavedSemesters();
-            const container = document.getElementById('savedSemestersList');
-            // Also update the GPA history page list if present
-            const historyContainer = document.getElementById('gpaHistoryList');
-
-            if (semesters.length === 0) {
-                const emptyMsg = '<span class="small">No semesters saved yet. Add courses and click "Save Semester".</span>';
-                container.innerHTML = emptyMsg;
-                if (historyContainer) historyContainer.innerHTML = emptyMsg;
-                return;
-            }
-
-            const sorted = [...semesters].reverse();
-            const html = sorted.map(s => `
-                <div class="history-item" style="display:flex;flex-direction:column;align-items:stretch;gap:4px;background:#0f172a;padding:10px;border-radius:8px;margin-top:6px;border:1px solid #334155;">
-                    <div style="display:flex;justify-content:space-between;font-weight:600;color:#fbbf24;">
-                        <span>📘 ${s.title}</span>
-                        <span>GPA: ${s.gpa.toFixed(2)}</span>
-                    </div>
-                    <div style="display:flex;flex-wrap:wrap;gap:4px;font-size:0.75rem;color:#94a3b8;">
-                        ${s.courses.map(c => `<span style="background:#1e293b;padding:2px 8px;border-radius:12px;">${c.name} (${c.units}u, ${c.grade})</span>`).join('')}
-                    </div>
-                    <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:#64748b;margin-top:2px;">
-                        <span>📅 ${s.date}</span>
-                        <button onclick="deleteSemester(${s.id})" class="danger small-btn" style="width:auto;padding:2px 10px;font-size:0.65rem;">✕ Delete</button>
-                    </div>
-                </div>
-            `).join('');
-
-            container.innerHTML = html;
-            if (historyContainer) historyContainer.innerHTML = html;
-        }
-
-        function updateDashFromSemesters() {
-            const semesters = getSavedSemesters();
-            if (semesters.length === 0) {
-                localStorage.removeItem('gpa');
-                localStorage.removeItem('cgpa');
-                updateDash();
-                return;
-            }
-
-            let totalPoints = 0;
-            let totalUnits = 0;
-            semesters.forEach(s => {
-                totalPoints += s.gpa * s.totalUnits;
-                totalUnits += s.totalUnits;
-            });
-            const cgpa = totalUnits > 0 ? (totalPoints / totalUnits) : 0;
-            const cgpaDisplay = cgpa.toFixed(2);
-
-            const last = semesters[semesters.length - 1];
-            const gpaDisplay = last.gpa.toFixed(2);
-
-            localStorage.setItem('gpa', gpaDisplay);
-            localStorage.setItem('cgpa', cgpaDisplay);
-
-            updateDash();
-        }
-
-        function initGPASection() {
-            const rows = document.querySelectorAll('#semesterCourseBox .course-row');
-            if (rows.length === 0) {
-                courseRowCounter = 0;
-                addCourseRow();
-            } else {
-                courseRowCounter = rows.length;
-            }
-            renderSavedSemesters();
-            updateDashFromSemesters();
-        }
-
-        /* ============ PLANNER ============ */
-        function savePlan() {
-            const planText = document.getElementById('plan').value;
-            localStorage.setItem('plan', planText);
-            document.getElementById('planStatus').innerText = '✅ Plan saved successfully! ' + new Date().toLocaleString();
-            showNotification('💾 Study plan saved!');
-        }
-
-        function loadPlan(silent = false) {
-            const saved = localStorage.getItem('plan') || '';
-            document.getElementById('plan').value = saved;
-            if (!silent) {
-                document.getElementById('planStatus').innerText = saved ? '📂 Plan loaded.' : '📂 No saved plan found.';
-            }
-        }
-
-        function clearPlan() {
-            if (confirm('Clear your study plan? Make sure you have saved it first.')) {
-                document.getElementById('plan').value = '';
-                document.getElementById('planStatus').innerText = '🗑 Plan editor cleared. (Saved version untouched)';
-                showNotification('🗑 Plan editor cleared.');
-            }
-        }
-
-        /* ============ ANALYZER ============ */
-        function analyze() {
-            const semesters = getSavedSemesters();
-            const gpa = parseFloat(localStorage.getItem('gpa')) || 0;
-            const cgpa = parseFloat(localStorage.getItem('cgpa')) || 0;
+            document.getElementById('dashDegree').innerText = getDegreeClass(cgpa);
+            document.getElementById('dashStanding').innerText = getStanding(cgpa);
             const streak = parseInt(localStorage.getItem('streak')) || 0;
-            const minutes = parseInt(localStorage.getItem('studyMinutes')) || 0;
-            const sessions = getSessionCount();
-
-            let msg = '<strong>📊 Analysis Results:</strong><br><br>';
-            msg += '🎓 <strong>Current GPA:</strong> ' + (gpa > 0 ? gpa.toFixed(2) : 'N/A') + '<br>';
-            msg += '📈 <strong>CGPA:</strong> ' + (cgpa > 0 ? cgpa.toFixed(2) : 'N/A') + '<br>';
-            msg += '🏆 <strong>Degree Class:</strong> ' + getDegreeClass(cgpa) + '<br>';
-            msg += '🔥 <strong>Study Streak:</strong> ' + streak + ' days<br>';
-            msg += '⏱ <strong>Total Study:</strong> ' + (minutes / 60).toFixed(1) + ' hours<br>';
-            msg += '📝 <strong>Total Sessions:</strong> ' + sessions + '<br>';
-            msg += '📚 <strong>Saved Semesters:</strong> ' + semesters.length + '<br><br>';
-
-            if (gpa >= 4.5) msg += '🌟 <strong>Verdict:</strong> Excellent! Keep dominating!';
-            else if (gpa >= 3.5) msg += '👍 <strong>Verdict:</strong> Good performance. Push for First Class!';
-            else if (gpa >= 2.4) msg += '⚠️ <strong>Verdict:</strong> Average. Increase study hours.';
-            else if (gpa > 0) msg += '🔴 <strong>Verdict:</strong> Needs serious improvement. Seek help.';
-            else msg += '📌 <strong>Verdict:</strong> No GPA data yet. Start calculating!';
-
-            if (streak >= 7) msg += '<br>🏅 Great consistency! 7+ day streak!';
-            if (minutes < 300 && sessions > 0) msg += '<br>💡 Tip: Aim for at least 5 hours of study per week.';
-
-            document.getElementById('analysisBox').innerHTML = msg;
-            showNotification('🔍 Analysis complete!');
+            document.getElementById('streakDisplay').innerText = streak;
+            const mins = parseInt(localStorage.getItem('studyMinutes')) || 0;
+            document.getElementById('hoursDisplay').innerText = (mins / 60).toFixed(1);
+            const sessions = JSON.parse(localStorage.getItem('sessionLog') || '[]').length;
+            document.getElementById('sessionCountDisplay').innerText = sessions;
         }
 
-        function resetAnalysis() {
-            document.getElementById('analysisBox').innerHTML = '<span class="small">No analysis yet. Click "Run Full Analysis" to begin.</span>';
-            showNotification('🔄 Analysis reset.');
+        // ─── 1. RESEARCH SUMMARIZER ───
+        function summarizeResearch() {
+            const text = document.getElementById('researchText').value.trim();
+            const length = document.getElementById('summaryLength').value;
+            const resultDiv = document.getElementById('researchResult');
+            if (!text) { showNotification('⚠️ Please paste some text.'); return; }
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 10);
+            let count = length === 'short' ? 3 : length === 'medium' ? 7 : 12;
+            const summary = sentences.slice(0, Math.min(count, sentences.length)).map(s => s.trim() + '.').join(' ');
+            const words = text.toLowerCase().replace(/[^a-z\s]/g, '').split(/\s+/);
+            const freq = {};
+            words.forEach(w => { if (w.length > 3 && !['the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'had',
+                    'her', 'was', 'one', 'our', 'out'].includes(w)) { freq[w] = (freq[w] || 0) + 1; } });
+            const keywords = Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, 6).map(k => k[0]);
+            document.getElementById('researchSummary').innerHTML = summary || 'Not enough text to summarize.';
+            document.getElementById('researchKeywords').innerHTML = keywords.length > 0 ? keywords.join(', ') :
+            'No keywords.';
+            resultDiv.style.display = 'block';
+            showNotification('📄 Summary generated!');
         }
 
-        /* ============ COUNTDOWN ============ */
-        function setCountdown() {
-            const dateVal = document.getElementById('examDate').value;
-            const label = document.getElementById('examLabel').value.trim() || 'Exam';
-            if (!dateVal) {
-                showNotification('⚠️ Please select an exam date.');
-                return;
-            }
-            const examDate = new Date(dateVal + 'T00:00:00');
-            const now = new Date();
-            if (examDate <= now) {
-                showNotification('⚠️ Please select a future date.');
-                return;
-            }
-            localStorage.setItem('examDate', examDate.toISOString());
-            localStorage.setItem('examLabel', label);
-            updateCountdownDisplay();
-            showNotification('🎯 Countdown set for: ' + label);
+        function copyResearchSummary() {
+            const s = document.getElementById('researchSummary').innerText;
+            if (s) { navigator.clipboard.writeText(s);
+                showNotification('📋 Copied!'); }
         }
 
-        function updateCountdownDisplay() {
-            const examDateStr = localStorage.getItem('examDate');
-            const label = localStorage.getItem('examLabel') || 'Exam';
-            const display = document.getElementById('countdownDisplay');
-            const labelEl = document.getElementById('countdownLabel');
+        // ─── 2. EXAM PERFORMANCE ANALYZER ───
+        function getPerfData() { try { return JSON.parse(localStorage.getItem('perfData')) || []; } catch { return []; } }
 
-            if (!examDateStr) {
-                display.innerText = '--:--:--:--';
-                labelEl.innerText = 'No exam set';
-                return;
-            }
-            const examDate = new Date(examDateStr);
-            const now = new Date();
-            const diff = examDate - now;
+        function savePerfData(d) { localStorage.setItem('perfData', JSON.stringify(d)); }
 
-            if (diff <= 0) {
-                display.innerText = '🎉 TIME!';
-                labelEl.innerText = label + ' is here!';
-                return;
-            }
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            const minutes = Math.floor((diff / (1000 * 60)) % 60);
-            const seconds = Math.floor((diff / 1000) % 60);
-            display.innerText = `${days.toString().padStart(2,'0')}:${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
-            labelEl.innerText = label + ' — ' + days + ' days remaining';
+        function addPerformance() {
+            const subject = document.getElementById('perfSubject').value.trim();
+            const score = parseInt(document.getElementById('perfScore').value);
+            const type = document.getElementById('perfExamType').value;
+            if (!subject) { showNotification('⚠️ Enter subject.'); return; }
+            if (isNaN(score) || score < 0 || score > 100) { showNotification('⚠️ Valid score 0-100.'); return; }
+            const data = getPerfData();
+            data.push({ id: Date.now(), subject, score, type, date: new Date().toLocaleString() });
+            savePerfData(data);
+            renderPerformance();
+            document.getElementById('perfSubject').value = '';
+            document.getElementById('perfScore').value = '';
+            showNotification('📊 Result added!');
         }
 
-        function clearCountdown() {
-            localStorage.removeItem('examDate');
-            localStorage.removeItem('examLabel');
-            document.getElementById('examDate').value = '';
-            document.getElementById('examLabel').value = '';
-            updateCountdownDisplay();
-            showNotification('🔄 Countdown cleared.');
+        function renderPerformance() {
+            const data = getPerfData();
+            const container = document.getElementById('performanceList');
+            if (!data.length) { container.innerHTML = '<span class="small">No results yet.</span>'; return; }
+            container.innerHTML = data.reverse().map(d =>
+                `<div style="display:flex;justify-content:space-between;padding:4px 8px;background:#0f172a;border-radius:4px;margin-top:2px;border:1px solid #334155;font-size:0.85rem;">
+                    <span><strong>${d.subject}</strong> (${d.type})</span>
+                    <span style="color:${d.score>=70?'#22c55e':d.score>=50?'#fbbf24':'#ef4444'};">${d.score}%</span>
+                    <button onclick="deletePerf(${d.id})" class="danger small-btn" style="padding:2px 8px;font-size:0.7rem;">✕</button>
+                </div>`
+            ).join('');
         }
 
-        setInterval(() => {
-            if (currentSection === 'countdown' || document.getElementById('sectionCountdown').classList.contains('active')) {
-                updateCountdownDisplay();
-            }
-        }, 1000);
-
-        /* ============ STUDY TIMER ============ */
-        function updateTimerDisplay() {
-            const m = Math.floor(timerSeconds / 60);
-            const s = timerSeconds % 60;
-            document.getElementById('time').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        function deletePerf(id) {
+            let data = getPerfData();
+            data = data.filter(d => d.id !== id);
+            savePerfData(data);
+            renderPerformance();
+            showNotification('🗑 Removed.');
         }
 
-        function startTimer() {
-            if (timerInterval) return;
-            if (!sessionActive) {
-                sessionActive = true;
-                document.getElementById('sessionTimerStatus').innerText = '🔴 Active';
-                showNotification('⏱ Study session started! Focus up!');
-            }
-            timerInterval = setInterval(() => {
-                timerSeconds--;
-                updateTimerDisplay();
-                if (timerSeconds <= 0) {
-                    clearInterval(timerInterval);
-                    timerInterval = null;
-                    pomodoroCompleted++;
-                    localStorage.setItem('pomodoroCount', pomodoroCompleted);
-                    document.getElementById('pomodoroCount').innerText = pomodoroCompleted;
-                    addStudyMinutes(25);
-                    logSession(25);
-                    showNotification('🍅 Pomodoro complete! Take a 5-min break. Great job!');
-                    document.getElementById('sessionTimerStatus').innerText = '✅ Completed';
-                    sessionActive = false;
-                    updateSessionCountDisplay();
-                    updateDash();
-                }
-            }, 1000);
-        }
-
-        function pauseTimer() {
-            clearInterval(timerInterval);
-            timerInterval = null;
-            if (sessionActive) {
-                document.getElementById('sessionTimerStatus').innerText = '⏸ Paused';
-                const elapsedSec = 1500 - timerSeconds;
-                const elapsedMin = Math.floor(elapsedSec / 60);
-                if (elapsedMin > 0) {
-                    addStudyMinutes(elapsedMin);
-                    logSession(elapsedMin);
-                    updateSessionCountDisplay();
-                    updateDash();
-                }
-                sessionActive = false;
-                showNotification('⏸ Timer paused. Session logged.');
-            }
-        }
-
-        function resetTimer() {
-            clearInterval(timerInterval);
-            timerInterval = null;
-            if (sessionActive) {
-                const elapsedSec = 1500 - timerSeconds;
-                const elapsedMin = Math.floor(elapsedSec / 60);
-                if (elapsedMin > 0) {
-                    addStudyMinutes(elapsedMin);
-                    logSession(elapsedMin);
-                    updateSessionCountDisplay();
-                    updateDash();
-                }
-            }
-            timerSeconds = 1500;
-            sessionActive = false;
-            document.getElementById('sessionTimerStatus').innerText = 'Idle';
-            updateTimerDisplay();
-            showNotification('↺ Timer reset.');
-        }
-
-        /* ============ SESSION LOGGING ============ */
-        function logSession(minutes) {
-            if (minutes <= 0) return;
-            const log = JSON.parse(localStorage.getItem('sessionLog')) || [];
-            log.push({
-                duration: minutes,
-                date: new Date().toLocaleString(),
-                type: 'Study Session'
+        function analyzePerformance() {
+            const data = getPerfData();
+            const resultDiv = document.getElementById('performanceResult');
+            if (!data.length) { showNotification('⚠️ Add results first.'); return; }
+            const subjects = {};
+            data.forEach(d => { if (!subjects[d.subject]) subjects[d.subject] = [];
+                subjects[d.subject].push(d.score); });
+            let html = '<div style="font-size:0.85rem;">';
+            Object.entries(subjects).forEach(([s, scores]) => {
+                const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
+                const trend = scores.length > 1 && scores[scores.length - 1] > scores[0] ? '⬆️' : '➡️';
+                const color = avg >= 70 ? '#22c55e' : avg >= 50 ? '#fbbf24' : '#ef4444';
+                html +=
+                    `<div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid #334155;">
+                        <span>${s}</span>
+                        <span style="color:${color};">${avg.toFixed(1)}%</span>
+                        <span style="font-size:0.7rem;color:#94a3b8;">${trend}</span>
+                    </div>`;
             });
-            if (log.length > 100) log.shift();
-            localStorage.setItem('sessionLog', JSON.stringify(log));
+            const all = data.map(d => d.score);
+            const overall = all.reduce((a, b) => a + b, 0) / all.length;
+            const color2 = overall >= 70 ? '#22c55e' : overall >= 50 ? '#fbbf24' : '#ef4444';
+            const rec = overall >= 70 ? '✅ Great! Keep it up!' : overall >= 50 ? '📈 Good, focus on weak areas.' :
+                '🔴 Needs improvement.';
+            html +=
+                `<div style="margin-top:6px;padding:8px;background:#0f172a;border-radius:4px;text-align:center;">
+                    <div style="font-weight:700;color:${color2};">Overall: ${overall.toFixed(1)}%</div>
+                    <div style="font-size:0.8rem;color:#94a3b8;">${rec}</div>
+                </div>`;
+            const weak = Object.entries(subjects).filter(([_, s]) => s.reduce((a, b) => a + b, 0) / s.length < 50).map((
+            [s]) => s);
+            if (weak.length) html +=
+                `<div style="margin-top:6px;padding:4px 8px;background:#ef4444;border-radius:4px;font-size:0.8rem;">⚠️ Focus: ${weak.join(', ')}</div>`;
+            html += '</div>';
+            document.getElementById('perfAnalysis').innerHTML = html;
+            resultDiv.style.display = 'block';
+            showNotification('📊 Analysis done!');
         }
 
-        function logQuickAction(action) {
-            const log = JSON.parse(localStorage.getItem('sessionLog')) || [];
-            log.push({
-                duration: 0,
-                date: new Date().toLocaleString(),
-                type: action
+        // ─── 3. ASSIGNMENT IDEA GENERATOR ───
+        function generateAssignmentIdea() {
+            const subject = document.getElementById('assignSubject').value.trim();
+            const topic = document.getElementById('assignTopic').value.trim() || subject;
+            const type = document.getElementById('assignType').value;
+            const resultDiv = document.getElementById('assignmentResult');
+            if (!subject) { showNotification('⚠️ Enter a subject.'); return; }
+            const ideas = {
+                'essay': [
+                    `"The Impact of ${topic} on Modern Society" – Explore how ${topic} shapes our world.`,
+                    `"A Critical Analysis of ${topic}" – Evaluate key theories and perspectives.`,
+                    `"The Evolution of ${topic}" – Trace development over time.`,
+                    `"${topic} in the 21st Century" – Current challenges and opportunities.`,
+                    `"Comparative Study of ${topic}" – Compare different approaches.`
+                ],
+                'research': [
+                    `"Investigating the Effects of ${topic}" – Design a research study.`,
+                    `"A Literature Review of ${topic}" – Synthesize existing research.`,
+                    `"Case Study Analysis of ${topic}" – In-depth examination.`,
+                    `"Survey Research on ${topic}" – Design and analyze a survey.`,
+                    `"Experimental Study of ${topic}" – Propose an experiment.`
+                ],
+                'case study': [
+                    `"Case Study: ${topic} in Action" – Real-world application.`,
+                    `"Examining ${topic}: A Case Study Approach" – Deep dive.`,
+                    `"Lessons from ${topic}" – What can we learn?`,
+                    `"Comparative Case Studies in ${topic}" – Compare multiple cases.`
+                ],
+                'presentation': [
+                    `"The Story of ${topic}" – Tell the story with visuals.`,
+                    `"5 Key Things About ${topic}" – Clear, concise presentation.`,
+                    `"${topic} Explained" – Simplify complex concepts.`,
+                    `"The Future of ${topic}" – Trends and predictions.`
+                ],
+                'project': [
+                    `"Building a ${topic} Project" – Create something tangible.`,
+                    `"Solving Problems with ${topic}" – Apply to real challenges.`,
+                    `"${topic} Innovation Challenge" – Develop creative solutions.`,
+                    `"Community Impact Project on ${topic}" – Make a difference.`
+                ]
+            };
+            const list = ideas[type] || ideas['essay'];
+            const selected = list.slice(0, 3);
+            let html = '<div style="font-size:0.85rem;">';
+            selected.forEach((idea, i) => {
+                html +=
+                    `<div style="padding:6px 8px;background:#0f172a;border-radius:4px;margin-top:4px;border-left:3px solid #3b82f6;">
+                        <strong>Idea ${i+1}:</strong> ${idea}
+                    </div>`;
             });
-            if (log.length > 100) log.shift();
-            localStorage.setItem('sessionLog', JSON.stringify(log));
-            updateSessionCountDisplay();
+            html +=
+                `<div style="margin-top:6px;padding:8px;background:#0f172a;border-radius:4px;border:1px solid #334155;">
+                    <div style="font-weight:600;color:#fbbf24;">📋 Outline</div>
+                    <div style="font-size:0.8rem;color:#94a3b8;">1. Introduction<br>2. Body – Key points<br>3. Conclusion<br>4. References</div>
+                </div>`;
+            html += '</div>';
+            document.getElementById('assignmentIdeas').innerHTML = html;
+            resultDiv.style.display = 'block';
+            showNotification('💡 Ideas generated!');
         }
 
-        function renderSessionLog() {
-            const log = JSON.parse(localStorage.getItem('sessionLog')) || [];
-            const container = document.getElementById('sessionLogList');
-            if (log.length === 0) {
-                container.innerHTML = '<span class="small">No sessions recorded yet. Use the Study Tracker to log sessions.</span>';
-                return;
+        function copyAssignmentIdeas() {
+            const s = document.getElementById('assignmentIdeas').innerText;
+            if (s) { navigator.clipboard.writeText(s);
+                showNotification('📋 Copied!'); }
+        }
+
+        // ─── 4. WELLNESS TRACKER ───
+        function getWellness() { try { return JSON.parse(localStorage.getItem('wellnessData')) || { sessions: 0,
+                    breaks: 0, stress: [] }; } catch { return { sessions: 0, breaks: 0, stress: [] }; } }
+
+        function saveWellness(d) { localStorage.setItem('wellnessData', JSON.stringify(d)); }
+
+        function updateWellnessUI() {
+            const d = getWellness();
+            document.getElementById('wellnessSessions').innerText = d.sessions || 0;
+            document.getElementById('wellnessBreaks').innerText = d.breaks || 0;
+            if (d.stress && d.stress.length) {
+                const last = d.stress[d.stress.length - 1];
+                const emoji = last <= 3 ? '😊' : last <= 6 ? '🙂' : last <= 8 ? '😰' : '😱';
+                document.getElementById('wellnessStress').innerHTML = last + '/10 ' + emoji;
             }
-            container.innerHTML = log.reverse().map((s, i) => `
-            <div class="history-item">
-              <span>📅 ${s.date}</span>
-              <span><strong>${s.type}</strong> ${s.duration > 0 ? '| ' + s.duration + ' min' : ''}</span>
-            </div>
-          `).join('');
-            log.reverse();
         }
 
-        function clearSessionLog() {
-            if (confirm('Clear all session logs? This cannot be undone.')) {
-                localStorage.removeItem('sessionLog');
-                renderSessionLog();
-                updateSessionCountDisplay();
-                showNotification('🗑 Session log cleared.');
-            }
+        function startStudySession() {
+            const d = getWellness();
+            d.sessions += 1;
+            saveWellness(d);
+            studySessionStart = Date.now();
+            updateWellnessUI();
+            document.getElementById('breakRecommendation').innerHTML =
+                '📚 Studying... Started at ' + new Date().toLocaleTimeString() +
+                '<br><span style="font-size:0.7rem;color:#94a3b8;">💡 Take a 5-min break every 25 min.</span>';
+            showNotification('📚 Study session started!');
+            setTimeout(() => {
+                if (studySessionStart) {
+                    document.getElementById('breakRecommendation').innerHTML =
+                        '⏰ 25 min done! Time for a break. Click "Break" to rest.';
+                    showNotification('⏰ Time for a break!');
+                }
+            }, 1500000);
         }
 
-        function exportSessionLog() {
-            const log = JSON.parse(localStorage.getItem('sessionLog')) || [];
-            if (log.length === 0) {
-                showNotification('⚠️ No sessions to export.');
-                return;
-            }
-            const text = log.map(s => `[${s.date}] ${s.type} - ${s.duration} min`).join('\n');
-            navigator.clipboard.writeText(text).then(() => {
-                showNotification('📋 Session log copied to clipboard!');
-            }).catch(() => {
-                showNotification('⚠️ Failed to copy. Please try again.');
-            });
+        function startBreak() {
+            const d = getWellness();
+            d.breaks += 1;
+            saveWellness(d);
+            studySessionStart = null;
+            updateWellnessUI();
+            const activities = ['🚶 Take a 5-min walk', '🧘 Stretch your neck & back', '💧 Drink water',
+                '👀 Look away from screen', '🎵 Listen to music', '😮‍💨 Deep breathing'
+            ];
+            const act = activities[Math.floor(Math.random() * activities.length)];
+            document.getElementById('breakRecommendation').innerHTML = '🧘 Break started. ' + act;
+            showNotification('🧘 Break time!');
         }
 
-        /* ============ INITIALIZATION ============ */
+        function logStressLevel() {
+            const val = prompt('Stress level (1-10):\n1=No stress  10=Extreme');
+            if (val === null) return;
+            const num = parseInt(val);
+            if (isNaN(num) || num < 1 || num > 10) { showNotification('⚠️ Enter 1-10.'); return; }
+            const d = getWellness();
+            d.stress.push(num);
+            saveWellness(d);
+            updateWellnessUI();
+            const emoji = num <= 3 ? '😊' : num <= 6 ? '🙂' : num <= 8 ? '😰' : '😱';
+            showNotification('😰 Stress logged: ' + num + '/10 ' + emoji);
+        }
+
+        // ─── 5. DIGITAL BOOKSHELF ───
+        function getBooks() { try { return JSON.parse(localStorage.getItem('bookshelf')) || []; } catch { return []; } }
+
+        function saveBooks(b) { localStorage.setItem('bookshelf', JSON.stringify(b)); }
+
+        function addBook() {
+            const title = document.getElementById('bookTitle').value.trim();
+            const link = document.getElementById('bookLink').value.trim();
+            const course = document.getElementById('bookCourse').value || 'General';
+            const type = document.getElementById('bookType').value;
+            const rating = parseInt(document.getElementById('bookRating').value) || 0;
+            if (!title) { showNotification('⚠️ Enter a title.'); return; }
+            const books = getBooks();
+            books.push({ id: Date.now(), title, link: link || '#', course, type, rating, done: false,
+                date: new Date().toLocaleString() });
+            saveBooks(books);
+            renderBooks();
+            document.getElementById('bookTitle').value = '';
+            document.getElementById('bookLink').value = '';
+            document.getElementById('bookRating').value = '';
+            showNotification('📚 "' + title + '" added!');
+        }
+
+        function renderBooks(filter) {
+            let books = getBooks();
+            const container = document.getElementById('bookList');
+            const search = (filter || '').toLowerCase();
+            if (search) books = books.filter(b => b.title.toLowerCase().includes(search) || b.course.toLowerCase()
+            .includes(search) || b.type.toLowerCase().includes(search));
+            if (!books.length) { container.innerHTML = '<span class="small">No resources yet.</span>'; return; }
+            container.innerHTML = books.map(b =>
+                `<div style="display:flex;justify-content:space-between;padding:4px 8px;background:#0f172a;border-radius:4px;margin-top:2px;border:1px solid #334155;font-size:0.85rem;">
+                    <div><strong>${b.title}</strong> <span style="font-size:0.7rem;color:#94a3b8;">(${b.course})</span> ${b.rating > 0 ? '⭐'.repeat(Math.min(b.rating,5)) : ''}</div>
+                    <div style="display:flex;gap:4px;align-items:center;">
+                        ${b.link && b.link !== '#' ? `<a href="${b.link}" target="_blank" style="color:#3b82f6;text-decoration:none;">🔗</a>` : ''}
+                        <button onclick="toggleBook(${b.id})" class="secondary small-btn" style="padding:2px 6px;font-size:0.6rem;">${b.done ? '✅' : '⬜'}</button>
+                        <button onclick="deleteBook(${b.id})" class="danger small-btn" style="padding:2px 6px;font-size:0.6rem;">✕</button>
+                    </div>
+                </div>`
+            ).join('');
+        }
+
+        function toggleBook(id) {
+            const books = getBooks();
+            const b = books.find(b => b.id === id);
+            if (b) { b.done = !b.done;
+                saveBooks(books);
+                renderBooks(document.getElementById('bookSearch').value);
+                showNotification(b.done ? '✅ Completed!' : '↩ Reopened.'); }
+        }
+
+        function deleteBook(id) {
+            let books = getBooks();
+            books = books.filter(b => b.id !== id);
+            saveBooks(books);
+            renderBooks(document.getElementById('bookSearch').value);
+            showNotification('🗑 Removed.');
+        }
+
+        function searchBooks() {
+            renderBooks(document.getElementById('bookSearch').value);
+        }
+
+        // ─── INIT ───
         function init() {
-            updateTimerDisplay();
-            updateStreak();
-            updateStudyHours();
             updateDash();
-            updateCountdownDisplay();
-            updateSessionCountDisplay();
-            document.getElementById('pomodoroCount').innerText = pomodoroCompleted;
-            loadPlan(true);
-            renderSessionLog();
-            initGPASection(); // New GPA setup
+            updateWellnessUI();
+            renderPerformance();
+            renderBooks();
         }
 
         document.getElementById('sidebarOverlay').addEventListener('click', closeMenu);
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeMenu();
-        });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
 
         init();
-
-        console.log('🐐 GoatTutor NG v6 – Semester-based GPA fully implemented.');
+        console.log('🐐 GoatTutor NG v6 – All features loaded.');
     </script>
 </body>
 </html>
