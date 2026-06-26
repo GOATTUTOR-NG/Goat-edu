@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-    <title>GoatTutor NG v6 🐐</title>
-    <!-- PDF.js for text extraction -->
+    <title>GoatTutor NG v6 – Internal AI</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <style>
         /* ─── RESET & BASE ─── */
@@ -525,6 +524,28 @@
             margin-bottom: 6px;
         }
 
+        /* ─── CHAT MESSAGES ─── */
+        .chat-message {
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            max-width: 92%;
+            word-wrap: break-word;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .chat-message.user {
+            background: #1e293b;
+            align-self: flex-end;
+            margin-left: auto;
+            border: 1px solid #3b82f6;
+        }
+        .chat-message.ai {
+            background: #0f172a;
+            border: 1px solid #334155;
+            align-self: flex-start;
+        }
+
         /* ─── RESPONSIVE TWEAKS ─── */
         @media (max-width: 600px) {
             .timer {
@@ -584,6 +605,9 @@
                 padding: 4px 8px;
                 min-height: 28px;
             }
+            .chat-message {
+                max-width: 100%;
+            }
         }
 
         @media (max-width: 380px) {
@@ -636,11 +660,10 @@
         <button onclick="navigateTo('gpaHistory')" id="navGPAHistory">📜 GPA History</button>
         <button onclick="navigateTo('calendar')" id="navCalendar">📅 Academic Calendar</button>
         <button onclick="navigateTo('cgpaTracker')" id="navCGPA">📊 CGPA Tracker</button>
-        <button onclick="navigateTo('cutoff')" id="navCutoff">📊 Cut‑off Marks (2024/2025)</button>
+        <button onclick="navigateTo('cutoff')" id="navCutoff">📊 Cut‑off Marks</button>
         <button onclick="navigateTo('screening')" id="navScreening">🎯 Screening Calculator</button>
         <button onclick="navigateTo('countdown')" id="navCountdown">⏳ Exam Countdown</button>
         <button onclick="navigateTo('sessionLog')" id="navSessionLog">📝 Session Log</button>
-        <!-- NEW: PDF Library -->
         <button onclick="navigateTo('pdfLibrary')" id="navPdfLibrary">📄 PDF Library</button>
         <button class="close-btn" onclick="closeMenu()">✕ Close Menu</button>
     </div>
@@ -663,10 +686,22 @@
         <!-- ========== MAIN SECTION ========== -->
         <div class="page-section active" id="sectionMain">
 
-            <!-- AI CORE -->
+            <!-- AI CORE (Internal) -->
             <div class="card">
-                <h3>🧠 AI Study Interface</h3>
-                <textarea id="topic" placeholder="Enter topic (e.g., Calculus, Organic Chemistry, Python loops)..."></textarea>
+                <h3>🧠 AI Study Interface (Internal)</h3>
+
+                <!-- API Key Settings -->
+                <div style="display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap;">
+                    <input type="password" id="apiKeyInput" placeholder="Enter API key..." style="flex:3;margin-top:0;min-width:120px;">
+                    <select id="apiProvider" style="flex:1;margin-top:0;min-width:80px;">
+                        <option value="openai">OpenAI</option>
+                        <option value="gemini">Gemini</option>
+                    </select>
+                    <button onclick="saveApiKey()" class="secondary small-btn" style="width:auto;margin-top:0;min-height:44px;">💾 Save</button>
+                </div>
+
+                <!-- Mode & Topic Input -->
+                <textarea id="topic" placeholder="Ask anything..."></textarea>
                 <select id="mode">
                     <option value="tutorial">📖 Tutorial</option>
                     <option value="summary">📝 Summary</option>
@@ -674,7 +709,12 @@
                     <option value="revision">🔄 Revision Notes</option>
                     <option value="flashcards">🃏 Flashcards</option>
                 </select>
-                <button onclick="askAI()">🚀 Ask AI Now</button>
+                <button onclick="askAIInternal()">🚀 Ask AI (Internal)</button>
+
+                <!-- Chat History -->
+                <div id="chatHistory" style="margin-top:8px;max-height:300px;overflow-y:auto;background:#0f172a;border-radius:8px;padding:8px;border:1px solid #334155;display:flex;flex-direction:column;">
+                    <div class="small" style="text-align:center;color:#94a3b8;padding:8px;">Your conversation will appear here.</div>
+                </div>
             </div>
 
             <!-- DASHBOARD -->
@@ -994,7 +1034,7 @@
             </div>
         </div>
 
-        <!-- ========== PDF LIBRARY (NEW) ========== -->
+        <!-- ========== PDF LIBRARY ========== -->
         <div class="page-section" id="sectionPdfLibrary">
             <div class="card">
                 <h3>📄 PDF Library</h3>
@@ -1035,7 +1075,7 @@
 
     <script>
         /* ============================================================
-           GOATTUTOR NG v6 – COMPLETE WITH SCREENING CALCULATOR + PDF LIBRARY
+           GOATTUTOR v6 – Internal AI + All Features
            ============================================================ */
 
         // ─── GLOBAL STATE ───
@@ -1118,18 +1158,6 @@
 
         function hideNotification() {
             document.getElementById('notificationToast').classList.remove('show');
-        }
-
-        // ─── AI ───
-        function askAI() {
-            const t = document.getElementById('topic').value.trim();
-            const m = document.getElementById('mode').value;
-            if (!t) { showNotification('⚠️ Please enter a topic first!'); return; }
-            const prompt = 'Act as GoatTutor AI, an expert academic tutor. Mode: ' + m + '. Topic: ' + t +
-                '. Provide a clear, detailed, and helpful response suitable for a student. Format the response nicely.';
-            window.open('https://chatgpt.com/?q=' + encodeURIComponent(prompt), '_blank');
-            showNotification('🚀 Opening AI with your topic...');
-            logQuickAction('AI Query: ' + t + ' (' + m + ')');
         }
 
         // ─── DEGREE CLASS ───
@@ -1992,6 +2020,131 @@
                 .catch(() => showNotification('⚠️ Failed to copy.'));
         }
 
+        // ─── INTERNAL AI ───
+
+        // ─── API KEY SETTINGS ───
+        function saveApiKey() {
+            const key = document.getElementById('apiKeyInput').value.trim();
+            const provider = document.getElementById('apiProvider').value;
+            if (!key) { showNotification('⚠️ Please enter an API key.'); return; }
+            localStorage.setItem('apiKey', key);
+            localStorage.setItem('apiProvider', provider);
+            showNotification('✅ API key saved.');
+        }
+
+        function loadApiKey() {
+            const key = localStorage.getItem('apiKey') || '';
+            const provider = localStorage.getItem('apiProvider') || 'openai';
+            document.getElementById('apiKeyInput').value = key;
+            document.getElementById('apiProvider').value = provider;
+        }
+
+        // ─── INTERNAL AI CALL ───
+        async function askAIInternal() {
+            const topic = document.getElementById('topic').value.trim();
+            const mode = document.getElementById('mode').value;
+            const apiKey = localStorage.getItem('apiKey');
+            const provider = localStorage.getItem('apiProvider') || 'openai';
+
+            if (!topic) { showNotification('⚠️ Please enter a prompt.'); return; }
+            if (!apiKey) { showNotification('⚠️ Please set your API key first.'); return; }
+
+            // Mode prompts
+            const modePrompts = {
+                tutorial: "Act as GoatTutor AI, an expert tutor. Provide a clear, step-by-step tutorial on the following topic:",
+                summary: "Summarise the following text concisely, highlighting key points:",
+                mcq: "Generate a 5-question multiple-choice quiz with answers based on the following topic:",
+                revision: "Create concise revision notes with bullet points and key definitions for:",
+                flashcards: "Create 5 flashcards (Q&A format) for active recall on:"
+            };
+            const system = modePrompts[mode] || modePrompts.tutorial;
+            const fullPrompt = system + '\n\n' + topic;
+
+            // Show user message
+            addChatMessage('user', topic);
+            const loadingId = addChatMessage('ai', '⏳ Thinking...');
+
+            try {
+                let responseText = '';
+                if (provider === 'openai') {
+                    responseText = await callOpenAI(fullPrompt, apiKey);
+                } else if (provider === 'gemini') {
+                    responseText = await callGemini(fullPrompt, apiKey);
+                } else {
+                    throw new Error('Unknown provider');
+                }
+                updateChatMessage(loadingId, responseText);
+                document.getElementById('topic').value = ''; // clear for next input
+            } catch (err) {
+                updateChatMessage(loadingId, '❌ Error: ' + err.message);
+                showNotification('❌ AI request failed.');
+            }
+        }
+
+        // ─── OPENAI API ───
+        async function callOpenAI(prompt, apiKey) {
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + apiKey
+                },
+                body: JSON.stringify({
+                    model: 'gpt-3.5-turbo',
+                    messages: [{ role: 'user', content: prompt }],
+                    temperature: 0.7,
+                    max_tokens: 1000
+                })
+            });
+            if (!response.ok) {
+                const err = await response.json();
+                throw new Error(err.error?.message || 'OpenAI API error');
+            }
+            const data = await response.json();
+            return data.choices[0].message.content;
+        }
+
+        // ─── GOOGLE GEMINI API ───
+        async function callGemini(prompt, apiKey) {
+            const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=' + apiKey;
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }]
+                })
+            });
+            if (!response.ok) {
+                const err = await response.json();
+                throw new Error(err.error?.message || 'Gemini API error');
+            }
+            const data = await response.json();
+            return data.candidates[0].content.parts[0].text;
+        }
+
+        // ─── CHAT UI HELPERS ───
+        function addChatMessage(role, text) {
+            const history = document.getElementById('chatHistory');
+            // Remove placeholder if present
+            const placeholder = history.querySelector('.small');
+            if (placeholder && placeholder.textContent.includes('conversation')) {
+                placeholder.remove();
+            }
+            const id = 'msg-' + Date.now();
+            const div = document.createElement('div');
+            div.id = id;
+            div.className = 'chat-message ' + role;
+            div.textContent = text;
+            history.appendChild(div);
+            history.scrollTop = history.scrollHeight;
+            return id;
+        }
+
+        function updateChatMessage(id, newText) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = newText;
+        }
+
         // ─── PDF LIBRARY (IndexedDB) ───
         let db = null;
         const DB_NAME = 'GoatTutorDB';
@@ -2196,7 +2349,7 @@
             }
         }
 
-        // ─── PDF TO AI: SUMMARIZE & QUIZ ───
+        // ─── PDF TO INTERNAL AI ───
         async function extractPdfText(id) {
             try {
                 const file = await getFileById(id);
@@ -2220,7 +2373,6 @@
                     showNotification('⚠️ No text could be extracted from this PDF.');
                     return null;
                 }
-                // Truncate to keep the prompt manageable
                 return fullText.length > 6000 ? fullText.substring(0, 6000) + '... [truncated]' : fullText;
             } catch (err) {
                 console.error(err);
@@ -2232,21 +2384,20 @@
         async function summarizePdf(id) {
             const text = await extractPdfText(id);
             if (!text) return;
-            const prompt = `Please summarise the following text in a clear and structured way. Focus on the key points and main arguments. Format the summary with headings and bullet points where appropriate.\n\n${text}`;
-            document.getElementById('topic').value = prompt;
+            document.getElementById('topic').value = text;
             document.getElementById('mode').value = 'summary';
             navigateTo('main');
-            showNotification('📄 PDF text sent to AI for summarization.');
+            // Wait a moment for the section to render, then trigger AI
+            setTimeout(() => askAIInternal(), 300);
         }
 
         async function quizPdf(id) {
             const text = await extractPdfText(id);
             if (!text) return;
-            const prompt = `Based on the following text, generate a 5-question multiple-choice quiz to test understanding. Each question should have 4 options (A, B, C, D) and the correct answer should be clearly indicated.\n\n${text}`;
-            document.getElementById('topic').value = prompt;
+            document.getElementById('topic').value = text;
             document.getElementById('mode').value = 'mcq';
             navigateTo('main');
-            showNotification('📄 PDF text sent to AI for quiz generation.');
+            setTimeout(() => askAIInternal(), 300);
         }
 
         // ─── DRAG & DROP SUPPORT ───
@@ -2296,14 +2447,18 @@
             // PDF Library init
             loadPdfList();
             setupDragDrop();
+
+            // Load API key
+            loadApiKey();
         }
 
         document.getElementById('sidebarOverlay').addEventListener('click', closeMenu);
         document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeMenu(); });
 
         init();
-        console.log('🐐 GoatTutor NG v6 – PDF Library with Summarize & Quiz added.');
+        console.log('🐐 GoatTutor NG v6 – Internal AI integrated.');
     </script>
+    <!-- Clarity Tracking -->
     <script type="text/javascript">
         (function(c,l,a,r,i,t,y){
             c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
