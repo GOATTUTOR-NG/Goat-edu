@@ -1068,7 +1068,7 @@
 
     <script>
         /* ============================================================
-           GOATTUTOR v6 – Free AI + All Features
+           GOATTUTOR v6 – Free AI + All Features (FIXED)
            ============================================================ */
 
         // ─── GLOBAL STATE ───
@@ -1141,7 +1141,8 @@
         }
 
         // ─── NOTIFICATIONS ───
-        function showNotification(message, duration = 3500) {
+        function showNotification(message, duration) {
+            if (duration === undefined) duration = 3500;
             const toast = document.getElementById('notificationToast');
             document.getElementById('notificationText').textContent = message;
             toast.classList.add('show');
@@ -1175,7 +1176,6 @@
                 return;
             }
 
-            // Mode-specific system prompts
             const modePrompts = {
                 tutorial: "Provide a clear, step-by-step tutorial on:",
                 summary: "Summarise the following text concisely:",
@@ -1186,12 +1186,10 @@
             const system = modePrompts[mode] || modePrompts.tutorial;
             const fullPrompt = system + '\n\n' + topic;
 
-            // Show user message
             addChatMessage('user', topic);
             const loadingId = addChatMessage('ai', '⏳ Free AI thinking...');
 
             try {
-                // Using Hugging Face's free inference API (no key required)
                 const response = await fetch('https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill', {
                     method: 'POST',
                     headers: {
@@ -1207,14 +1205,13 @@
                 const data = await response.json();
                 let reply = data.generated_text || data[0]?.generated_text || 'No response.';
 
-                // Remove the prompt from the reply if it echoes it back
                 if (reply.startsWith(fullPrompt)) {
                     reply = reply.slice(fullPrompt.length).trim();
                 }
                 if (!reply) reply = 'No response.';
 
                 updateChatMessage(loadingId, reply);
-                document.getElementById('topic').value = ''; // clear input
+                document.getElementById('topic').value = '';
             } catch (err) {
                 updateChatMessage(loadingId, '❌ Free AI is busy. Please try again later.');
                 showNotification('⚠️ Free AI service unavailable.');
@@ -1224,7 +1221,6 @@
         // ─── CHAT UI HELPERS ───
         function addChatMessage(role, text) {
             const history = document.getElementById('chatHistory');
-            // Remove placeholder if present
             const placeholder = history.querySelector('.small');
             if (placeholder && placeholder.textContent.includes('conversation')) {
                 placeholder.remove();
@@ -1388,13 +1384,10 @@
                 showNotification('⚠️ No valid courses to calculate.');
                 return;
             }
-            let totalPoints = 0,
-                totalUnits = 0;
-            data.courses.forEach(c => { totalPoints += c.units * c.gradePoint;
-                totalUnits += c.units; });
+            let totalPoints = 0, totalUnits = 0;
+            data.courses.forEach(c => { totalPoints += c.units * c.gradePoint; totalUnits += c.units; });
             const gpa = (totalPoints / totalUnits).toFixed(2);
-            document.getElementById('semesterGpaOut').innerHTML = '📊 Semester GPA: <strong>' + gpa + '</strong> / 5.0 (' +
-                totalUnits + ' units)';
+            document.getElementById('semesterGpaOut').innerHTML = '📊 Semester GPA: <strong>' + gpa + '</strong> / 5.0 (' + totalUnits + ' units)';
             return { gpa: parseFloat(gpa), totalUnits };
         }
 
@@ -1404,10 +1397,8 @@
                 showNotification('⚠️ Add at least one valid course with units before saving.');
                 return;
             }
-            let totalPoints = 0,
-                totalUnits = 0;
-            data.courses.forEach(c => { totalPoints += c.units * c.gradePoint;
-                totalUnits += c.units; });
+            let totalPoints = 0, totalUnits = 0;
+            data.courses.forEach(c => { totalPoints += c.units * c.gradePoint; totalUnits += c.units; });
             const gpa = parseFloat((totalPoints / totalUnits).toFixed(2));
 
             const semester = {
@@ -1499,10 +1490,8 @@
                 updateDash();
                 return;
             }
-            let totalPoints = 0,
-                totalUnits = 0;
-            semesters.forEach(s => { totalPoints += s.gpa * s.totalUnits;
-                totalUnits += s.totalUnits; });
+            let totalPoints = 0, totalUnits = 0;
+            semesters.forEach(s => { totalPoints += s.gpa * s.totalUnits; totalUnits += s.totalUnits; });
             const cgpa = totalUnits > 0 ? (totalPoints / totalUnits) : 0;
             const last = semesters[semesters.length - 1];
             localStorage.setItem('gpa', last.gpa.toFixed(2));
@@ -1512,8 +1501,7 @@
 
         function initGPASection() {
             const rows = document.querySelectorAll('#semesterCourseBox .course-row');
-            if (rows.length === 0) { courseRowCounter = 0;
-                addCourseRow(); } else { courseRowCounter = rows.length; }
+            if (rows.length === 0) { courseRowCounter = 0; addCourseRow(); } else { courseRowCounter = rows.length; }
             renderSavedSemesters();
             updateDashFromSemesters();
             renderCGPATracker();
@@ -1544,8 +1532,7 @@
         }
 
         function calcCGPA() {
-            let total = 0,
-                units = 0;
+            let total = 0, units = 0;
             const rows = document.querySelectorAll('#cgpaBox .row');
             rows.forEach(row => {
                 const id = row.id.replace('cgpaRow', '');
@@ -1566,8 +1553,7 @@
                 return;
             }
             const cgpa = (total / units).toFixed(2);
-            document.getElementById('cgpaOut').innerHTML = '✅ CGPA: <strong>' + cgpa + '</strong> / 5.0 &nbsp;|&nbsp; Class: ' +
-                getDegreeClass(cgpa);
+            document.getElementById('cgpaOut').innerHTML = '✅ CGPA: <strong>' + cgpa + '</strong> / 5.0 &nbsp;|&nbsp; Class: ' + getDegreeClass(cgpa);
             showNotification('📈 CGPA calculated: ' + cgpa);
         }
 
@@ -1608,8 +1594,7 @@
             });
 
             if (upcomingEvents.length === 0) {
-                container.innerHTML =
-                    '<span class="small" style="display:block;text-align:center;padding:10px;">No upcoming events. Check back later.</span>';
+                container.innerHTML = '<span class="small" style="display:block;text-align:center;padding:10px;">No upcoming events. Check back later.</span>';
                 document.getElementById('calendarCountdown').innerText = '--';
                 return;
             }
@@ -1620,8 +1605,7 @@
             let html = '';
             nextFive.forEach((event, index) => {
                 const isNext = index === 0;
-                const dateStr = event.dateObj.toLocaleDateString('en-GB', { day: 'numeric', month: 'short',
-                    year: 'numeric' });
+                const dateStr = event.dateObj.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
                 html += `
                     <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #334155;${isNext ? 'background:#1a2a4a;padding:8px 10px;border-radius:6px;margin-bottom:4px;' : ''}">
                         <span style="${isNext ? 'font-weight:600;color:#fbbf24;' : ''}">${isNext ? '🔴 ' : ''}${event.title}</span>
@@ -1631,8 +1615,7 @@
             });
 
             if (upcomingEvents.length > 5) {
-                html += '<div class="small" style="text-align:center;padding:4px;">+ ' + (upcomingEvents.length - 5) +
-                    ' more events</div>';
+                html += '<div class="small" style="text-align:center;padding:4px;">+ ' + (upcomingEvents.length - 5) + ' more events</div>';
             }
 
             container.innerHTML = html;
@@ -1679,8 +1662,7 @@
 
             const sorted = [...semesters].sort((a, b) => new Date(a.date) - new Date(b.date));
 
-            let totalPoints = 0,
-                totalUnits = 0;
+            let totalPoints = 0, totalUnits = 0;
             sorted.forEach(s => {
                 totalPoints += s.gpa * s.totalUnits;
                 totalUnits += s.totalUnits;
@@ -1923,8 +1905,7 @@
         }
 
         function resetAnalysis() {
-            document.getElementById('analysisBox').innerHTML =
-                '<span class="small">No analysis yet. Click "Run Full Analysis" to begin.</span>';
+            document.getElementById('analysisBox').innerHTML = '<span class="small">No analysis yet. Click "Run Full Analysis" to begin.</span>';
             showNotification('🔄 Analysis reset.');
         }
 
@@ -1962,8 +1943,7 @@
             const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
             const minutes = Math.floor((diff / (1000 * 60)) % 60);
             const seconds = Math.floor((diff / 1000) % 60);
-            display.innerText = String(days).padStart(2, '0') + ':' + String(hours).padStart(2, '0') + ':' + String(minutes)
-                .padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+            display.innerText = String(days).padStart(2, '0') + ':' + String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
             labelEl.innerText = label + ' — ' + days + ' days remaining';
         }
 
@@ -2074,8 +2054,7 @@
             const log = JSON.parse(localStorage.getItem('sessionLog')) || [];
             const container = document.getElementById('sessionLogList');
             if (log.length === 0) {
-                container.innerHTML =
-                    '<span class="small">No sessions recorded yet. Use the Study Tracker to log sessions.</span>';
+                container.innerHTML = '<span class="small">No sessions recorded yet. Use the Study Tracker to log sessions.</span>';
                 return;
             }
             const reversed = [...log].reverse();
@@ -2402,7 +2381,6 @@
                 semCounter = cgpaRows.length;
             }
 
-            // PDF Library init
             loadPdfList();
             setupDragDrop();
         }
