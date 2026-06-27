@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-    <title>GoatTutor NG v6 – Smart Dashboard</title>
+    <title>GoatTutor NG v6 – User Accounts</title>
+    <!-- Firebase SDKs (Compat version – works in regular HTML) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <style>
         /* ─── RESET & BASE ─── */
@@ -60,6 +64,29 @@
             background: #334155;
         }
 
+        .topbar .auth-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+        .topbar .auth-status button {
+            width: auto;
+            padding: 4px 12px;
+            margin: 0;
+            font-size: 0.7rem;
+            min-height: 30px;
+            background: #dc2626;
+        }
+        .topbar .auth-status button:hover {
+            background: #b91c1c;
+        }
+        .topbar .auth-status .user-email {
+            color: #fbbf24;
+            font-weight: 500;
+        }
+
         /* ─── SIDEBAR OVERLAY ─── */
         .sidebar-overlay {
             position: fixed;
@@ -104,7 +131,6 @@
             text-transform: uppercase;
         }
 
-        /* ─── SIDEBAR GROUP STYLES ─── */
         .sidebar-group {
             margin-top: 2px;
         }
@@ -173,7 +199,6 @@
             font-weight: 600 !important;
         }
 
-        /* ─── SIDEBAR REGULAR BUTTONS ─── */
         .sidebar button:not(.sidebar-group-btn):not(.sidebar-group-items button) {
             width: 100%;
             padding: 12px 14px;
@@ -641,6 +666,93 @@
             align-self: flex-start;
         }
 
+        /* ─── STUDY STREAK ─── */
+        .streak-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 6px 0;
+        }
+        .streak-grid .stat {
+            background: #0f172a;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #334155;
+        }
+        .streak-grid .stat .number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fbbf24;
+        }
+        .streak-grid .stat .label {
+            font-size: 0.65rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            background: #1e293b;
+            color: #fbbf24;
+            margin-top: 4px;
+        }
+
+        /* ─── AUTH MODAL ─── */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 300;
+            justify-content: center;
+            align-items: center;
+        }
+        .auth-modal.show {
+            display: flex;
+        }
+        .auth-modal .auth-box {
+            background: #1e293b;
+            padding: 24px;
+            border-radius: 16px;
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid #334155;
+        }
+        .auth-modal .auth-box h2 {
+            color: #fbbf24;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .auth-modal .auth-box input {
+            margin-bottom: 8px;
+        }
+        .auth-modal .auth-box .auth-toggle {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            text-align: center;
+            margin-top: 8px;
+        }
+        .auth-modal .auth-box .auth-toggle span {
+            color: #3b82f6;
+            cursor: pointer;
+        }
+        .auth-modal .auth-box .auth-toggle span:hover {
+            text-decoration: underline;
+        }
+        .auth-modal .auth-box .auth-error {
+            color: #ef4444;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 6px;
+        }
+
         /* ─── RESPONSIVE TWEAKS ─── */
         @media (max-width: 600px) {
             .timer {
@@ -745,41 +857,6 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #64748b;
         }
-
-        /* ─── STUDY STREAK ─── */
-        .streak-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin: 6px 0;
-        }
-        .streak-grid .stat {
-            background: #0f172a;
-            border-radius: 8px;
-            padding: 10px;
-            text-align: center;
-            border: 1px solid #334155;
-        }
-        .streak-grid .stat .number {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #fbbf24;
-        }
-        .streak-grid .stat .label {
-            font-size: 0.65rem;
-            color: #94a3b8;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-        .badge {
-            display: inline-block;
-            padding: 4px 14px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            background: #1e293b;
-            color: #fbbf24;
-            margin-top: 4px;
-        }
     </style>
 </head>
 <body>
@@ -790,8 +867,6 @@
     <!-- ─── SIDEBAR ─── -->
     <div class="sidebar" id="sidebar">
         <h3>📋 Navigation</h3>
-
-        <!-- Dashboard -->
         <button class="active-nav" onclick="navigateTo('main')" id="navMain">🏠 Dashboard</button>
 
         <!-- ─── GROUP 1: ACADEMICS ─── -->
@@ -846,6 +921,21 @@
         <button class="close-btn" onclick="closeMenu()">✕ Close Menu</button>
     </div>
 
+    <!-- ─── AUTH MODAL ─── -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-box">
+            <h2 id="authTitle">🔐 Sign Up</h2>
+            <input type="email" id="authEmail" placeholder="Email" />
+            <input type="password" id="authPassword" placeholder="Password (min 6 chars)" />
+            <button id="authButton" onclick="handleAuth()">Sign Up</button>
+            <div class="auth-toggle">
+                <span id="authToggleText">Already have an account? <span onclick="toggleAuthMode()">Login</span></span>
+            </div>
+            <div class="auth-error" id="authError"></div>
+            <button onclick="closeAuthModal()" class="secondary small-btn" style="width:auto;margin-top:8px;">Close</button>
+        </div>
+    </div>
+
     <!-- ─── NOTIFICATION TOAST ─── -->
     <div class="notification-toast" id="notificationToast">
         <span class="close-toast" onclick="hideNotification()">✕</span>
@@ -855,7 +945,13 @@
     <!-- ─── TOP BAR ─── -->
     <div class="topbar">
         <div class="logo">🐐 GoatTutor NG v6</div>
-        <button class="menuBtn" onclick="toggleMenu()" aria-label="Open menu">☰</button>
+        <div style="display:flex;align-items:center;gap:8px;">
+            <div class="auth-status" id="authStatus">
+                <span id="userDisplay">👤 Guest</span>
+                <button onclick="showAuthModal()" id="authActionBtn">Login</button>
+            </div>
+            <button class="menuBtn" onclick="toggleMenu()" aria-label="Open menu">☰</button>
+        </div>
     </div>
 
     <!-- ─── MAIN CONTENT ─── -->
@@ -913,17 +1009,17 @@
                 </div>
             </div>
 
-            <!-- STUDY STREAK CARD -->
+            <!-- STUDY STREAK -->
             <div class="card">
                 <h3>🔥 Study Streak</h3>
                 <div class="streak-grid">
                     <div class="stat">
                         <div class="number" id="currentStreak">0</div>
-                        <div class="label">Current Streak</div>
+                        <div class="label">Current</div>
                     </div>
                     <div class="stat">
                         <div class="number" id="bestStreak">0</div>
-                        <div class="label">Best Streak</div>
+                        <div class="label">Best</div>
                     </div>
                     <div class="stat">
                         <div class="number" id="totalStudyDays">0</div>
@@ -937,7 +1033,7 @@
                 <button onclick="resetStreakStats()" class="danger small-btn" style="width:auto;margin-top:4px;">🔄 Reset Stats</button>
             </div>
 
-            <!-- QUICK ACTIONS: GPA, CGPA, TIMER -->
+            <!-- QUICK ACTIONS -->
             <div class="card">
                 <h3>⚡ Quick Actions</h3>
                 <div class="quick-grid">
@@ -1301,8 +1397,23 @@
 
     <script>
         /* ============================================================
-           GOATTUTOR v6 – Smart Dashboard + Study Streak
+           GOATTUTOR v6 – Full User Accounts with Firebase
            ============================================================ */
+
+        // ─── FIREBASE CONFIG (YOUR CONFIG INSERTED) ───
+        const firebaseConfig = {
+            apiKey: "AIzaSyB-3UXCEekG1u657jtDwMtCIZW0EwX9L0E",
+            authDomain: "dayveedo.firebaseapp.com",
+            projectId: "dayveedo",
+            storageBucket: "dayveedo.firebasestorage.app",
+            messagingSenderId: "576630332768",
+            appId: "1:576630332768:web:cba937cfeb898d35259205"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
         // ─── GLOBALS ───
         let timerSeconds = 1500;
@@ -1312,6 +1423,158 @@
         let sessionActive = false;
         let courseRowCounter = 1;
         let semCounter = 1;
+        let currentUser = null;
+        let userDocRef = null;
+
+        // ─── AUTH STATE ───
+        auth.onAuthStateChanged(async user => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('userDisplay').innerHTML = `👤 ${user.email}`;
+                document.getElementById('authActionBtn').innerText = 'Logout';
+                document.getElementById('authActionBtn').onclick = () => { auth.signOut(); };
+                // Load user data from Firestore
+                userDocRef = db.collection('users').doc(user.uid);
+                const doc = await userDocRef.get();
+                if (doc.exists) {
+                    loadUserData(doc.data());
+                } else {
+                    // Create default user document
+                    await userDocRef.set({
+                        email: user.email,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+                // Sync local data to cloud
+                syncLocalToCloud();
+                showNotification('✅ Welcome back, ' + user.email);
+            } else {
+                currentUser = null;
+                userDocRef = null;
+                document.getElementById('userDisplay').innerHTML = '👤 Guest';
+                document.getElementById('authActionBtn').innerText = 'Login';
+                document.getElementById('authActionBtn').onclick = () => showAuthModal();
+                // Load local data
+                loadLocalData();
+            }
+            updateDash();
+        });
+
+        // ─── AUTH MODAL ───
+        let isLoginMode = false;
+
+        function showAuthModal() {
+            document.getElementById('authModal').classList.add('show');
+            document.getElementById('authTitle').innerText = isLoginMode ? '🔐 Login' : '🔐 Sign Up';
+            document.getElementById('authButton').innerText = isLoginMode ? 'Login' : 'Sign Up';
+            document.getElementById('authToggleText').innerHTML = isLoginMode ?
+                'Don\'t have an account? <span onclick="toggleAuthMode()">Sign Up</span>' :
+                'Already have an account? <span onclick="toggleAuthMode()">Login</span>';
+            document.getElementById('authError').innerText = '';
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.remove('show');
+        }
+
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            showAuthModal();
+        }
+
+        async function handleAuth() {
+            const email = document.getElementById('authEmail').value.trim();
+            const password = document.getElementById('authPassword').value;
+            const errorEl = document.getElementById('authError');
+            if (!email || !password) { errorEl.innerText = 'Please fill in all fields.'; return; }
+            try {
+                if (isLoginMode) {
+                    await auth.signInWithEmailAndPassword(email, password);
+                } else {
+                    await auth.createUserWithEmailAndPassword(email, password);
+                }
+                closeAuthModal();
+            } catch (err) {
+                errorEl.innerText = err.message;
+            }
+        }
+
+        // ─── DATA SYNC ───
+        function loadLocalData() {
+            // All data is already read from localStorage by existing functions.
+            // Just call update UI functions.
+            updateStreakUI();
+            renderSavedSemesters();
+            renderCGPATracker();
+            renderCutoffMarks();
+            loadPdfList();
+            renderReminders();
+            renderSessionLog();
+            loadPlan(true);
+            updateDash();
+        }
+
+        function loadUserData(data) {
+            // Overwrite localStorage with cloud data
+            if (data.streak) localStorage.setItem('streak', data.streak);
+            if (data.bestStreak) localStorage.setItem('bestStreak', data.bestStreak);
+            if (data.totalStudyDays) localStorage.setItem('totalStudyDays', data.totalStudyDays);
+            if (data.lastStudyDay) localStorage.setItem('lastStudyDay', data.lastStudyDay);
+            if (data.semesters) localStorage.setItem('semesters', JSON.stringify(data.semesters));
+            if (data.gpa) localStorage.setItem('gpa', data.gpa);
+            if (data.cgpa) localStorage.setItem('cgpa', data.cgpa);
+            if (data.studyMinutes) localStorage.setItem('studyMinutes', data.studyMinutes);
+            if (data.plan) localStorage.setItem('plan', data.plan);
+            if (data.sessionLog) localStorage.setItem('sessionLog', JSON.stringify(data.sessionLog));
+            if (data.pdfs) {
+                localStorage.setItem('pdfsCloud', JSON.stringify(data.pdfs));
+            }
+            if (data.reminders) localStorage.setItem('reminders', JSON.stringify(data.reminders));
+            if (data.examDate) localStorage.setItem('examDate', data.examDate);
+            if (data.examLabel) localStorage.setItem('examLabel', data.examLabel);
+            // Refresh UI
+            updateDash();
+            updateStreakUI();
+            renderSavedSemesters();
+            renderCGPATracker();
+            renderCutoffMarks();
+            loadPdfList();
+            renderReminders();
+            renderSessionLog();
+            loadPlan(true);
+            updateCountdownDisplay();
+            showNotification('📥 Data synced from cloud.');
+        }
+
+        async function syncLocalToCloud() {
+            if (!currentUser) return;
+            try {
+                const data = {
+                    streak: parseInt(localStorage.getItem('streak')) || 0,
+                    bestStreak: parseInt(localStorage.getItem('bestStreak')) || 0,
+                    totalStudyDays: parseInt(localStorage.getItem('totalStudyDays')) || 0,
+                    lastStudyDay: localStorage.getItem('lastStudyDay') || '',
+                    semesters: JSON.parse(localStorage.getItem('semesters') || '[]'),
+                    gpa: localStorage.getItem('gpa') || '',
+                    cgpa: localStorage.getItem('cgpa') || '',
+                    studyMinutes: parseInt(localStorage.getItem('studyMinutes')) || 0,
+                    plan: localStorage.getItem('plan') || '',
+                    sessionLog: JSON.parse(localStorage.getItem('sessionLog') || '[]'),
+                    reminders: JSON.parse(localStorage.getItem('reminders') || '[]'),
+                    examDate: localStorage.getItem('examDate') || '',
+                    examLabel: localStorage.getItem('examLabel') || ''
+                };
+                await userDocRef.set(data, { merge: true });
+                console.log('✅ Data synced to cloud.');
+            } catch (err) {
+                console.error('Sync error:', err);
+            }
+        }
+
+        // Auto-sync every 30 seconds if logged in
+        setInterval(() => {
+            if (currentUser) syncLocalToCloud();
+        }, 30000);
 
         // ─── MENU & NAVIGATION ───
         function toggleMenu() {
@@ -1324,18 +1587,15 @@
             document.getElementById('sidebarOverlay').classList.remove('show');
         }
 
-        // ─── SIDEBAR GROUP TOGGLE ───
         function toggleGroup(groupId) {
             const items = document.getElementById(groupId + 'Items');
             const btn = document.getElementById('group' + groupId.charAt(0).toUpperCase() + groupId.slice(1));
             if (!items) return;
-
             items.classList.toggle('open');
             if (btn) {
                 const arrow = btn.querySelector('.arrow');
                 if (arrow) arrow.classList.toggle('open');
             }
-
             const states = JSON.parse(localStorage.getItem('sidebarGroups') || '{}');
             states[groupId] = items.classList.contains('open');
             localStorage.setItem('sidebarGroups', JSON.stringify(states));
@@ -1356,7 +1616,6 @@
             });
         }
 
-        // ─── NAVIGATION MAP ───
         const sectionMap = {
             'main': 'sectionMain',
             'gpaCalculator': 'sectionGPACalculator',
@@ -1374,7 +1633,6 @@
             'pdfLibrary': 'sectionPdfLibrary',
             'reminders': 'sectionReminders'
         };
-
         const navMap = {
             'main': 'navMain',
             'cgpaTracker': 'navCGPA2',
@@ -1396,15 +1654,11 @@
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
             const targetId = sectionMap[section];
             if (targetId) document.getElementById(targetId).classList.add('active');
-
             document.querySelectorAll('.sidebar button').forEach(b => b.classList.remove('active-nav'));
             document.querySelectorAll('.sidebar-group-items button').forEach(b => b.classList.remove('active-nav'));
-
             const navBtnId = navMap[section];
             if (navBtnId) document.getElementById(navBtnId).classList.add('active-nav');
-
             window.scrollTo({ top: 0, behavior: 'smooth' });
-
             if (section === 'planner') loadPlan(true);
             if (section === 'gpaHistory') renderSavedSemesters();
             if (section === 'calendar') renderAcademicCalendar();
@@ -1430,16 +1684,16 @@
             document.getElementById('notificationToast').classList.remove('show');
         }
 
-        // ─── AI: ChatGPT Redirect ───
+        // ─── AI ───
         function askAI() {
             const t = document.getElementById('topic').value.trim();
             const m = document.getElementById('mode').value;
-            if (!t) { showNotification('⚠️ Please enter a topic first!'); return; }
+            if (!t) { showNotification('⚠️ Enter a topic.'); return; }
             const prompt = 'Act as GoatTutor AI, an expert academic tutor. Mode: ' + m + '. Topic: ' + t +
-                '. Provide a clear, detailed, and helpful response suitable for a student.';
+                '. Provide a clear, detailed, and helpful response.';
             window.open('https://chatgpt.com/?q=' + encodeURIComponent(prompt), '_blank');
-            showNotification('🚀 Opening ChatGPT with your topic...');
-            logQuickAction('AI Query: ' + t + ' (' + m + ')');
+            showNotification('🚀 Opening ChatGPT...');
+            logQuickAction('AI Query: ' + t);
         }
 
         // ─── DEGREE CLASS ───
@@ -1462,7 +1716,7 @@
             return '🔴 Needs Improvement';
         }
 
-        // ─── STREAK, HOURS, SESSIONS ───
+        // ─── STREAK ───
         function updateStreak() {
             const today = new Date().toDateString();
             const lastVisit = localStorage.getItem('lastVisit');
@@ -1474,12 +1728,11 @@
                 else streak = 1;
                 localStorage.setItem('streak', streak);
                 localStorage.setItem('lastVisit', today);
-                if (streak > 1) showNotification('🔥 Study Streak: ' + streak + ' days! Keep going!');
+                if (streak > 1) showNotification('🔥 Streak: ' + streak + ' days!');
             }
             document.getElementById('streakDisplay').innerText = localStorage.getItem('streak') || 1;
         }
 
-        // ─── STUDY STREAK FEATURE ───
         function getStreakStats() {
             const streak = parseInt(localStorage.getItem('streak')) || 0;
             const bestStreak = parseInt(localStorage.getItem('bestStreak')) || 0;
@@ -1492,14 +1745,13 @@
             document.getElementById('currentStreak').innerText = stats.streak;
             document.getElementById('bestStreak').innerText = stats.bestStreak;
             document.getElementById('totalStudyDays').innerText = stats.totalDays;
-
             const badge = document.getElementById('streakBadge');
-            if (stats.streak >= 100) badge.innerText = '🏆 Legendary (100+ days)';
-            else if (stats.streak >= 30) badge.innerText = '🥇 Elite (30+ days)';
-            else if (stats.streak >= 14) badge.innerText = '🥈 Dedicated (14+ days)';
-            else if (stats.streak >= 7) badge.innerText = '🥉 Consistent (7+ days)';
+            if (stats.streak >= 100) badge.innerText = '🏆 Legendary';
+            else if (stats.streak >= 30) badge.innerText = '🥇 Elite';
+            else if (stats.streak >= 14) badge.innerText = '🥈 Dedicated';
+            else if (stats.streak >= 7) badge.innerText = '🥉 Consistent';
             else if (stats.streak >= 3) badge.innerText = '💪 Getting Started';
-            else badge.innerText = '📚 Start your streak today!';
+            else badge.innerText = '📚 Start your streak!';
         }
 
         function logStudyDay() {
@@ -1508,18 +1760,11 @@
             const streak = parseInt(localStorage.getItem('streak')) || 0;
             const bestStreak = parseInt(localStorage.getItem('bestStreak')) || 0;
             const totalDays = parseInt(localStorage.getItem('totalStudyDays')) || 0;
-
-            if (lastStudy === today) {
-                showNotification('✅ You already logged today!');
-                return;
-            }
-
+            if (lastStudy === today) { showNotification('✅ Already logged today.'); return; }
             const yesterday = new Date();
             yesterday.setDate(yesterday.getDate() - 1);
             let newStreak = 1;
-            if (lastStudy === yesterday.toDateString()) {
-                newStreak = streak + 1;
-            }
+            if (lastStudy === yesterday.toDateString()) newStreak = streak + 1;
             localStorage.setItem('streak', newStreak);
             localStorage.setItem('lastStudyDay', today);
             localStorage.setItem('totalStudyDays', totalDays + 1);
@@ -1527,22 +1772,23 @@
                 localStorage.setItem('bestStreak', newStreak);
                 showNotification('🎉 New best streak: ' + newStreak + ' days!');
             } else {
-                showNotification('🔥 Streak: ' + newStreak + ' days! Keep going!');
+                showNotification('🔥 Streak: ' + newStreak + ' days!');
             }
-            // Also update the dashboard streak display
             document.getElementById('streakDisplay').innerText = newStreak;
             updateStreakUI();
+            if (currentUser) syncLocalToCloud();
         }
 
         function resetStreakStats() {
-            if (!confirm('Reset all streak stats? This cannot be undone.')) return;
+            if (!confirm('Reset all streak stats?')) return;
             localStorage.removeItem('streak');
             localStorage.removeItem('bestStreak');
             localStorage.removeItem('totalStudyDays');
             localStorage.removeItem('lastStudyDay');
             updateStreakUI();
             document.getElementById('streakDisplay').innerText = '0';
-            showNotification('🔄 Streak stats reset.');
+            showNotification('🔄 Streak reset.');
+            if (currentUser) syncLocalToCloud();
         }
 
         function updateStudyHours() {
@@ -1554,10 +1800,11 @@
             const current = parseInt(localStorage.getItem('studyMinutes')) || 0;
             localStorage.setItem('studyMinutes', current + minutes);
             updateStudyHours();
+            if (currentUser) syncLocalToCloud();
         }
 
         function getSessionCount() {
-            const log = JSON.parse(localStorage.getItem('sessionLog')) || [];
+            const log = JSON.parse(localStorage.getItem('sessionLog') || '[]');
             return log.length;
         }
 
@@ -1565,7 +1812,6 @@
             document.getElementById('sessionCountDisplay').innerText = getSessionCount();
         }
 
-        // ─── DASHBOARD UPDATE ───
         function updateDash() {
             const gpa = localStorage.getItem('gpa') || '--';
             const cgpa = localStorage.getItem('cgpa') || '--';
@@ -1692,33 +1938,32 @@
             renderSavedSemesters();
             updateDashFromSemesters();
             renderCGPATracker();
-            showNotification('💾 Semester "' + data.title + '" saved with GPA ' + gpa.toFixed(2));
+            showNotification('💾 Semester saved.');
+            if (currentUser) syncLocalToCloud();
         }
 
         function deleteSemester(id) {
             let semesters = getSavedSemesters();
-            if (semesters.length === 0) { showNotification('⚠️ No semesters to delete.'); return; }
-            let targetId = id;
-            if (!targetId) {
-                const last = semesters[semesters.length - 1];
-                if (!confirm('Delete semester "' + last.title + '" (GPA: ' + last.gpa.toFixed(2) + ')?')) return;
-                targetId = last.id;
-            }
-            semesters = semesters.filter(s => s.id !== targetId);
+            if (!semesters.length) { showNotification('⚠️ No semesters.'); return; }
+            let target = id;
+            if (!target) { const last = semesters[semesters.length - 1]; if (!confirm('Delete "' + last.title + '"?')) return; target = last.id; }
+            semesters = semesters.filter(s => s.id !== target);
             saveSemestersToStorage(semesters);
             renderSavedSemesters();
             updateDashFromSemesters();
             renderCGPATracker();
-            showNotification('🗑 Semester deleted.');
+            showNotification('🗑 Deleted.');
+            if (currentUser) syncLocalToCloud();
         }
 
         function clearAllSemesters() {
-            if (!confirm('Delete ALL saved semesters? This cannot be undone.')) return;
+            if (!confirm('Delete all semesters?')) return;
             saveSemestersToStorage([]);
             renderSavedSemesters();
             updateDashFromSemesters();
             renderCGPATracker();
-            showNotification('🗑 All semesters cleared.');
+            showNotification('🗑 All cleared.');
+            if (currentUser) syncLocalToCloud();
         }
 
         function renderSavedSemesters() {
@@ -2353,13 +2598,13 @@
         }
 
         // ─── PDF LIBRARY ───
-        let db = null;
+        let dbPdf = null;
         const DB_NAME = 'GoatTutorDB';
         const STORE_NAME = 'pdfs';
 
         function openDB() {
             return new Promise((resolve, reject) => {
-                if (db) { resolve(db); return; }
+                if (dbPdf) { resolve(dbPdf); return; }
                 const request = indexedDB.open(DB_NAME, 1);
                 request.onupgradeneeded = (event) => {
                     const database = event.target.result;
@@ -2368,8 +2613,8 @@
                     }
                 };
                 request.onsuccess = (event) => {
-                    db = event.target.result;
-                    resolve(db);
+                    dbPdf = event.target.result;
+                    resolve(dbPdf);
                 };
                 request.onerror = (event) => {
                     reject(event.target.error);
@@ -2809,9 +3054,8 @@
         document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeMenu(); });
 
         init();
-        console.log('🐐 GoatTutor NG v6 – Smart Dashboard + Study Streak fixed.');
+        console.log('🐐 GoatTutor v6 – Full user accounts with Firebase.');
     </script>
-
     <!-- Clarity Tracking -->
     <script type="text/javascript">
         (function(c,l,a,r,i,t,y){
