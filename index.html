@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-    <title>GoatTutor NG v6</title>
+    <title>GoatTutor NG v6 – Smart Dashboard</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <style>
         /* ─── RESET & BASE ─── */
@@ -143,7 +143,7 @@
             padding-left: 8px;
         }
         .sidebar-group-items.open {
-            max-height: 500px;
+            max-height: 600px;
         }
         .sidebar-group-items button {
             width: 100% !important;
@@ -745,6 +745,41 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #64748b;
         }
+
+        /* ─── STUDY STREAK ─── */
+        .streak-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 6px 0;
+        }
+        .streak-grid .stat {
+            background: #0f172a;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #334155;
+        }
+        .streak-grid .stat .number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fbbf24;
+        }
+        .streak-grid .stat .label {
+            font-size: 0.65rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            background: #1e293b;
+            color: #fbbf24;
+            margin-top: 4px;
+        }
     </style>
 </head>
 <body>
@@ -826,7 +861,7 @@
     <!-- ─── MAIN CONTENT ─── -->
     <div class="container">
 
-        <!-- ========== MAIN SECTION ========== -->
+        <!-- ========== MAIN DASHBOARD ========== -->
         <div class="page-section active" id="sectionMain">
 
             <!-- AI CORE -->
@@ -878,6 +913,30 @@
                 </div>
             </div>
 
+            <!-- STUDY STREAK CARD -->
+            <div class="card">
+                <h3>🔥 Study Streak</h3>
+                <div class="streak-grid">
+                    <div class="stat">
+                        <div class="number" id="currentStreak">0</div>
+                        <div class="label">Current Streak</div>
+                    </div>
+                    <div class="stat">
+                        <div class="number" id="bestStreak">0</div>
+                        <div class="label">Best Streak</div>
+                    </div>
+                    <div class="stat">
+                        <div class="number" id="totalStudyDays">0</div>
+                        <div class="label">Total Days</div>
+                    </div>
+                </div>
+                <div style="text-align:center;">
+                    <span class="badge" id="streakBadge">💪 Getting Started</span>
+                </div>
+                <button onclick="logStudyDay()" class="secondary small-btn" style="width:auto;margin-top:6px;">✅ Log Today's Study</button>
+                <button onclick="resetStreakStats()" class="danger small-btn" style="width:auto;margin-top:4px;">🔄 Reset Stats</button>
+            </div>
+
             <!-- QUICK ACTIONS: GPA, CGPA, TIMER -->
             <div class="card">
                 <h3>⚡ Quick Actions</h3>
@@ -896,355 +955,353 @@
                     </div>
                 </div>
             </div>
-
-            <!-- GPA CALCULATOR (full version, now hidden behind quick action) -->
-            <div class="page-section" id="sectionGPACalculator">
-                <div class="card">
-                    <h3>📚 GPA Calculator – Semester View</h3>
-                    <div class="row">
-                        <input type="text" id="semesterTitle" placeholder="Semester (e.g., 100L First Sem)" style="flex:2;">
-                    </div>
-                    <div id="semesterCourseBox" style="margin-top:8px;">
-                        <div class="row course-row" id="courseRow1">
-                            <input type="text" id="cname1" placeholder="Course Name (e.g., CHM 101)" style="flex:2;">
-                            <input type="number" id="cunit1" placeholder="Units" min="0" step="0.5" style="flex:1;">
-                            <select id="cgrade1" style="flex:1;">
-                                <option value="5">A (5.0)</option>
-                                <option value="4">B (4.0)</option>
-                                <option value="3">C (3.0)</option>
-                                <option value="2">D (2.0)</option>
-                                <option value="1">E (1.0)</option>
-                                <option value="0">F (0.0)</option>
-                            </select>
-                            <button onclick="removeCourseRow(1)" class="danger small-btn" style="width:auto;flex:0;">✕</button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <button onclick="addCourseRow()" class="secondary" style="flex:1;">➕ Add Course</button>
-                        <button onclick="saveSemester()" style="flex:1;">💾 Save Semester</button>
-                        <button onclick="deleteSemester()" class="danger" style="flex:1;">🗑 Delete</button>
-                    </div>
-                    <button onclick="calcSemesterGPA()" class="secondary" style="margin-top:4px;">📊 Calculate GPA</button>
-                    <div id="semesterGpaOut" style="margin-top:6px;font-weight:600;color:#fbbf24;text-align:center;"></div>
-                </div>
-            </div>
-
-            <!-- CGPA CALCULATOR (full version, hidden) -->
-            <div class="page-section" id="sectionCGPACalculator">
-                <div class="card">
-                    <h3>📈 CGPA Calculator</h3>
-                    <p class="small">Enter semester GPAs and units to compute your cumulative GPA manually.</p>
-                    <div id="cgpaBox">
-                        <div class="row">
-                            <input type="number" id="cunit1_cgpa" placeholder="Semester Units" min="0" step="0.5" style="flex:1;">
-                            <input type="number" id="cgpa1_cgpa" placeholder="Semester GPA" min="0" max="5" step="0.01" style="flex:1;">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <button onclick="addCGPARow()" class="secondary" style="flex:1;">➕ Add Semester</button>
-                        <button onclick="calcCGPA()" style="flex:1;">📊 Calculate CGPA</button>
-                    </div>
-                    <div id="cgpaOut" style="margin-top:8px;font-weight:600;color:#fbbf24;text-align:center;"></div>
-                </div>
-            </div>
-
-            <!-- STUDY TIMER (full version, hidden) -->
-            <div class="page-section" id="sectionTimer">
-                <div class="card">
-                    <h3>⏱ Study Tracker</h3>
-                    <div class="timer" id="time">25:00</div>
-                    <div class="timer-row">
-                        <button onclick="startTimer()">▶ Start</button>
-                        <button onclick="pauseTimer()" class="secondary">⏸ Pause</button>
-                        <button onclick="resetTimer()" class="danger">↺ Reset</button>
-                    </div>
-                    <div class="small" style="text-align:center;margin-top:6px;">
-                        Session: <span id="sessionTimerStatus">Idle</span> |
-                        Pomodoro: <span id="pomodoroCount">0</span> completed
-                    </div>
-                </div>
-            </div>
-
-            <!-- The rest of the page-sections (CGPA Tracker, GPA History, Planner, etc.) remain as before -->
-            <!-- They are hidden unless navigated to from the sidebar -->
-            <!-- ========== CGPA TRACKER ========== -->
-            <div class="page-section" id="sectionCGPA">
-                <div class="card">
-                    <h3>📈 CGPA Tracker</h3>
-                    <p class="small">Track your CGPA progress across all saved semesters.</p>
-                    <div id="cgpaTrackerContent">
-                        <div class="small" style="text-align:center;padding:10px;">
-                            No semester data yet. Add and save semesters using the GPA Calculator.
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ========== GPA HISTORY ========== -->
-            <div class="page-section" id="sectionGPAHistory">
-                <div class="card">
-                    <h3>📜 GPA History (Saved Semesters)</h3>
-                    <div id="gpaHistoryList">
-                        <span class="small">No semesters saved yet.</span>
-                    </div>
-                    <button onclick="clearAllSemesters()" class="danger" style="margin-top:8px;">🗑 Clear All History</button>
-                </div>
-            </div>
-
-            <!-- ========== PLANNER ========== -->
-            <div class="page-section" id="sectionPlanner">
-                <div class="card">
-                    <h3>📅 Weekly Study Planner</h3>
-                    <textarea id="plan" placeholder="Write your weekly study plan here..."></textarea>
-                    <button onclick="savePlan()">💾 Save Plan</button>
-                    <button onclick="loadPlan()" class="secondary">📂 Load Saved Plan</button>
-                    <button onclick="clearPlan()" class="danger">🗑 Clear Plan</button>
-                    <div class="small" id="planStatus" style="margin-top:6px;"></div>
-                </div>
-            </div>
-
-            <!-- ========== ANALYZER ========== -->
-            <div class="page-section" id="sectionAnalyzer">
-                <div class="card">
-                    <h3>📊 Smart Performance Analyzer</h3>
-                    <button onclick="analyze()">🔍 Run Full Analysis</button>
-                    <div class="card" style="margin-top:10px;background:#0f172a;" id="analysisBox">
-                        <span class="small">No analysis yet. Click "Run Full Analysis" to begin.</span>
-                    </div>
-                    <button onclick="resetAnalysis()" class="secondary" style="margin-top:6px;">🔄 Reset Analysis</button>
-                </div>
-            </div>
-
-            <!-- ========== SESSION LOG ========== -->
-            <div class="page-section" id="sectionSessionLog">
-                <div class="card">
-                    <h3>📝 Study Session Log</h3>
-                    <div class="history-list" id="sessionLogList">
-                        <span class="small">No sessions recorded yet.</span>
-                    </div>
-                    <button onclick="clearSessionLog()" class="danger" style="margin-top:8px;">🗑 Clear Log</button>
-                    <button onclick="exportSessionLog()" class="secondary" style="margin-top:4px;">📋 Copy Log</button>
-                </div>
-            </div>
-
-            <!-- ========== ACADEMIC CALENDAR ========== -->
-            <div class="page-section" id="sectionCalendar">
-                <div class="card">
-                    <h3>📅 UNIOSUN Academic Calendar 2025/2026</h3>
-                    <p class="small">Key dates for the current academic session. The next event is highlighted with a countdown.</p>
-                    <div id="academicCalendarList">
-                        <span class="small" style="display:block;text-align:center;padding:10px;">Loading calendar...</span>
-                    </div>
-                    <div style="margin-top:8px;padding:10px;background:#0f172a;border-radius:8px;text-align:center;">
-                        <div style="font-size:0.75rem;color:#94a3b8;">⏳ Next Event In</div>
-                        <div id="calendarCountdown" style="font-size:1.4rem;font-weight:700;color:#fbbf24;font-family:'Courier New',monospace;">--</div>
-                    </div>
-                    <button onclick="viewFullCalendar()" class="secondary small-btn" style="width:auto;margin-top:4px;">📄 View Full Calendar</button>
-                </div>
-            </div>
-
-            <!-- ========== CUT-OFF MARKS ========== -->
-            <div class="page-section" id="sectionCutoff">
-                <div class="card">
-                    <h3>📊 UNIOSUN Cut‑off Marks 2024/2025</h3>
-                    <p class="small">
-                        ⚠️ <strong>Last year's data</strong> – Use this to predict your chances for the current session.
-                        Cut‑offs may change. Check the official portal for final decisions.
-                    </p>
-                    <div class="row" style="margin-top:6px;">
-                        <input type="text" id="cutoffSearch" placeholder="Search for a course..." style="flex:3;" onkeyup="filterCutoffMarks()">
-                        <select id="cutoffFaculty" style="flex:1;" onchange="filterCutoffMarks()">
-                            <option value="all">All Faculties</option>
-                            <option value="Agriculture">Agriculture</option>
-                            <option value="Education">Education</option>
-                            <option value="Science">Science</option>
-                            <option value="Social Sciences">Social Sciences</option>
-                            <option value="Law">Law</option>
-                            <option value="Medicine">Medicine</option>
-                            <option value="Engineering">Engineering</option>
-                            <option value="Arts">Arts</option>
-                            <option value="Management">Management</option>
-                        </select>
-                    </div>
-                    <div id="cutoffResults" style="margin-top:8px;max-height:300px;overflow-y:auto;">
-                        <span class="small">Loading cut-off marks...</span>
-                    </div>
-                    <div class="small" style="margin-top:4px;text-align:center;">
-                        GM = General Merit &nbsp;|&nbsp; IC = Indigene/Catchment<br>
-                        Scores are in % (screening aggregate).
-                    </div>
-                </div>
-            </div>
-
-            <!-- ========== SCREENING CALCULATOR ========== -->
-            <div class="page-section" id="sectionScreening">
-                <div class="card">
-                    <h3>🎯 UNIOSUN Screening Calculator</h3>
-                    <p class="small">Calculate your screening aggregate using your JAMB score and O'level grades for 5 relevant subjects.</p>
-
-                    <div class="row">
-                        <input type="number" id="jambScore" placeholder="JAMB Score (e.g., 280)" min="0" max="400" style="flex:2;">
-                    </div>
-
-                    <div class="row">
-                        <input type="text" id="subject1" placeholder="Subject 1 (e.g., English)" style="flex:2;">
-                        <select id="grade1" style="flex:1;">
-                            <option value="8">A1 (8)</option>
-                            <option value="7">B2 (7)</option>
-                            <option value="6">B3 (6)</option>
-                            <option value="5">C4 (5)</option>
-                            <option value="4">C5 (4)</option>
-                            <option value="3">C6 (3)</option>
-                            <option value="2">D7 (2)</option>
-                            <option value="1">E8 (1)</option>
-                            <option value="0">F9 (0)</option>
-                        </select>
-                    </div>
-                    <div class="row">
-                        <input type="text" id="subject2" placeholder="Subject 2 (e.g., Mathematics)" style="flex:2;">
-                        <select id="grade2" style="flex:1;">
-                            <option value="8">A1 (8)</option>
-                            <option value="7">B2 (7)</option>
-                            <option value="6">B3 (6)</option>
-                            <option value="5">C4 (5)</option>
-                            <option value="4">C5 (4)</option>
-                            <option value="3">C6 (3)</option>
-                            <option value="2">D7 (2)</option>
-                            <option value="1">E8 (1)</option>
-                            <option value="0">F9 (0)</option>
-                        </select>
-                    </div>
-                    <div class="row">
-                        <input type="text" id="subject3" placeholder="Subject 3" style="flex:2;">
-                        <select id="grade3" style="flex:1;">
-                            <option value="8">A1 (8)</option>
-                            <option value="7">B2 (7)</option>
-                            <option value="6">B3 (6)</option>
-                            <option value="5">C4 (5)</option>
-                            <option value="4">C5 (4)</option>
-                            <option value="3">C6 (3)</option>
-                            <option value="2">D7 (2)</option>
-                            <option value="1">E8 (1)</option>
-                            <option value="0">F9 (0)</option>
-                        </select>
-                    </div>
-                    <div class="row">
-                        <input type="text" id="subject4" placeholder="Subject 4" style="flex:2;">
-                        <select id="grade4" style="flex:1;">
-                            <option value="8">A1 (8)</option>
-                            <option value="7">B2 (7)</option>
-                            <option value="6">B3 (6)</option>
-                            <option value="5">C4 (5)</option>
-                            <option value="4">C5 (4)</option>
-                            <option value="3">C6 (3)</option>
-                            <option value="2">D7 (2)</option>
-                            <option value="1">E8 (1)</option>
-                            <option value="0">F9 (0)</option>
-                        </select>
-                    </div>
-                    <div class="row">
-                        <input type="text" id="subject5" placeholder="Subject 5" style="flex:2;">
-                        <select id="grade5" style="flex:1;">
-                            <option value="8">A1 (8)</option>
-                            <option value="7">B2 (7)</option>
-                            <option value="6">B3 (6)</option>
-                            <option value="5">C4 (5)</option>
-                            <option value="4">C5 (4)</option>
-                            <option value="3">C6 (3)</option>
-                            <option value="2">D7 (2)</option>
-                            <option value="1">E8 (1)</option>
-                            <option value="0">F9 (0)</option>
-                        </select>
-                    </div>
-
-                    <button onclick="calcUNIOSUN()">📊 Calculate Screening Score</button>
-                    <div id="uniosunResult" style="margin-top:8px;font-weight:600;color:#fbbf24;text-align:center;"></div>
-                </div>
-            </div>
-
-            <!-- ========== COUNTDOWN ========== -->
-            <div class="page-section" id="sectionCountdown">
-                <div class="card">
-                    <h3>⏳ Exam Countdown</h3>
-                    <div class="row">
-                        <input type="date" id="examDate" style="flex:2;">
-                        <input type="text" id="examLabel" placeholder="Exam name (e.g., MATH 101)" style="flex:2;">
-                    </div>
-                    <button onclick="setCountdown()">🎯 Set Countdown</button>
-                    <div class="countdown-display" id="countdownDisplay">--:--:--:--</div>
-                    <div class="countdown-label" id="countdownLabel">No exam set</div>
-                    <button onclick="clearCountdown()" class="secondary" style="margin-top:4px;">🔄 Clear Countdown</button>
-                </div>
-            </div>
-
-            <!-- ========== PDF LIBRARY ========== -->
-            <div class="page-section" id="sectionPdfLibrary">
-                <div class="card">
-                    <h3>📄 PDF Library</h3>
-                    <p class="small">Upload, view, summarise, or quiz your PDF study materials.</p>
-
-                    <div class="upload-area" id="uploadArea" onclick="document.getElementById('pdfUploadInput').click()">
-                        <div class="icon">📂</div>
-                        <div style="font-weight:500;">Click or drag & drop PDF files here</div>
-                        <div style="font-size:0.75rem;color:#94a3b8;margin-top:4px;">Max 50MB per file</div>
-                        <input type="file" id="pdfUploadInput" accept=".pdf,application/pdf" multiple style="display:none;" onchange="handleFileUpload(event)">
-                    </div>
-
-                    <div style="margin-top:10px;">
-                        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
-                            <span style="font-weight:600;font-size:0.9rem;">📑 My PDFs</span>
-                            <span style="font-size:0.75rem;color:#94a3b8;" id="pdfCount">0 files</span>
-                        </div>
-                        <div id="pdfList" style="margin-top:6px;max-height:250px;overflow-y:auto;">
-                            <span class="small">No PDFs uploaded yet.</span>
-                        </div>
-                    </div>
-
-                    <div class="pdf-viewer-container" id="pdfViewerContainer">
-                        <div class="pdf-viewer-placeholder" id="pdfViewerPlaceholder">
-                            <div class="icon">📄</div>
-                            <div style="font-weight:500;margin-bottom:4px;">Select a PDF to view</div>
-                            <div style="font-size:0.8rem;color:#64748b;">Click on any PDF in the list above</div>
-                        </div>
-                        <iframe id="pdfViewer" style="display:none;width:100%;height:100%;border:none;"></iframe>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ========== REMINDERS ========== -->
-            <div class="page-section" id="sectionReminders">
-                <div class="card">
-                    <h3>🔔 Smart Reminders</h3>
-                    <p class="small">Set reminders for assignments, tests, exams – get browser notifications when due.</p>
-                    <div style="margin-bottom:6px;">
-                        <button onclick="requestNotificationPermission()" class="secondary small-btn" style="width:auto;margin-top:0;">🔔 Enable Notifications</button>
-                        <span id="notifStatus" style="font-size:0.75rem;color:#94a3b8;margin-left:8px;">Click to enable</span>
-                    </div>
-                    <div class="row">
-                        <input type="text" id="reminderTitle" placeholder="Reminder Title" style="flex:2;">
-                        <input type="datetime-local" id="reminderDateTime" style="flex:2;">
-                    </div>
-                    <div class="row">
-                        <select id="reminderPriority" style="flex:1;">
-                            <option value="high">🔴 High</option>
-                            <option value="medium">🟡 Medium</option>
-                            <option value="low">🟢 Low</option>
-                        </select>
-                        <button onclick="addReminder()" class="secondary" style="flex:1;">➕ Add Reminder</button>
-                    </div>
-                    <div id="reminderList" style="margin-top:8px;max-height:200px;overflow-y:auto;">
-                        <span class="small">No reminders set.</span>
-                    </div>
-                    <button onclick="clearAllReminders()" class="danger small-btn" style="width:auto;margin-top:4px;">🗑 Clear All</button>
-                </div>
-            </div>
-
         </div>
+
+        <!-- ========== GPA CALCULATOR ========== -->
+        <div class="page-section" id="sectionGPACalculator">
+            <div class="card">
+                <h3>📚 GPA Calculator – Semester View</h3>
+                <div class="row">
+                    <input type="text" id="semesterTitle" placeholder="Semester (e.g., 100L First Sem)" style="flex:2;">
+                </div>
+                <div id="semesterCourseBox" style="margin-top:8px;">
+                    <div class="row course-row" id="courseRow1">
+                        <input type="text" id="cname1" placeholder="Course Name (e.g., CHM 101)" style="flex:2;">
+                        <input type="number" id="cunit1" placeholder="Units" min="0" step="0.5" style="flex:1;">
+                        <select id="cgrade1" style="flex:1;">
+                            <option value="5">A (5.0)</option>
+                            <option value="4">B (4.0)</option>
+                            <option value="3">C (3.0)</option>
+                            <option value="2">D (2.0)</option>
+                            <option value="1">E (1.0)</option>
+                            <option value="0">F (0.0)</option>
+                        </select>
+                        <button onclick="removeCourseRow(1)" class="danger small-btn" style="width:auto;flex:0;">✕</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <button onclick="addCourseRow()" class="secondary" style="flex:1;">➕ Add Course</button>
+                    <button onclick="saveSemester()" style="flex:1;">💾 Save Semester</button>
+                    <button onclick="deleteSemester()" class="danger" style="flex:1;">🗑 Delete</button>
+                </div>
+                <button onclick="calcSemesterGPA()" class="secondary" style="margin-top:4px;">📊 Calculate GPA</button>
+                <div id="semesterGpaOut" style="margin-top:6px;font-weight:600;color:#fbbf24;text-align:center;"></div>
+            </div>
+        </div>
+
+        <!-- ========== CGPA CALCULATOR ========== -->
+        <div class="page-section" id="sectionCGPACalculator">
+            <div class="card">
+                <h3>📈 CGPA Calculator</h3>
+                <p class="small">Enter semester GPAs and units to compute your cumulative GPA manually.</p>
+                <div id="cgpaBox">
+                    <div class="row">
+                        <input type="number" id="cunit1_cgpa" placeholder="Semester Units" min="0" step="0.5" style="flex:1;">
+                        <input type="number" id="cgpa1_cgpa" placeholder="Semester GPA" min="0" max="5" step="0.01" style="flex:1;">
+                    </div>
+                </div>
+                <div class="row">
+                    <button onclick="addCGPARow()" class="secondary" style="flex:1;">➕ Add Semester</button>
+                    <button onclick="calcCGPA()" style="flex:1;">📊 Calculate CGPA</button>
+                </div>
+                <div id="cgpaOut" style="margin-top:8px;font-weight:600;color:#fbbf24;text-align:center;"></div>
+            </div>
+        </div>
+
+        <!-- ========== STUDY TIMER ========== -->
+        <div class="page-section" id="sectionTimer">
+            <div class="card">
+                <h3>⏱ Study Tracker</h3>
+                <div class="timer" id="time">25:00</div>
+                <div class="timer-row">
+                    <button onclick="startTimer()">▶ Start</button>
+                    <button onclick="pauseTimer()" class="secondary">⏸ Pause</button>
+                    <button onclick="resetTimer()" class="danger">↺ Reset</button>
+                </div>
+                <div class="small" style="text-align:center;margin-top:6px;">
+                    Session: <span id="sessionTimerStatus">Idle</span> |
+                    Pomodoro: <span id="pomodoroCount">0</span> completed
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CGPA TRACKER ========== -->
+        <div class="page-section" id="sectionCGPA">
+            <div class="card">
+                <h3>📈 CGPA Tracker</h3>
+                <p class="small">Track your CGPA progress across all saved semesters.</p>
+                <div id="cgpaTrackerContent">
+                    <div class="small" style="text-align:center;padding:10px;">
+                        No semester data yet. Add and save semesters using the GPA Calculator.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== GPA HISTORY ========== -->
+        <div class="page-section" id="sectionGPAHistory">
+            <div class="card">
+                <h3>📜 GPA History (Saved Semesters)</h3>
+                <div id="gpaHistoryList">
+                    <span class="small">No semesters saved yet.</span>
+                </div>
+                <button onclick="clearAllSemesters()" class="danger" style="margin-top:8px;">🗑 Clear All History</button>
+            </div>
+        </div>
+
+        <!-- ========== PLANNER ========== -->
+        <div class="page-section" id="sectionPlanner">
+            <div class="card">
+                <h3>📅 Weekly Study Planner</h3>
+                <textarea id="plan" placeholder="Write your weekly study plan here..."></textarea>
+                <button onclick="savePlan()">💾 Save Plan</button>
+                <button onclick="loadPlan()" class="secondary">📂 Load Saved Plan</button>
+                <button onclick="clearPlan()" class="danger">🗑 Clear Plan</button>
+                <div class="small" id="planStatus" style="margin-top:6px;"></div>
+            </div>
+        </div>
+
+        <!-- ========== ANALYZER ========== -->
+        <div class="page-section" id="sectionAnalyzer">
+            <div class="card">
+                <h3>📊 Smart Performance Analyzer</h3>
+                <button onclick="analyze()">🔍 Run Full Analysis</button>
+                <div class="card" style="margin-top:10px;background:#0f172a;" id="analysisBox">
+                    <span class="small">No analysis yet. Click "Run Full Analysis" to begin.</span>
+                </div>
+                <button onclick="resetAnalysis()" class="secondary" style="margin-top:6px;">🔄 Reset Analysis</button>
+            </div>
+        </div>
+
+        <!-- ========== SESSION LOG ========== -->
+        <div class="page-section" id="sectionSessionLog">
+            <div class="card">
+                <h3>📝 Study Session Log</h3>
+                <div class="history-list" id="sessionLogList">
+                    <span class="small">No sessions recorded yet.</span>
+                </div>
+                <button onclick="clearSessionLog()" class="danger" style="margin-top:8px;">🗑 Clear Log</button>
+                <button onclick="exportSessionLog()" class="secondary" style="margin-top:4px;">📋 Copy Log</button>
+            </div>
+        </div>
+
+        <!-- ========== ACADEMIC CALENDAR ========== -->
+        <div class="page-section" id="sectionCalendar">
+            <div class="card">
+                <h3>📅 UNIOSUN Academic Calendar 2025/2026</h3>
+                <p class="small">Key dates for the current academic session. The next event is highlighted with a countdown.</p>
+                <div id="academicCalendarList">
+                    <span class="small" style="display:block;text-align:center;padding:10px;">Loading calendar...</span>
+                </div>
+                <div style="margin-top:8px;padding:10px;background:#0f172a;border-radius:8px;text-align:center;">
+                    <div style="font-size:0.75rem;color:#94a3b8;">⏳ Next Event In</div>
+                    <div id="calendarCountdown" style="font-size:1.4rem;font-weight:700;color:#fbbf24;font-family:'Courier New',monospace;">--</div>
+                </div>
+                <button onclick="viewFullCalendar()" class="secondary small-btn" style="width:auto;margin-top:4px;">📄 View Full Calendar</button>
+            </div>
+        </div>
+
+        <!-- ========== CUT-OFF MARKS ========== -->
+        <div class="page-section" id="sectionCutoff">
+            <div class="card">
+                <h3>📊 UNIOSUN Cut‑off Marks 2024/2025</h3>
+                <p class="small">
+                    ⚠️ <strong>Last year's data</strong> – Use this to predict your chances for the current session.
+                    Cut‑offs may change. Check the official portal for final decisions.
+                </p>
+                <div class="row" style="margin-top:6px;">
+                    <input type="text" id="cutoffSearch" placeholder="Search for a course..." style="flex:3;" onkeyup="filterCutoffMarks()">
+                    <select id="cutoffFaculty" style="flex:1;" onchange="filterCutoffMarks()">
+                        <option value="all">All Faculties</option>
+                        <option value="Agriculture">Agriculture</option>
+                        <option value="Education">Education</option>
+                        <option value="Science">Science</option>
+                        <option value="Social Sciences">Social Sciences</option>
+                        <option value="Law">Law</option>
+                        <option value="Medicine">Medicine</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="Arts">Arts</option>
+                        <option value="Management">Management</option>
+                    </select>
+                </div>
+                <div id="cutoffResults" style="margin-top:8px;max-height:300px;overflow-y:auto;">
+                    <span class="small">Loading cut-off marks...</span>
+                </div>
+                <div class="small" style="margin-top:4px;text-align:center;">
+                    GM = General Merit &nbsp;|&nbsp; IC = Indigene/Catchment<br>
+                    Scores are in % (screening aggregate).
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== SCREENING CALCULATOR ========== -->
+        <div class="page-section" id="sectionScreening">
+            <div class="card">
+                <h3>🎯 UNIOSUN Screening Calculator</h3>
+                <p class="small">Calculate your screening aggregate using your JAMB score and O'level grades for 5 relevant subjects.</p>
+
+                <div class="row">
+                    <input type="number" id="jambScore" placeholder="JAMB Score (e.g., 280)" min="0" max="400" style="flex:2;">
+                </div>
+
+                <div class="row">
+                    <input type="text" id="subject1" placeholder="Subject 1 (e.g., English)" style="flex:2;">
+                    <select id="grade1" style="flex:1;">
+                        <option value="8">A1 (8)</option>
+                        <option value="7">B2 (7)</option>
+                        <option value="6">B3 (6)</option>
+                        <option value="5">C4 (5)</option>
+                        <option value="4">C5 (4)</option>
+                        <option value="3">C6 (3)</option>
+                        <option value="2">D7 (2)</option>
+                        <option value="1">E8 (1)</option>
+                        <option value="0">F9 (0)</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <input type="text" id="subject2" placeholder="Subject 2 (e.g., Mathematics)" style="flex:2;">
+                    <select id="grade2" style="flex:1;">
+                        <option value="8">A1 (8)</option>
+                        <option value="7">B2 (7)</option>
+                        <option value="6">B3 (6)</option>
+                        <option value="5">C4 (5)</option>
+                        <option value="4">C5 (4)</option>
+                        <option value="3">C6 (3)</option>
+                        <option value="2">D7 (2)</option>
+                        <option value="1">E8 (1)</option>
+                        <option value="0">F9 (0)</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <input type="text" id="subject3" placeholder="Subject 3" style="flex:2;">
+                    <select id="grade3" style="flex:1;">
+                        <option value="8">A1 (8)</option>
+                        <option value="7">B2 (7)</option>
+                        <option value="6">B3 (6)</option>
+                        <option value="5">C4 (5)</option>
+                        <option value="4">C5 (4)</option>
+                        <option value="3">C6 (3)</option>
+                        <option value="2">D7 (2)</option>
+                        <option value="1">E8 (1)</option>
+                        <option value="0">F9 (0)</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <input type="text" id="subject4" placeholder="Subject 4" style="flex:2;">
+                    <select id="grade4" style="flex:1;">
+                        <option value="8">A1 (8)</option>
+                        <option value="7">B2 (7)</option>
+                        <option value="6">B3 (6)</option>
+                        <option value="5">C4 (5)</option>
+                        <option value="4">C5 (4)</option>
+                        <option value="3">C6 (3)</option>
+                        <option value="2">D7 (2)</option>
+                        <option value="1">E8 (1)</option>
+                        <option value="0">F9 (0)</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <input type="text" id="subject5" placeholder="Subject 5" style="flex:2;">
+                    <select id="grade5" style="flex:1;">
+                        <option value="8">A1 (8)</option>
+                        <option value="7">B2 (7)</option>
+                        <option value="6">B3 (6)</option>
+                        <option value="5">C4 (5)</option>
+                        <option value="4">C5 (4)</option>
+                        <option value="3">C6 (3)</option>
+                        <option value="2">D7 (2)</option>
+                        <option value="1">E8 (1)</option>
+                        <option value="0">F9 (0)</option>
+                    </select>
+                </div>
+
+                <button onclick="calcUNIOSUN()">📊 Calculate Screening Score</button>
+                <div id="uniosunResult" style="margin-top:8px;font-weight:600;color:#fbbf24;text-align:center;"></div>
+            </div>
+        </div>
+
+        <!-- ========== COUNTDOWN ========== -->
+        <div class="page-section" id="sectionCountdown">
+            <div class="card">
+                <h3>⏳ Exam Countdown</h3>
+                <div class="row">
+                    <input type="date" id="examDate" style="flex:2;">
+                    <input type="text" id="examLabel" placeholder="Exam name (e.g., MATH 101)" style="flex:2;">
+                </div>
+                <button onclick="setCountdown()">🎯 Set Countdown</button>
+                <div class="countdown-display" id="countdownDisplay">--:--:--:--</div>
+                <div class="countdown-label" id="countdownLabel">No exam set</div>
+                <button onclick="clearCountdown()" class="secondary" style="margin-top:4px;">🔄 Clear Countdown</button>
+            </div>
+        </div>
+
+        <!-- ========== PDF LIBRARY ========== -->
+        <div class="page-section" id="sectionPdfLibrary">
+            <div class="card">
+                <h3>📄 PDF Library</h3>
+                <p class="small">Upload, view, summarise, or quiz your PDF study materials.</p>
+
+                <div class="upload-area" id="uploadArea" onclick="document.getElementById('pdfUploadInput').click()">
+                    <div class="icon">📂</div>
+                    <div style="font-weight:500;">Click or drag & drop PDF files here</div>
+                    <div style="font-size:0.75rem;color:#94a3b8;margin-top:4px;">Max 50MB per file</div>
+                    <input type="file" id="pdfUploadInput" accept=".pdf,application/pdf" multiple style="display:none;" onchange="handleFileUpload(event)">
+                </div>
+
+                <div style="margin-top:10px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
+                        <span style="font-weight:600;font-size:0.9rem;">📑 My PDFs</span>
+                        <span style="font-size:0.75rem;color:#94a3b8;" id="pdfCount">0 files</span>
+                    </div>
+                    <div id="pdfList" style="margin-top:6px;max-height:250px;overflow-y:auto;">
+                        <span class="small">No PDFs uploaded yet.</span>
+                    </div>
+                </div>
+
+                <div class="pdf-viewer-container" id="pdfViewerContainer">
+                    <div class="pdf-viewer-placeholder" id="pdfViewerPlaceholder">
+                        <div class="icon">📄</div>
+                        <div style="font-weight:500;margin-bottom:4px;">Select a PDF to view</div>
+                        <div style="font-size:0.8rem;color:#64748b;">Click on any PDF in the list above</div>
+                    </div>
+                    <iframe id="pdfViewer" style="display:none;width:100%;height:100%;border:none;"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== REMINDERS ========== -->
+        <div class="page-section" id="sectionReminders">
+            <div class="card">
+                <h3>🔔 Smart Reminders</h3>
+                <p class="small">Set reminders for assignments, tests, exams – get browser notifications when due.</p>
+                <div style="margin-bottom:6px;">
+                    <button onclick="requestNotificationPermission()" class="secondary small-btn" style="width:auto;margin-top:0;">🔔 Enable Notifications</button>
+                    <span id="notifStatus" style="font-size:0.75rem;color:#94a3b8;margin-left:8px;">Click to enable</span>
+                </div>
+                <div class="row">
+                    <input type="text" id="reminderTitle" placeholder="Reminder Title" style="flex:2;">
+                    <input type="datetime-local" id="reminderDateTime" style="flex:2;">
+                </div>
+                <div class="row">
+                    <select id="reminderPriority" style="flex:1;">
+                        <option value="high">🔴 High</option>
+                        <option value="medium">🟡 Medium</option>
+                        <option value="low">🟢 Low</option>
+                    </select>
+                    <button onclick="addReminder()" class="secondary" style="flex:1;">➕ Add Reminder</button>
+                </div>
+                <div id="reminderList" style="margin-top:8px;max-height:200px;overflow-y:auto;">
+                    <span class="small">No reminders set.</span>
+                </div>
+                <button onclick="clearAllReminders()" class="danger small-btn" style="width:auto;margin-top:4px;">🗑 Clear All</button>
+            </div>
+        </div>
+
     </div>
 
     <script>
         /* ============================================================
-           GOATTUTOR v6 – Smart Dashboard
+           GOATTUTOR v6 – Smart Dashboard + Study Streak
            ============================================================ */
 
         // ─── GLOBALS ───
@@ -1422,6 +1479,72 @@
             document.getElementById('streakDisplay').innerText = localStorage.getItem('streak') || 1;
         }
 
+        // ─── STUDY STREAK FEATURE ───
+        function getStreakStats() {
+            const streak = parseInt(localStorage.getItem('streak')) || 0;
+            const bestStreak = parseInt(localStorage.getItem('bestStreak')) || 0;
+            const totalDays = parseInt(localStorage.getItem('totalStudyDays')) || 0;
+            return { streak, bestStreak, totalDays };
+        }
+
+        function updateStreakUI() {
+            const stats = getStreakStats();
+            document.getElementById('currentStreak').innerText = stats.streak;
+            document.getElementById('bestStreak').innerText = stats.bestStreak;
+            document.getElementById('totalStudyDays').innerText = stats.totalDays;
+
+            const badge = document.getElementById('streakBadge');
+            if (stats.streak >= 100) badge.innerText = '🏆 Legendary (100+ days)';
+            else if (stats.streak >= 30) badge.innerText = '🥇 Elite (30+ days)';
+            else if (stats.streak >= 14) badge.innerText = '🥈 Dedicated (14+ days)';
+            else if (stats.streak >= 7) badge.innerText = '🥉 Consistent (7+ days)';
+            else if (stats.streak >= 3) badge.innerText = '💪 Getting Started';
+            else badge.innerText = '📚 Start your streak today!';
+        }
+
+        function logStudyDay() {
+            const today = new Date().toDateString();
+            const lastStudy = localStorage.getItem('lastStudyDay');
+            const streak = parseInt(localStorage.getItem('streak')) || 0;
+            const bestStreak = parseInt(localStorage.getItem('bestStreak')) || 0;
+            const totalDays = parseInt(localStorage.getItem('totalStudyDays')) || 0;
+
+            if (lastStudy === today) {
+                showNotification('✅ You already logged today!');
+                return;
+            }
+
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            let newStreak = 1;
+            if (lastStudy === yesterday.toDateString()) {
+                newStreak = streak + 1;
+            }
+            localStorage.setItem('streak', newStreak);
+            localStorage.setItem('lastStudyDay', today);
+            localStorage.setItem('totalStudyDays', totalDays + 1);
+            if (newStreak > bestStreak) {
+                localStorage.setItem('bestStreak', newStreak);
+                showNotification('🎉 New best streak: ' + newStreak + ' days!');
+            } else {
+                showNotification('🔥 Streak: ' + newStreak + ' days! Keep going!');
+            }
+            // Also update the dashboard streak display
+            document.getElementById('streakDisplay').innerText = newStreak;
+            updateStreakUI();
+        }
+
+        function resetStreakStats() {
+            if (!confirm('Reset all streak stats? This cannot be undone.')) return;
+            localStorage.removeItem('streak');
+            localStorage.removeItem('bestStreak');
+            localStorage.removeItem('totalStudyDays');
+            localStorage.removeItem('lastStudyDay');
+            updateStreakUI();
+            document.getElementById('streakDisplay').innerText = '0';
+            showNotification('🔄 Streak stats reset.');
+        }
+
         function updateStudyHours() {
             const minutes = parseInt(localStorage.getItem('studyMinutes')) || 0;
             document.getElementById('hoursDisplay').innerText = (minutes / 60).toFixed(1);
@@ -1453,6 +1576,7 @@
             updateStreak();
             updateStudyHours();
             updateSessionCountDisplay();
+            updateStreakUI();
         }
 
         // ─── SEMESTER SYSTEM ───
@@ -2670,6 +2794,7 @@
             renderReminders();
             scheduleReminderCheck();
             loadGroupStates();
+            updateStreakUI();
 
             if (Notification.permission === 'granted') {
                 document.getElementById('notifStatus').innerText = '✅ Enabled';
@@ -2684,7 +2809,7 @@
         document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeMenu(); });
 
         init();
-        console.log('🐐 GoatTutor NG v6 – Smart Dashboard, quick actions on main page.');
+        console.log('🐐 GoatTutor NG v6 – Smart Dashboard + Study Streak fixed.');
     </script>
 
     <!-- Clarity Tracking -->
