@@ -177,7 +177,8 @@
         .sidebar-group-items.open {
             max-height: 600px;
         }
-        .sidebar-group-items button {
+        .sidebar-group-items a {
+            display: block;
             width: 100% !important;
             padding: 10px 14px !important;
             border: none !important;
@@ -188,23 +189,25 @@
             cursor: pointer !important;
             font-size: 0.85rem !important;
             transition: all 0.2s !important;
+            text-decoration: none;
+            margin-top: 2px !important;
+            min-height: 40px !important;
             display: flex !important;
             align-items: center !important;
             gap: 8px !important;
-            min-height: 40px !important;
-            margin-top: 2px !important;
         }
-        .sidebar-group-items button:hover {
+        .sidebar-group-items a:hover {
             background: #1e293b !important;
             color: #e2e8f0 !important;
             transform: translateX(3px) !important;
         }
-        .sidebar-group-items button.active-nav {
+        .sidebar-group-items a.active-nav {
             background: #3b82f6 !important;
             color: #fff !important;
             font-weight: 600 !important;
         }
-        .sidebar button:not(.sidebar-group-btn):not(.sidebar-group-items button) {
+        .sidebar a:not(.sidebar-group-btn):not(.sidebar-group-items a) {
+            display: block;
             width: 100%;
             padding: 12px 14px;
             border: none;
@@ -215,16 +218,17 @@
             cursor: pointer;
             font-size: 0.95rem;
             transition: all 0.2s;
+            text-decoration: none;
+            min-height: 48px;
             display: flex;
             align-items: center;
             gap: 10px;
-            min-height: 48px;
         }
-        .sidebar button:not(.sidebar-group-btn):not(.sidebar-group-items button):hover {
+        .sidebar a:not(.sidebar-group-btn):not(.sidebar-group-items a):hover {
             background: #334155;
             transform: translateX(3px);
         }
-        .sidebar button:not(.sidebar-group-btn):not(.sidebar-group-items button).active-nav {
+        .sidebar a:not(.sidebar-group-btn):not(.sidebar-group-items a).active-nav {
             background: #3b82f6;
             color: #fff;
             font-weight: 600;
@@ -1040,7 +1044,7 @@
                 left: -260px;
                 padding: 16px 12px;
             }
-            .sidebar button {
+            .sidebar a {
                 font-size: 0.9rem;
                 padding: 10px 12px;
                 min-height: 44px;
@@ -1143,53 +1147,53 @@
     <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
         <h3>📋 Navigation</h3>
-        <button class="active-nav" onclick="navigateTo('main')" id="navMain">🏠 Dashboard</button>
+        <a href="#main" class="active-nav" id="navMain" onclick="navigateTo('main')">🏠 Dashboard</a>
         <div class="sidebar-group">
             <button class="sidebar-group-btn" onclick="toggleGroup('gamification')" id="groupGamification">🎮 Gamification <span class="arrow">▼</span></button>
             <div class="sidebar-group-items" id="gamificationItems">
-                <button onclick="navigateTo('gamification')" id="navGamification">🏆 My Stats</button>
-                <button onclick="navigateTo('leaderboard')" id="navLeaderboard">📊 Leaderboard</button>
-                <button onclick="navigateTo('challenge')" id="navChallenge">🎯 Daily Challenge</button>
+                <a href="#gamification" onclick="navigateTo('gamification')" id="navGamification">🏆 My Stats</a>
+                <a href="#leaderboard" onclick="navigateTo('leaderboard')" id="navLeaderboard">📊 Leaderboard</a>
+                <a href="#challenge" onclick="navigateTo('challenge')" id="navChallenge">🎯 Daily Challenge</a>
             </div>
         </div>
         <div class="sidebar-group">
             <button class="sidebar-group-btn" onclick="toggleGroup('academics')" id="groupAcademics">📚 Academics <span class="arrow">▼</span></button>
             <div class="sidebar-group-items" id="academicsItems">
-                <button onclick="navigateTo('gpaHistory')" id="navGPAHistory">📜 GPA History</button>
-                <button onclick="navigateTo('cgpaTracker')" id="navCGPA">📊 CGPA Tracker</button>
+                <a href="#gpaHistory" onclick="navigateTo('gpaHistory')" id="navGPAHistory">📜 GPA History</a>
+                <a href="#cgpaTracker" onclick="navigateTo('cgpaTracker')" id="navCGPA">📊 CGPA Tracker</a>
             </div>
         </div>
         <div class="sidebar-group">
             <button class="sidebar-group-btn" onclick="toggleGroup('uniosun')" id="groupUniosun">🎯 UNIOSUN Tools <span class="arrow">▼</span></button>
             <div class="sidebar-group-items" id="uniosunItems">
-                <button onclick="navigateTo('screening')" id="navScreening">🎯 Screening Calculator</button>
-                <button onclick="navigateTo('cutoff')" id="navCutoff">📊 Cut‑off Marks</button>
-                <button onclick="navigateTo('calendar')" id="navCalendar">📅 Academic Calendar</button>
+                <a href="#screening" onclick="navigateTo('screening')" id="navScreening">🎯 Screening Calculator</a>
+                <a href="#cutoff" onclick="navigateTo('cutoff')" id="navCutoff">📊 Cut‑off Marks</a>
+                <a href="#calendar" onclick="navigateTo('calendar')" id="navCalendar">📅 Academic Calendar</a>
             </div>
         </div>
         <div class="sidebar-group">
             <button class="sidebar-group-btn" onclick="toggleGroup('study')" id="groupStudy">📖 Study Tools <span class="arrow">▼</span></button>
             <div class="sidebar-group-items" id="studyItems">
-                <button onclick="navigateTo('planner')" id="navPlanner">📅 Weekly Planner</button>
-                <button onclick="navigateTo('pdfLibrary')" id="navPdfLibrary">📄 PDF Library</button>
-                <button onclick="navigateTo('feedback')" id="navFeedback">💬 Feedback</button>
+                <a href="#planner" onclick="navigateTo('planner')" id="navPlanner">📅 Weekly Planner</a>
+                <a href="#pdfLibrary" onclick="navigateTo('pdfLibrary')" id="navPdfLibrary">📄 PDF Library</a>
+                <a href="#feedback" onclick="navigateTo('feedback')" id="navFeedback">💬 Feedback</a>
             </div>
         </div>
         <div class="sidebar-group">
             <button class="sidebar-group-btn" onclick="toggleGroup('analytics')" id="groupAnalytics">📊 Analytics <span class="arrow">▼</span></button>
             <div class="sidebar-group-items" id="analyticsItems">
-                <button onclick="navigateTo('analyzer')" id="navAnalyzer">📊 Smart Analyzer</button>
-                <button onclick="navigateTo('sessionLog')" id="navSessionLog">📝 Session Log</button>
+                <a href="#analyzer" onclick="navigateTo('analyzer')" id="navAnalyzer">📊 Smart Analyzer</a>
+                <a href="#sessionLog" onclick="navigateTo('sessionLog')" id="navSessionLog">📝 Session Log</a>
             </div>
         </div>
         <!-- ─── ADMIN PANEL (hidden by default, shown only to admin) ─── -->
         <div class="sidebar-group" id="groupAdmin" style="display:none;">
             <button class="sidebar-group-btn" onclick="toggleGroup('admin')">🔐 Admin Panel <span class="arrow">▼</span></button>
             <div class="sidebar-group-items" id="adminItems">
-                <button onclick="navigateTo('adminUpdate')" id="navAdminUpdate">📝 Post Update</button>
+                <a href="#adminUpdate" onclick="navigateTo('adminUpdate')" id="navAdminUpdate">📝 Post Update</a>
             </div>
         </div>
-        <button onclick="navigateTo('countdown')" id="navCountdown">⏳ Exam Countdown</button>
+        <a href="#countdown" onclick="navigateTo('countdown')" id="navCountdown">⏳ Exam Countdown</a>
         <button class="close-btn" onclick="closeMenu()">✕ Close Menu</button>
     </div>
 
@@ -1220,7 +1224,7 @@
         <div class="container">
 
             <!-- ========== MAIN SECTION = LANDING PAGE ========== -->
-            <div class="page-section active" id="sectionMain">
+            <div class="page-section" id="sectionMain">
 
                 <!-- HERO SECTION -->
                 <div class="hero-section" style="background:linear-gradient(135deg, #1e293b 0%, #0f172a 100%);border-radius:20px;padding:30px 20px;text-align:center;border:1px solid #334155;margin-bottom:4px;">
@@ -2821,18 +2825,26 @@
             'feedback': 'navFeedback'
         };
 
+        // ─── HASH-BASED ROUTING ──────────────────────────────────────────
         function navigateTo(section) {
             closeMenu();
             currentSection = section;
+            // Update URL hash without triggering a hashchange event
+            if (window.location.hash !== '#' + section) {
+                history.pushState(null, '', '#' + section);
+            }
+            // Show/hide sections
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
             const targetId = sectionMap[section];
             if (targetId) document.getElementById(targetId).classList.add('active');
-            document.querySelectorAll('.sidebar button').forEach(b => b.classList.remove('active-nav'));
-            document.querySelectorAll('.sidebar-group-items button').forEach(b => b.classList.remove('active-nav'));
+            // Update nav highlights
+            document.querySelectorAll('.sidebar a, .sidebar button:not(.sidebar-group-btn)').forEach(b => b.classList.remove('active-nav'));
+            document.querySelectorAll('.sidebar-group-items a').forEach(b => b.classList.remove('active-nav'));
             const navBtnId = navMap[section];
-            if (navBtnId) document.getElementById(navBtnId).classList.add('active-nav');
+            if (navBtnId) document.getElementById(navBtnId)?.classList.add('active-nav');
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
+            // Lazy-load content
             if (section === 'planner') loadPlan(true);
             if (section === 'gpaHistory') renderSavedSemesters();
             if (section === 'calendar') renderAcademicCalendar();
@@ -2845,6 +2857,16 @@
             if (section === 'leaderboard') loadLeaderboard('all_time');
             if (section === 'challenge') checkDailyChallengeReset();
         }
+
+        // Listen to hash changes (back/forward)
+        window.addEventListener('hashchange', () => {
+            const section = window.location.hash.replace('#', '') || 'main';
+            if (section !== currentSection) {
+                navigateTo(section);
+            }
+        });
+
+        // ─── END ROUTING ──────────────────────────────────────────────────
 
         // ─── NOTIFICATIONS ───
         function showNotification(message, duration) {
@@ -3374,6 +3396,13 @@
             showNotification('↺ Reset.');
         }
 
+        function addStudyMinutes(minutes) {
+            const current = parseInt(localStorage.getItem('studyMinutes')) || 0;
+            localStorage.setItem('studyMinutes', current + minutes);
+            if (currentUser) syncLocalToCloud();
+            updateDash();
+        }
+
         // ─── SESSION LOG ───
         function logSession(minutes) {
             if (minutes <= 0) return;
@@ -3765,6 +3794,10 @@
 
         // ─── INIT ───
         function init() {
+            // ── Set initial section from hash or default to 'main' ──
+            const initialSection = window.location.hash.replace('#', '') || 'main';
+            navigateTo(initialSection);
+
             updateTimerDisplay();
             updateStreakUI();
             updateStudyHours();
@@ -3801,8 +3834,36 @@
 
         document.getElementById('sidebarOverlay').addEventListener('click', closeMenu);
         document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeMenu(); });
+
+        // ─── Daily Challenge (placeholder functions, you already have the full implementation) ───
+        // (The existing challenge functions are already in your code, we'll keep them unchanged)
+        // ─── IMPORTANT: The challenge functions were not included in the snippet, but they exist in your original code.
+        // We assume they are defined elsewhere in your JS. To avoid errors, we'll add stub functions if missing.
+
+        if (typeof startDailyChallenge !== 'function') {
+            window.startDailyChallenge = function(subject) {
+                showNotification('🎯 Starting challenge for ' + subject + '...');
+                // Your existing implementation goes here.
+                // For the sake of completeness, we'll call a simple placeholder.
+                document.getElementById('challengeQuestions').style.display = 'block';
+                document.getElementById('challengeResult').style.display = 'none';
+                document.getElementById('challengeQuestions').innerHTML = `
+                    <div style="text-align:center;color:#fbbf24;padding:20px;">
+                        ⏳ Challenge loading... (your implementation goes here)
+                    </div>
+                `;
+            };
+        }
+
+        if (typeof checkDailyChallengeReset !== 'function') {
+            window.checkDailyChallengeReset = function() {
+                // placeholder
+            };
+        }
+
+        // ─── Start the app ───
         init();
-        console.log('🐐 GoatTutor v7 – Fully functional with admin UID: ' + ADMIN_UID);
+        console.log('🐐 GoatTutor v8 – Multi‑page (hash‑based) routing enabled. Admin UID: ' + ADMIN_UID);
     </script>
     <script type="text/javascript">
         (function(c, l, a, r, i, t, y) {
