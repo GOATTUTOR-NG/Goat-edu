@@ -1182,6 +1182,13 @@
                 <button onclick="navigateTo('sessionLog')" id="navSessionLog">📝 Session Log</button>
             </div>
         </div>
+        <!-- ─── ADMIN PANEL (hidden by default, shown only to admin) ─── -->
+        <div class="sidebar-group" id="groupAdmin" style="display:none;">
+            <button class="sidebar-group-btn" onclick="toggleGroup('admin')">🔐 Admin Panel <span class="arrow">▼</span></button>
+            <div class="sidebar-group-items" id="adminItems">
+                <button onclick="navigateTo('adminUpdate')" id="navAdminUpdate">📝 Post Update</button>
+            </div>
+        </div>
         <button onclick="navigateTo('countdown')" id="navCountdown">⏳ Exam Countdown</button>
         <button class="close-btn" onclick="closeMenu()">✕ Close Menu</button>
     </div>
@@ -1353,22 +1360,10 @@
                     <div id="facultyRankings"><span class="small">Loading...</span></div>
                 </div>
 
-                <!-- ─── NEWS & UPDATES ─── -->
+                <!-- ─── NEWS & UPDATES (view only) ─── -->
                 <div class="card">
                     <h3>📰 Education & UNIOSUN Updates</h3>
                     <div id="updatesContainer"><span class="small">Loading updates...</span></div>
-                    <button onclick="showAddUpdateForm()" class="secondary small-btn" style="margin-top:6px;width:auto;">📝 Post Update (Admin)</button>
-                    <div id="addUpdateForm" style="display:none;margin-top:8px;">
-                        <input type="text" id="updateTitle" placeholder="Title" style="margin-bottom:4px;" />
-                        <textarea id="updateContent" placeholder="Content" style="min-height:60px;"></textarea>
-                        <select id="updateCategory" style="margin-top:4px;">
-                            <option value="education">Education Sector</option>
-                            <option value="uniosun">UNIOSUN</option>
-                            <option value="general">General</option>
-                        </select>
-                        <button onclick="submitUpdate()" style="margin-top:4px;">📨 Publish Update</button>
-                        <button onclick="document.getElementById('addUpdateForm').style.display='none'" class="secondary small-btn" style="width:auto;">Cancel</button>
-                    </div>
                 </div>
 
                 <!-- AI INTERFACE (for quick access) -->
@@ -1414,6 +1409,24 @@
                 </div>
 
             </div> <!-- end sectionMain -->
+
+            <!-- ========== ADMIN: POST UPDATE SECTION ========== -->
+            <div class="page-section" id="sectionAdminUpdate">
+                <div class="card">
+                    <h3>📝 Post Update</h3>
+                    <p class="small">Publish news, announcements, or important information for all users.</p>
+                    <div style="margin-top:8px;">
+                        <input type="text" id="updateTitle" placeholder="Title" style="margin-bottom:4px;" />
+                        <textarea id="updateContent" placeholder="Content" style="min-height:80px;"></textarea>
+                        <select id="updateCategory" style="margin-top:4px;">
+                            <option value="education">Education Sector</option>
+                            <option value="uniosun">UNIOSUN</option>
+                            <option value="general">General</option>
+                        </select>
+                        <button onclick="submitUpdate()" style="margin-top:4px;">📨 Publish Update</button>
+                    </div>
+                </div>
+            </div>
 
             <!-- ========== OTHER PAGE SECTIONS ========== -->
             <!-- GPA CALCULATOR -->
@@ -2396,11 +2409,6 @@
             }
         }
 
-        function showAddUpdateForm() {
-            const form = document.getElementById('addUpdateForm');
-            form.style.display = form.style.display === 'none' ? 'block' : 'none';
-        }
-
         // ─── ADMIN: SUBMIT UPDATE (Restricted to ADMIN_UID) ───
         async function submitUpdate() {
             // ─── ADMIN CHECK ───
@@ -2427,9 +2435,10 @@
                 });
                 document.getElementById('updateTitle').value = '';
                 document.getElementById('updateContent').value = '';
-                document.getElementById('addUpdateForm').style.display = 'none';
                 showNotification('✅ Update published!');
                 loadUpdates();
+                // Navigate back to main to see the update
+                navigateTo('main');
             } catch (err) {
                 console.error('Submit update error:', err);
                 showNotification('❌ Failed to publish update.');
@@ -2474,6 +2483,13 @@
                 await renderMissions();
                 await loadFacultyRankings();
                 await loadUpdates();
+
+                // ─── SHOW ADMIN PANEL IF USER IS ADMIN ───
+                if (user.uid === ADMIN_UID) {
+                    document.getElementById('groupAdmin').style.display = 'block';
+                } else {
+                    document.getElementById('groupAdmin').style.display = 'none';
+                }
             } else {
                 currentUser = null;
                 userDocRef = null;
@@ -2481,6 +2497,7 @@
                 document.getElementById('appContainer').style.display = 'none';
                 document.getElementById('userDisplay').innerHTML = '👤 Guest';
                 document.getElementById('authActionBtn').style.display = 'none';
+                document.getElementById('groupAdmin').style.display = 'none';
                 loadLocalData();
             }
             renderAchievements();
@@ -2616,7 +2633,7 @@
 
         function loadGroupStates() {
             const states = JSON.parse(localStorage.getItem('sidebarGroups') || '{}');
-            ['gamification', 'academics', 'uniosun', 'study', 'analytics'].forEach(g => {
+            ['gamification', 'academics', 'uniosun', 'study', 'analytics', 'admin'].forEach(g => {
                 const items = document.getElementById(g + 'Items');
                 const btn = document.getElementById('group' + g.charAt(0).toUpperCase() + g.slice(1));
                 if (items && states[g]) {
@@ -2628,6 +2645,7 @@
 
         const sectionMap = {
             'main': 'sectionMain',
+            'adminUpdate': 'sectionAdminUpdate',
             'gamification': 'sectionGamification',
             'leaderboard': 'sectionLeaderboard',
             'challenge': 'sectionChallenge',
@@ -2649,6 +2667,7 @@
 
         const navMap = {
             'main': 'navMain',
+            'adminUpdate': 'navAdminUpdate',
             'gamification': 'navGamification',
             'leaderboard': 'navLeaderboard',
             'challenge': 'navChallenge',
@@ -3646,7 +3665,7 @@
         document.getElementById('sidebarOverlay').addEventListener('click', closeMenu);
         document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeMenu(); });
         init();
-        console.log('🐐 GoatTutor v7 – Full gamification + news updates (admin UID protected)');
+        console.log('🐐 GoatTutor v7 – Admin update feature in sidebar (UID restricted)');
     </script>
     <script type="text/javascript">
         (function(c, l, a, r, i, t, y) {
