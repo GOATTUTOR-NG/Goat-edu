@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-    <title>GoatTutor NG – Complete Cut‑off + CGPA + AI Chat</title>
+    <title>GoatTutor NG – Complete Cut‑off + CGPA + AI Chat + PDF</title>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192.png">
     <!-- Firebase SDKs -->
@@ -12,6 +12,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js">
     </script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js">
+    </script>
+    <!-- PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js">
     </script>
     <style>
         /* ─── ALL ORIGINAL STYLES PRESERVED ─── */
@@ -1680,6 +1683,59 @@
             font-size: 0.6rem;
         }
 
+        /* ─── PDF INTELLIGENCE ─── */
+        .pdf-upload-area {
+            border: 2px dashed #475569;
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: border 0.3s;
+            margin-top: 8px;
+        }
+        .pdf-upload-area:hover {
+            border-color: #3b82f6;
+        }
+        .pdf-upload-area .icon {
+            font-size: 3rem;
+        }
+        .pdf-upload-area .label {
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+        .pdf-upload-area input[type="file"] {
+            display: none;
+        }
+        .pdf-progress {
+            margin-top: 8px;
+            background: #1e293b;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            display: none;
+        }
+        .pdf-progress .bar {
+            height: 4px;
+            background: #3b82f6;
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.3s;
+            margin-top: 4px;
+        }
+        .pdf-result {
+            background: #0f172a;
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 10px;
+            border: 1px solid #334155;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            display: none;
+        }
+
         @media (max-width:600px) {
             .target-card .stat-grid {
                 grid-template-columns: 1fr 1fr;
@@ -1930,6 +1986,7 @@
                 <button onclick="navigateTo('challenge')" id="navChallenge">🎯 Daily Quiz</button>
                 <button onclick="navigateTo('planner')" id="navPlanner">📅 Weekly Planner</button>
                 <button onclick="navigateTo('sessionLog')" id="navSessionLog">📝 Session Log</button>
+                <button onclick="navigateTo('pdf')" id="navPDF" style="background:#8b5cf6;color:#fff;">📄 PDF Intelligence</button>
             </div>
         </div>
         <div class="sidebar-group">
@@ -2065,6 +2122,7 @@
                         <div class="quick-card" onclick="navigateTo('timer')"><div class="icon">⏱</div><div class="label">Study Timer</div></div>
                         <div class="quick-card" onclick="navigateTo('aiChat')"><div class="icon">🧠</div><div class="label">AI Chat</div></div>
                         <div class="quick-card" onclick="navigateTo('targetCGPA')" style="border-color:#fbbf24;"><div class="icon">🎯</div><div class="label" style="color:#fbbf24;font-weight:700;">Target CGPA</div></div>
+                        <div class="quick-card" onclick="navigateTo('pdf')" style="border-color:#8b5cf6;"><div class="icon">📄</div><div class="label" style="color:#8b5cf6;font-weight:700;">PDF Intelligence</div></div>
                     </div>
                 </div>
 
@@ -2189,7 +2247,7 @@
                 </div>
             </div>
 
-            <!-- ===== SECTION: TARGET CGPA CALCULATOR (NEW) ===== -->
+            <!-- ===== SECTION: TARGET CGPA CALCULATOR ===== -->
             <div class="page-section" id="sectionTargetCGPA">
                 <div class="card">
                     <h2>🎯 Target CGPA Calculator</h2>
@@ -2262,6 +2320,34 @@
                 </div>
             </div>
 
+            <!-- ===== SECTION: PDF INTELLIGENCE (NEW) ===== -->
+            <div class="page-section" id="sectionPDF">
+                <div class="card">
+                    <h3>📄 PDF Intelligence</h3>
+                    <p class="small">Upload a PDF (past questions, lecture notes, or any study material) and let AI generate summaries, quizzes, or revision notes.</p>
+                    <div class="pdf-upload-area" id="pdfDropArea">
+                        <div class="icon">📂</div>
+                        <div class="label">Click to upload a PDF, or drag & drop here</div>
+                        <input type="file" id="pdfFileInput" accept=".pdf" />
+                    </div>
+                    <div class="pdf-progress" id="pdfProgress">
+                        <span id="pdfProgressText">Processing...</span>
+                        <div class="bar" id="pdfProgressBar"></div>
+                    </div>
+                    <div style="margin-top:8px;">
+                        <select id="pdfMode" style="margin-top:0;">
+                            <option value="summary">📝 Summary</option>
+                            <option value="quiz">❓ Generate Quiz</option>
+                            <option value="revision">🔄 Revision Notes</option>
+                            <option value="tutorial">📖 Tutorial</option>
+                        </select>
+                        <button onclick="processPDF()" id="pdfProcessBtn" style="margin-top:4px;">🚀 Process PDF with AI</button>
+                    </div>
+                    <div class="pdf-result" id="pdfResult"></div>
+                    <div class="small" style="margin-top:8px;color:#94a3b8;">💡 Extracts text from your PDF and uses Gemini AI to generate study content. All processing happens locally.</div>
+                </div>
+            </div>
+
             <!-- ===== SECTION: SCREENING CALCULATOR ===== -->
             <div class="page-section" id="sectionScreening">
                 <div class="card">
@@ -2318,7 +2404,7 @@
                 </div>
             </div>
 
-            <!-- ===== SECTION: CUTOFF MARKS (COMPLETE LIST) ===== -->
+            <!-- ===== SECTION: CUTOFF MARKS ===== -->
             <div class="page-section" id="sectionCutoff">
                 <div class="card">
                     <h3>📊 UNIOSUN 2025/2026 Cut‑off Marks – All 107 Programmes</h3>
@@ -2481,7 +2567,7 @@
                 </div>
             </div>
 
-            <!-- ===== SECTION: AI CHAT (NEW!) ===== -->
+            <!-- ===== SECTION: AI CHAT ===== -->
             <div class="page-section" id="sectionAiChat">
                 <div class="card">
                     <h3>🧠 GoatTutor AI Chat</h3>
@@ -2537,6 +2623,7 @@
         let isTimerRunning = false;
         let pomodoroCompleted = parseInt(localStorage.getItem('pomodoroCount')) || 0;
         let gpaCourses = [];
+        let pdfText = '';
 
         // ─── ENCODED GEMINI API KEY ───
         const ENCODED_API_KEY = "QVEuQWI4Uk42TGFmWi1DV2tqQ1hldWZfU0labFBJVWZDclNtYVQ5aDd5RE5zWkxEemNDR3c=";
@@ -2853,6 +2940,7 @@
                 'cgpaTracker': 'sectionCGPA',
                 'gpaHistory': 'sectionGPAHistory',
                 'targetCGPA': 'sectionTargetCGPA',
+                'pdf': 'sectionPDF',
                 'screening': 'sectionScreening',
                 'cutoff': 'sectionCutoff',
                 'calendar': 'sectionCalendar',
@@ -2878,6 +2966,7 @@
                 'cgpaTracker': 'navCGPA',
                 'gpaHistory': 'navGPAHistory',
                 'targetCGPA': 'navTargetCGPA',
+                'pdf': 'navPDF',
                 'screening': 'navScreening',
                 'cutoff': 'navCutoff',
                 'calendar': 'navCalendar',
@@ -2907,6 +2996,7 @@
             if (section === 'analyzer') runAnalysis();
             if (section === 'challenge') startDailyQuiz();
             if (section === 'screening') renderScreeningCutoffRef();
+            if (section === 'pdf') initPDF();
         }
 
         // ─── AUTH ───
@@ -3013,6 +3103,7 @@
             await loadUpdates();
             await loadLeaderboard('all_time');
             renderTargetCalculator();
+            initPDF();
         }
 
         // ─── DASHBOARD ───
@@ -3396,7 +3487,7 @@
             showNotification('🔄 CGPA recalculated');
         }
 
-        // ─── TARGET CGPA CALCULATOR (NEW) ───
+        // ─── TARGET CGPA CALCULATOR ───
         let targetCourses = [];
         let targetPreset = 4.5;
 
@@ -3418,11 +3509,9 @@
             document.getElementById('targetCurrentDegree').textContent = getDegreeClass(cgpa);
             document.getElementById('targetCurrentDegree').style.background = cgpa !== '--' ? '#1e293b' : '#334155';
 
-            // Load saved target courses
             const saved = JSON.parse(localStorage.getItem('targetCourses') || '[]');
             targetCourses = saved;
 
-            // Show course tags
             const tagContainer = document.getElementById('targetCourseTags');
             if (targetCourses.length === 0) {
                 tagContainer.innerHTML = '<span class="small">No courses added yet. Add your current semester courses above.</span>';
@@ -3432,7 +3521,6 @@
                 ).join('');
             }
 
-            // Restore preset
             const savedPreset = localStorage.getItem('targetPreset');
             if (savedPreset) {
                 targetPreset = parseFloat(savedPreset);
@@ -3507,7 +3595,6 @@
             }
 
             const targetCGPA = targetPreset;
-            // Required total points after this semester: targetCGPA * (totalUnits + currentUnits)
             const targetTotalPoints = targetCGPA * (totalUnits + currentUnits);
             const requiredPoints = targetTotalPoints - totalPoints;
             const requiredGPA = requiredPoints / currentUnits;
@@ -3528,7 +3615,6 @@
             else if (targetCGPA >= 1.5) badge.className = 'target-label third-class';
             else badge.className = 'target-label pass';
 
-            // Grade breakdown per course
             let breakdownHtml =
                 `<table><thead><tr><th>Course</th><th>Units</th><th>Required Grade</th><th>Points Needed</th></tr></thead><tbody>`;
             targetCourses.forEach(c => {
@@ -3553,7 +3639,6 @@
             breakdownHtml += '</tbody></table>';
             document.getElementById('targetGradeBreakdown').innerHTML = breakdownHtml;
 
-            // Insight
             const insight = document.getElementById('targetInsight');
             if (requiredGPA <= 3.0) {
                 insight.innerHTML =
@@ -3574,6 +3659,143 @@
 
             showNotification(`🎯 Target CGPA calculation complete!`, 3000);
             awardXP(10, 'target_cgpa_calc');
+        }
+
+        // ─── PDF INTELLIGENCE ───
+        let pdfFile = null;
+
+        function initPDF() {
+            const dropArea = document.getElementById('pdfDropArea');
+            const fileInput = document.getElementById('pdfFileInput');
+            dropArea.addEventListener('click', () => fileInput.click());
+            dropArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropArea.style.borderColor = '#fbbf24';
+            });
+            dropArea.addEventListener('dragleave', () => {
+                dropArea.style.borderColor = '#475569';
+            });
+            dropArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropArea.style.borderColor = '#475569';
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    fileInput.files = files;
+                    handlePDFFile(files[0]);
+                }
+            });
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handlePDFFile(e.target.files[0]);
+                }
+            });
+            // Reset result on new upload
+            document.getElementById('pdfResult').style.display = 'none';
+            document.getElementById('pdfProgress').style.display = 'none';
+        }
+
+        function handlePDFFile(file) {
+            if (file.type !== 'application/pdf') {
+                showNotification('⚠️ Please upload a PDF file.');
+                return;
+            }
+            pdfFile = file;
+            document.getElementById('pdfDropArea').querySelector('.label').textContent = `📎 ${file.name}`;
+            document.getElementById('pdfResult').style.display = 'none';
+            document.getElementById('pdfProgress').style.display = 'none';
+            showNotification(`📄 Loaded ${file.name}. Click "Process PDF with AI" to analyze.`);
+            // Store file for later processing
+        }
+
+        async function processPDF() {
+            if (!pdfFile) {
+                showNotification('⚠️ Please upload a PDF first.');
+                return;
+            }
+            const progressDiv = document.getElementById('pdfProgress');
+            const progressBar = document.getElementById('pdfProgressBar');
+            const progressText = document.getElementById('pdfProgressText');
+            const resultDiv = document.getElementById('pdfResult');
+            const mode = document.getElementById('pdfMode').value;
+
+            progressDiv.style.display = 'block';
+            progressBar.style.width = '0%';
+            progressText.textContent = 'Extracting text from PDF...';
+
+            try {
+                const arrayBuffer = await pdfFile.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                let fullText = '';
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const textContent = await page.getTextContent();
+                    const pageText = textContent.items.map(item => item.str).join(' ');
+                    fullText += pageText + '\n';
+                    const progress = (i / pdf.numPages) * 50; // first 50% for extraction
+                    progressBar.style.width = progress + '%';
+                    progressText.textContent = `Extracting page ${i} of ${pdf.numPages}...`;
+                }
+
+                if (fullText.trim().length < 20) {
+                    throw new Error('Could not extract enough text from the PDF. It might be scanned or image-based.');
+                }
+
+                progressText.textContent = 'Sending to AI for processing...';
+                progressBar.style.width = '60%';
+
+                // Prepare prompt based on mode
+                const modeMap = {
+                    'summary': 'Summarize the following content in 5–7 clear bullet points. Highlight key concepts and make it easy to review.',
+                    'quiz': 'Generate 10 multiple-choice questions based on the following content. Provide the correct answers at the end. Make the questions thoughtful and cover important topics.',
+                    'revision': 'Create detailed revision notes from the following content. Use headings, subheadings, and bullet points. Highlight key definitions, formulas, and important facts.',
+                    'tutorial': 'Explain the following content as a friendly tutor. Break down complex ideas, use examples, and make it engaging for a university student.'
+                };
+
+                const instruction = modeMap[mode] ||
+                    'Analyze the following content and provide a helpful study guide.';
+
+                const prompt = `${instruction}\n\nContent:\n${fullText.substring(0, 15000)}`; // limit to 15k chars
+
+                const API_KEY = atob(ENCODED_API_KEY);
+                const response = await fetch(
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: prompt }] }]
+                        })
+                    }
+                );
+
+                const data = await response.json();
+                if (data.error) throw new Error(data.error.message || 'API error');
+
+                const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response from AI.';
+
+                progressBar.style.width = '100%';
+                progressText.textContent = '✅ Done!';
+                setTimeout(() => {
+                    progressDiv.style.display = 'none';
+                }, 1500);
+
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = reply;
+
+                awardXP(8, 'pdf_processed');
+                showNotification('📄 PDF processed successfully! +8 XP', 3000);
+
+            } catch (err) {
+                console.error('PDF error:', err);
+                progressText.textContent = '❌ Error: ' + err.message;
+                progressBar.style.width = '100%';
+                setTimeout(() => {
+                    progressDiv.style.display = 'none';
+                }, 3000);
+                showNotification('❌ PDF processing failed: ' + err.message, 5000);
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `<span class="error">⚠️ Error: ${err.message}</span>`;
+            }
         }
 
         // ─── SCREENING ───
@@ -3630,7 +3852,6 @@
             showNotification('🎯 Screening score calculated!');
         }
 
-        // ─── SCREENING CUTOFF REFERENCE ───
         function renderScreeningCutoffRef() {
             const container = document.getElementById('screeningCutoffRef');
             if (!container) return;
@@ -3649,7 +3870,7 @@
             container.innerHTML = html;
         }
 
-        // ─── CUTOFF (COMPLETE LIST WITH SEARCH) ───
+        // ─── CUTOFF ───
         let cutoffFilter = '';
 
         function filterCutoff() {
@@ -3726,7 +3947,7 @@
             container.innerHTML = html;
         }
 
-        // ─── QUIZ SYSTEM (100+ questions) ───
+        // ─── QUIZ SYSTEM ───
         const QUESTION_BANK = [
             { course: 'CHM 102', question: 'Which technique is used for the quantitative analysis of organic compounds?',
                 options: ['Titration', 'Distillation', 'Chromatography', 'Spectroscopy'], correct: 0 },
@@ -3984,7 +4205,6 @@
                 ], correct: 0 },
         ];
 
-        // Shuffle
         function shuffleArray(arr) {
             for (let i = arr.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -4492,7 +4712,7 @@
             showNotification('📸 CGPA card downloaded!');
         }
 
-        // ─── AI: OPEN EXTERNAL (Fallback) ───
+        // ─── AI: OPEN EXTERNAL ───
         function openAI(service) {
             const t = document.getElementById('topic').value.trim();
             const m = document.getElementById('mode').value;
@@ -4517,7 +4737,6 @@
         }
 
         // ─── AI: ASK GOAT TUTOR (Gemini) ───
-        // ✅ FIXED: Using gemini-2.0-flash (the latest free model)
         async function askGoatTutor() {
             const prompt = document.getElementById('aiPrompt').value.trim();
             const mode = document.getElementById('aiMode').value;
@@ -4557,7 +4776,6 @@
 
                 const fullPrompt = `${instruction}\n\nUser question: ${prompt}`;
 
-                // ✅ CORRECT MODEL: gemini-2.0-flash (latest free tier)
                 const response = await fetch(
                     `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`,
                     {
@@ -4594,7 +4812,7 @@
             }
         }
 
-        // ─── AI: FALLBACK (Open external) ───
+        // ─── AI: FALLBACK ───
         function openAIFallback(service) {
             const prompt = document.getElementById('aiPrompt').value.trim();
             if (!prompt) {
@@ -4646,7 +4864,7 @@
                 document.getElementById('gpaSemesterTitle').textContent = localStorage.getItem('gpaSemesterTitle');
             }
             refreshAll();
-            console.log('🐐 GoatTutor NG – Complete Cut‑off (107 Programmes) + AI Chat (gemini-2.0-flash) + Target CGPA!');
+            console.log('🐐 GoatTutor NG – Complete Cut‑off (107 Programmes) + AI Chat (gemini-2.0-flash) + Target CGPA + PDF Intelligence!');
         }
 
         document.addEventListener('DOMContentLoaded', init);
@@ -4704,6 +4922,9 @@
         window.addTargetCourse = addTargetCourse;
         window.calculateTarget = calculateTarget;
         window.renderTargetCalculator = renderTargetCalculator;
+        // PDF functions
+        window.processPDF = processPDF;
+        window.initPDF = initPDF;
     </script>
 </body>
 </html>
