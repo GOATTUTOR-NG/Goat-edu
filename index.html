@@ -5,7 +5,7 @@
 <meta name="viewport"
       content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#07111f">
-<title>Ibadan Life v2 — GTA Style Life Simulator</title>
+<title>Ibadan Life 3D — GTA Style Life Simulator</title>
 
 <style>
 *{
@@ -19,21 +19,9 @@ html,body{
   width:100%;
   height:100%;
   overflow:hidden;
-  background:#050912;
-  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:#fff;
-}
-
-body{
+  background:#050914;
+  font-family:Arial,Helvetica,sans-serif;
   touch-action:none;
-}
-
-button{
-  font:inherit;
-  color:inherit;
-  border:0;
-  outline:0;
-  cursor:pointer;
 }
 
 #game{
@@ -41,8 +29,12 @@ button{
   inset:0;
   width:100%;
   height:100%;
+}
+
+canvas{
   display:block;
-  background:#88b96c;
+  width:100%;
+  height:100%;
 }
 
 #loading{
@@ -50,310 +42,234 @@ button{
   inset:0;
   z-index:9999;
   display:flex;
+  flex-direction:column;
   align-items:center;
   justify-content:center;
-  flex-direction:column;
   background:
-    radial-gradient(circle at 50% 35%,#183b4c 0,#08131d 45%,#03070c 100%);
-  transition:.5s;
+    radial-gradient(circle at 50% 30%,#163b55 0,#07111f 45%,#03060b 100%);
+  color:white;
 }
 
 .logo{
-  font-size:clamp(32px,9vw,70px);
+  font-size:34px;
   font-weight:1000;
-  letter-spacing:-3px;
-  text-align:center;
+  letter-spacing:-1px;
 }
 
-.logo span{
-  color:#72e36c;
-}
+.logo span{color:#39e58c}
 
-.loading-sub{
-  margin-top:8px;
-  opacity:.65;
+.loadingText{
+  margin-top:10px;
+  opacity:.75;
   font-size:13px;
 }
 
-.loading-bar{
-  width:210px;
-  height:5px;
-  margin-top:28px;
-  background:#20303d;
-  border-radius:20px;
+.loader{
+  width:220px;
+  height:7px;
+  margin-top:22px;
+  border-radius:99px;
   overflow:hidden;
+  background:#ffffff18;
 }
 
-.loading-bar i{
+.loader i{
   display:block;
-  width:0;
+  width:35%;
   height:100%;
-  background:#7df26e;
-  animation:load 1.5s forwards;
+  background:#39e58c;
+  border-radius:99px;
+  animation:load 1.2s infinite ease-in-out;
 }
 
 @keyframes load{
-  to{width:100%}
+  0%{transform:translateX(-100%)}
+  100%{transform:translateX(650%)}
 }
 
 #hud{
   position:fixed;
-  inset:0;
-  pointer-events:none;
+  top:0;
+  left:0;
+  right:0;
   z-index:20;
+  pointer-events:none;
+  padding:
+    max(10px,env(safe-area-inset-top))
+    10px 0;
 }
 
-.top-left{
-  position:absolute;
-  top:calc(10px + env(safe-area-inset-top));
-  left:10px;
+.topbar{
   display:flex;
+  align-items:center;
+  justify-content:space-between;
   gap:8px;
-  align-items:center;
 }
 
-.avatar{
-  width:45px;
-  height:45px;
-  border-radius:50%;
-  background:linear-gradient(135deg,#71e76d,#1d7b51);
-  display:grid;
-  place-items:center;
-  font-size:22px;
-  border:2px solid rgba(255,255,255,.25);
-  box-shadow:0 5px 20px #0008;
-}
-
-.player-card{
-  background:#07111dcc;
-  backdrop-filter:blur(12px);
-  border:1px solid #ffffff15;
-  border-radius:13px;
-  padding:7px 11px;
-  min-width:145px;
-  box-shadow:0 8px 25px #0006;
-}
-
-.player-name{
-  font-size:13px;
-  font-weight:900;
-}
-
-.player-money{
-  color:#83f17b;
-  font-size:13px;
-  font-weight:800;
-  margin-top:2px;
-}
-
-.top-right{
-  position:absolute;
-  top:calc(10px + env(safe-area-inset-top));
-  right:10px;
-  display:flex;
-  gap:7px;
-  align-items:flex-start;
-  pointer-events:auto;
-}
-
-.stat-pill{
-  background:#07111ddd;
-  border:1px solid #ffffff14;
-  border-radius:12px;
-  padding:7px 9px;
-  font-size:11px;
-  backdrop-filter:blur(12px);
-}
-
-#miniMap{
-  width:92px;
-  height:92px;
-  background:#09131b;
-  border:2px solid #ffffff22;
-  border-radius:14px;
-  overflow:hidden;
-  box-shadow:0 8px 25px #0008;
-}
-
-.needs{
-  position:absolute;
-  left:10px;
-  top:70px;
-  width:min(190px,45vw);
-  background:#07111dcc;
-  border:1px solid #ffffff12;
-  border-radius:14px;
-  padding:8px;
-  backdrop-filter:blur(12px);
-}
-
-.need{
-  display:grid;
-  grid-template-columns:20px 1fr 30px;
-  gap:5px;
-  align-items:center;
-  font-size:10px;
-  margin:4px 0;
-}
-
-.bar{
-  height:6px;
-  border-radius:20px;
-  background:#1c2931;
-  overflow:hidden;
-}
-
-.bar i{
-  display:block;
-  height:100%;
-  width:50%;
-  border-radius:20px;
-  background:#71e66c;
-  transition:width .3s;
-}
-
-#locationBadge{
-  position:absolute;
-  top:calc(112px + env(safe-area-inset-top));
-  left:50%;
-  transform:translateX(-50%);
-  background:#07111ddd;
-  padding:6px 12px;
-  border-radius:30px;
+.playerCard{
+  min-width:165px;
+  padding:9px 11px;
   border:1px solid #ffffff18;
-  font-size:11px;
-  font-weight:800;
-  backdrop-filter:blur(12px);
+  border-radius:14px;
+  background:#07111fd9;
+  backdrop-filter:blur(10px);
+  box-shadow:0 8px 30px #0005;
 }
 
-#context{
-  position:absolute;
-  left:50%;
-  bottom:205px;
-  transform:translateX(-50%);
-  padding:9px 15px;
-  border-radius:30px;
-  background:#07111ded;
-  border:1px solid #72e36c55;
-  color:#bfffb9;
+.playerName{
+  font-weight:900;
+  font-size:14px;
+}
+
+.money{
+  margin-top:2px;
+  color:#48ee99;
+  font-weight:900;
+  font-size:13px;
+}
+
+.statuses{
+  display:flex;
+  gap:5px;
+  margin-top:7px;
+  flex-wrap:wrap;
+}
+
+.stat{
+  font-size:10px;
+  padding:3px 6px;
+  border-radius:7px;
+  background:#ffffff0c;
+  color:#dbe7ef;
+}
+
+.rightHud{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:5px;
+}
+
+.clock{
+  padding:7px 10px;
+  border-radius:10px;
+  background:#07111fd9;
+  border:1px solid #ffffff18;
   font-size:12px;
   font-weight:900;
-  display:none;
-  white-space:nowrap;
 }
 
-#mission{
-  position:absolute;
-  top:calc(145px + env(safe-area-inset-top));
-  right:10px;
-  width:min(205px,48vw);
-  padding:10px;
-  border-radius:13px;
-  background:#07111dcc;
-  border:1px solid #ffffff15;
-  backdrop-filter:blur(12px);
-  display:none;
-}
-
-.mission-title{
+.location{
+  padding:6px 9px;
+  border-radius:9px;
+  background:#07111fd9;
+  border:1px solid #ffffff18;
   font-size:10px;
-  text-transform:uppercase;
-  color:#71e66c;
-  font-weight:900;
+  color:#8fe7ff;
+  max-width:190px;
+  text-align:right;
 }
 
-.mission-text{
-  margin-top:3px;
-  font-size:11px;
-  line-height:1.3;
-}
-
-#controls{
+#hint{
   position:fixed;
-  inset:0;
-  pointer-events:none;
+  left:50%;
+  bottom:145px;
+  transform:translateX(-50%);
   z-index:30;
+  pointer-events:none;
+  max-width:92vw;
+  padding:9px 14px;
+  border-radius:12px;
+  background:#050914df;
+  border:1px solid #ffffff20;
+  color:white;
+  font-size:12px;
+  font-weight:800;
+  text-align:center;
+  opacity:0;
+  transition:.2s;
 }
+
+#hint.show{opacity:1}
 
 #joystick{
-  position:absolute;
-  left:17px;
-  bottom:calc(22px + env(safe-area-inset-bottom));
-  width:125px;
-  height:125px;
+  position:fixed;
+  left:18px;
+  bottom:22px;
+  width:122px;
+  height:122px;
+  z-index:40;
   border-radius:50%;
-  background:#07111d88;
-  border:2px solid #ffffff1d;
-  box-shadow:inset 0 0 30px #0007;
-  pointer-events:auto;
+  background:#ffffff0b;
+  border:1px solid #ffffff18;
+  box-shadow:0 10px 30px #0004;
 }
 
 #stick{
   position:absolute;
-  width:58px;
-  height:58px;
   left:50%;
   top:50%;
-  margin:-29px;
+  width:56px;
+  height:56px;
+  transform:translate(-50%,-50%);
   border-radius:50%;
-  background:#ffffff18;
-  border:2px solid #ffffff30;
-  box-shadow:0 8px 20px #0008;
-  transition:transform .05s;
+  background:#ffffff20;
+  border:1px solid #ffffff35;
+  box-shadow:0 5px 18px #0005;
 }
 
-.action-grid{
-  position:absolute;
-  right:12px;
-  bottom:calc(18px + env(safe-area-inset-bottom));
+#actions{
+  position:fixed;
+  right:15px;
+  bottom:20px;
+  z-index:40;
   display:grid;
-  grid-template-columns:repeat(2,58px);
-  gap:8px;
-  pointer-events:auto;
+  grid-template-columns:repeat(2,62px);
+  gap:9px;
 }
 
 .action{
-  width:58px;
-  height:58px;
-  border-radius:18px;
-  background:#07111ddd;
-  border:1px solid #ffffff18;
-  box-shadow:0 7px 20px #0009;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:2px;
-  font-size:19px;
-}
-
-.action small{
-  font-size:8px;
-  opacity:.8;
-  font-weight:900;
-}
-
-.action.primary{
-  background:#5ed45d;
-  color:#041008;
-}
-
-.action.danger{
-  background:#8d3030;
-}
-
-#phoneButton{
-  position:absolute;
-  right:145px;
-  bottom:calc(24px + env(safe-area-inset-bottom));
   width:62px;
   height:62px;
   border-radius:50%;
-  background:#101d2aee;
-  border:2px solid #ffffff20;
-  font-size:25px;
-  pointer-events:auto;
-  box-shadow:0 8px 25px #0009;
+  border:1px solid #ffffff25;
+  color:white;
+  background:#07111fd9;
+  box-shadow:0 8px 24px #0006;
+  font-weight:1000;
+  font-size:11px;
+}
+
+.action:active{
+  transform:scale(.93);
+  background:#16324b;
+}
+
+#phoneBtn{
+  position:fixed;
+  right:15px;
+  top:95px;
+  z-index:40;
+  width:52px;
+  height:52px;
+  border-radius:15px;
+  border:1px solid #ffffff20;
+  background:#07111fd9;
+  color:white;
+  font-size:21px;
+}
+
+#crosshair{
+  position:fixed;
+  left:50%;
+  top:50%;
+  z-index:15;
+  transform:translate(-50%,-50%);
+  width:6px;
+  height:6px;
+  border:1px solid #ffffffaa;
+  border-radius:50%;
+  pointer-events:none;
 }
 
 #phone{
@@ -363,150 +279,62 @@ button{
   display:none;
   align-items:flex-end;
   justify-content:center;
-  background:#0007;
-  backdrop-filter:blur(4px);
+  background:#0008;
 }
 
-.phone-shell{
-  width:min(430px,100%);
-  height:min(760px,92vh);
-  background:#08111a;
-  border-radius:30px 30px 0 0;
+.phonePanel{
+  width:min(480px,100%);
+  min-height:58vh;
+  padding:18px;
+  border-radius:25px 25px 0 0;
+  background:
+    linear-gradient(160deg,#0d1d2c,#07111b);
   border:1px solid #ffffff18;
-  box-shadow:0 -20px 60px #000b;
-  padding:17px;
-  overflow:hidden;
-  animation:phoneUp .25s ease;
+  box-shadow:0 -20px 60px #0009;
+  color:white;
 }
 
-@keyframes phoneUp{
-  from{transform:translateY(100%)}
-  to{transform:translateY(0)}
-}
-
-.phone-top{
+.phoneHead{
   display:flex;
   justify-content:space-between;
   align-items:center;
   margin-bottom:15px;
 }
 
-.phone-title{
-  font-size:20px;
+.phoneTitle{
   font-weight:1000;
+  font-size:21px;
 }
 
 .close{
+  border:0;
+  background:#ffffff10;
+  color:white;
   width:38px;
   height:38px;
-  border-radius:50%;
-  background:#ffffff12;
+  border-radius:12px;
   font-size:18px;
 }
 
-.phone-screen{
-  height:calc(100% - 55px);
-  overflow:auto;
-  padding-bottom:20px;
-}
-
-.app-grid{
+.phoneGrid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:10px;
 }
 
-.app{
-  aspect-ratio:1;
-  border-radius:19px;
-  background:linear-gradient(145deg,#13222f,#0b151f);
-  border:1px solid #ffffff12;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:5px;
-  font-size:25px;
-}
-
-.app span{
-  font-size:10px;
+.phoneItem{
+  min-height:82px;
+  border:1px solid #ffffff14;
+  border-radius:16px;
+  background:#ffffff08;
+  color:white;
   font-weight:800;
-  opacity:.85;
 }
 
-.panel{
-  background:#0d1924;
-  border:1px solid #ffffff12;
-  border-radius:17px;
-  padding:13px;
-  margin-bottom:10px;
-}
-
-.panel h3{
-  margin:0 0 10px;
-  font-size:14px;
-}
-
-.item{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  padding:10px 0;
-  border-bottom:1px solid #ffffff0b;
-}
-
-.item:last-child{
-  border-bottom:0;
-}
-
-.item-info{
-  flex:1;
-}
-
-.item-name{
-  font-weight:850;
-  font-size:12px;
-}
-
-.item-desc{
-  font-size:10px;
-  opacity:.58;
-  margin-top:3px;
-}
-
-.btn{
-  background:#62dc63;
-  color:#041007;
-  padding:8px 10px;
-  border-radius:10px;
-  font-weight:900;
-  font-size:10px;
-}
-
-.btn.dark{
-  background:#ffffff10;
-  color:#fff;
-}
-
-.btn.red{
-  background:#8f3434;
-  color:#fff;
-}
-
-.btn.blue{
-  background:#4387e8;
-}
-
-.phone-back{
-  margin-bottom:10px;
-  width:100%;
-  text-align:left;
-  background:#ffffff0c;
-  padding:9px;
-  border-radius:10px;
-  font-size:11px;
+.phoneItem b{
+  display:block;
+  font-size:25px;
+  margin-bottom:5px;
 }
 
 #modal{
@@ -516,154 +344,67 @@ button{
   display:none;
   align-items:center;
   justify-content:center;
+  padding:20px;
   background:#0009;
-  padding:15px;
 }
 
-.modal-box{
+.modalBox{
   width:min(440px,100%);
-  max-height:88vh;
+  max-height:80vh;
   overflow:auto;
-  background:#08121c;
-  border:1px solid #ffffff1a;
-  border-radius:23px;
-  padding:18px;
-  box-shadow:0 20px 80px #000;
-}
-
-.modal-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:15px;
-}
-
-.modal-head h2{
-  margin:0;
-  font-size:20px;
-}
-
-#toast{
-  position:fixed;
-  left:50%;
-  bottom:calc(155px + env(safe-area-inset-bottom));
-  transform:translate(-50%,20px);
-  z-index:500;
-  background:#07111ded;
-  border:1px solid #72e36c55;
-  padding:11px 15px;
-  border-radius:13px;
-  font-size:12px;
-  font-weight:800;
-  opacity:0;
-  transition:.25s;
-  pointer-events:none;
-  text-align:center;
-  max-width:85vw;
-}
-
-#toast.show{
-  opacity:1;
-  transform:translate(-50%,0);
-}
-
-#activity{
-  position:fixed;
-  inset:0;
-  z-index:180;
-  display:none;
-  background:#02060aee;
-  align-items:center;
-  justify-content:center;
-}
-
-.activity-card{
-  width:min(390px,90%);
-  background:#0b1721;
+  border-radius:22px;
+  padding:20px;
+  background:#0a1724;
+  color:white;
   border:1px solid #ffffff18;
-  border-radius:24px;
-  padding:22px;
-  text-align:center;
+  box-shadow:0 20px 70px #000;
 }
 
-.activity-icon{
-  font-size:60px;
+.modalBox h2{
+  margin-top:0;
 }
 
-.activity-title{
-  font-size:21px;
-  font-weight:1000;
-  margin-top:8px;
+.modalText{
+  color:#c6d5df;
+  line-height:1.55;
+  font-size:14px;
 }
 
-.activity-desc{
-  opacity:.7;
-  font-size:12px;
-  line-height:1.5;
-  margin:8px 0 18px;
-}
-
-.progress{
+.modalBtn{
   width:100%;
-  height:9px;
-  border-radius:20px;
-  background:#182732;
-  overflow:hidden;
-}
-
-.progress i{
-  display:block;
-  width:0;
-  height:100%;
-  background:#6be469;
-}
-
-#pause{
-  position:fixed;
-  inset:0;
-  z-index:400;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  background:#02060acc;
-  backdrop-filter:blur(10px);
-}
-
-.pause-box{
-  width:min(380px,90%);
-  background:#09131d;
-  border:1px solid #ffffff18;
-  border-radius:24px;
-  padding:25px;
-  text-align:center;
-}
-
-.pause-box h1{
-  margin:0;
-  font-size:30px;
-}
-
-.pause-buttons{
-  display:grid;
-  gap:9px;
-  margin-top:20px;
-}
-
-.pause-buttons button{
-  padding:14px;
-  border-radius:13px;
-  background:#ffffff0c;
+  padding:13px;
+  margin-top:10px;
+  border:0;
+  border-radius:12px;
+  background:#1a3950;
+  color:white;
   font-weight:900;
 }
 
-.pause-buttons button:first-child{
-  background:#68dc66;
-  color:#041006;
+.modalBtn.primary{
+  background:#20c977;
+  color:#04120b;
 }
 
-@media(min-width:700px){
-  .action-grid{
-    grid-template-columns:repeat(4,58px);
+#driveBadge{
+  position:fixed;
+  left:50%;
+  top:92px;
+  transform:translateX(-50%);
+  z-index:25;
+  display:none;
+  padding:8px 13px;
+  border-radius:12px;
+  background:#101d29dd;
+  border:1px solid #4de99955;
+  color:#8fffbf;
+  font-size:12px;
+  font-weight:1000;
+}
+
+@media(min-width:800px){
+  #actions{
+    grid-template-columns:repeat(4,62px);
   }
 }
 </style>
@@ -671,2107 +412,3553 @@ button{
 
 <body>
 
+<div id="game"></div>
+
 <div id="loading">
   <div class="logo">IBADAN <span>LIFE</span></div>
-  <div class="loading-sub">LIVE YOUR STORY • v2.1</div>
-  <div class="loading-bar"><i></i></div>
+  <div class="loadingText" id="loadingText">Loading Ibadan...</div>
+  <div class="loader"><i></i></div>
 </div>
-
-<canvas id="game"></canvas>
 
 <div id="hud">
+  <div class="topbar">
+    <div class="playerCard">
+      <div class="playerName" id="playerName">David</div>
+      <div class="money" id="money">₦50,000</div>
+      <div class="statuses">
+        <span class="stat" id="health">❤️ 100</span>
+        <span class="stat" id="energy">⚡ 100</span>
+        <span class="stat" id="hunger">🍗 100</span>
+        <span class="stat" id="hygiene">🧼 100</span>
+      </div>
+    </div>
 
-  <div class="top-left">
-    <div class="avatar">🧑🏾</div>
-    <div class="player-card">
-      <div class="player-name" id="hudName">David</div>
-      <div class="player-money" id="hudMoney">₦50,000</div>
+    <div class="rightHud">
+      <div class="clock" id="clock">MON 08:00</div>
+      <div class="location" id="location">Your House</div>
     </div>
   </div>
-
-  <div class="top-right">
-    <div class="stat-pill" id="timeLabel">08:00 AM</div>
-    <div class="stat-pill" id="weatherLabel">☀️ Clear</div>
-  </div>
-
-  <div class="needs">
-    <div class="need"><span>🍗</span><div class="bar"><i id="hungerBar"></i></div><b id="hungerText">80</b></div>
-    <div class="need"><span>⚡</span><div class="bar"><i id="energyBar"></i></div><b id="energyText">80</b></div>
-    <div class="need"><span>🚿</span><div class="bar"><i id="hygieneBar"></i></div><b id="hygieneText">80</b></div>
-    <div class="need"><span>🎮</span><div class="bar"><i id="funBar"></i></div><b id="funText">70</b></div>
-    <div class="need"><span>👥</span><div class="bar"><i id="socialBar"></i></div><b id="socialText">65</b></div>
-  </div>
-
-  <div id="locationBadge">Family House</div>
-
-  <div id="mission">
-    <div class="mission-title">ACTIVE MISSION</div>
-    <div class="mission-text" id="missionText">Get ready for your day.</div>
-  </div>
-
-  <div id="miniMap">
-    <canvas id="mapCanvas" width="180" height="180"></canvas>
-  </div>
-
-  <div id="context">Tap ACTION</div>
 </div>
 
-<div id="controls">
+<div id="crosshair"></div>
+<div id="driveBadge">🚗 DRIVING — Swipe to look • EXIT to leave</div>
+<div id="hint"></div>
 
-  <div id="joystick">
-    <div id="stick"></div>
-  </div>
-
-  <button id="phoneButton">📱</button>
-
-  <div class="action-grid">
-    <button class="action primary" id="actButton">🖐️<small>ACTION</small></button>
-    <button class="action" id="runButton">🏃🏾<small>RUN</small></button>
-    <button class="action" id="vehicleButton">🚗<small>VEHICLE</small></button>
-    <button class="action" id="cameraButton">🎥<small>VIEW</small></button>
-    <button class="action" id="pauseButton">⏸️<small>PAUSE</small></button>
-    <button class="action" id="sleepButton">💤<small>SLEEP</small></button>
-    <button class="action" id="socialButton">👋🏾<small>SOCIAL</small></button>
-    <button class="action" id="mapButton">🗺️<small>MAP</small></button>
-  </div>
-
+<div id="joystick">
+  <div id="stick"></div>
 </div>
+
+<div id="actions">
+  <button class="action" id="actionBtn">ACTION</button>
+  <button class="action" id="carBtn">CAR</button>
+  <button class="action" id="runBtn">RUN</button>
+  <button class="action" id="exitBtn">EXIT</button>
+</div>
+
+<button id="phoneBtn">📱</button>
 
 <div id="phone">
-  <div class="phone-shell">
-    <div class="phone-top">
-      <div class="phone-title">📱 MyPhone</div>
-      <button class="close" id="closePhone">×</button>
+  <div class="phonePanel">
+    <div class="phoneHead">
+      <div class="phoneTitle">📱 David's Phone</div>
+      <button class="close" id="phoneClose">×</button>
     </div>
-    <div class="phone-screen" id="phoneScreen"></div>
+
+    <div class="phoneGrid">
+      <button class="phoneItem" data-phone="map"><b>🗺️</b>Map</button>
+      <button class="phoneItem" data-phone="jobs"><b>💼</b>Jobs</button>
+      <button class="phoneItem" data-phone="house"><b>🏠</b>House</button>
+      <button class="phoneItem" data-phone="car"><b>🚗</b>Cars</button>
+      <button class="phoneItem" data-phone="stats"><b>📊</b>Stats</button>
+      <button class="phoneItem" data-phone="decorate"><b>🛋️</b>Decorate</button>
+    </div>
   </div>
 </div>
 
 <div id="modal">
-  <div class="modal-box" id="modalBox"></div>
-</div>
-
-<div id="activity">
-  <div class="activity-card">
-    <div class="activity-icon" id="activityIcon">🍲</div>
-    <div class="activity-title" id="activityTitle">Eating</div>
-    <div class="activity-desc" id="activityDesc">
-      You are enjoying a proper Nigerian meal.
-    </div>
-    <div class="progress"><i id="activityProgress"></i></div>
+  <div class="modalBox">
+    <h2 id="modalTitle">Ibadan Life</h2>
+    <div class="modalText" id="modalText"></div>
+    <div id="modalButtons"></div>
+    <button class="modalBtn" id="modalClose">CLOSE</button>
   </div>
 </div>
 
-<div id="toast"></div>
-
-<div id="pause">
-  <div class="pause-box">
-    <h1>IBADAN LIFE</h1>
-    <p style="opacity:.6">Game paused</p>
-    <div class="pause-buttons">
-      <button id="resumeButton">▶ RESUME</button>
-      <button id="saveButton">💾 SAVE GAME</button>
-      <button id="restartButton">↻ NEW LIFE</button>
-    </div>
-  </div>
-</div>
-
-<script>
-/* =========================================================
-   IBADAN LIFE v2.1 — BUG-FIXED
-   ========================================================= */
-
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
-const mapCanvas = document.getElementById("mapCanvas");
-const mapCtx = mapCanvas.getContext("2d");
-
-let W=innerWidth,H=innerHeight,DPR=Math.min(devicePixelRatio||1,2);
-
-function resize(){
-  W=innerWidth;
-  H=innerHeight;
-  canvas.width=W*DPR;
-  canvas.height=H*DPR;
-  canvas.style.width=W+"px";
-  canvas.style.height=H+"px";
-  ctx.setTransform(DPR,0,0,DPR,0,0);
+<script type="importmap">
+{
+  "imports":{
+    "three":"https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js",
+    "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/"
+  }
 }
-addEventListener("resize",resize);
-resize();
+</script>
+
+<script type="module">
+
+import * as THREE from "three";
+import {GLTFLoader} from "three/addons/loaders/GLTFLoader.js";
+import * as SkeletonUtils from "three/addons/utils/SkeletonUtils.js";
 
 /* =========================================================
-   WORLD
-   ========================================================= */
+   IBADAN LIFE 3D
+   SINGLE-FILE MOBILE GTA-STYLE LIFE SIMULATOR
+========================================================= */
 
-const WORLD_W=3600;
-const WORLD_H=2400;
+const SAVE_KEY = "IBADAN_LIFE_3D_V3";
 
-const districts=[
-  {name:"Family House",x:120,y:160,w:520,h:420,color:"#91bd70"},
-  {name:"Bodija",x:900,y:120,w:620,h:480,color:"#89b36b"},
-  {name:"UI",x:1850,y:100,w:700,h:500,color:"#82aa66"},
-  {name:"Mokola",x:2700,y:160,w:580,h:460,color:"#9bbc73"},
-  {name:"Dugbe",x:380,y:850,w:680,h:500,color:"#91ae6b"},
-  {name:"Mapo",x:1350,y:850,w:640,h:520,color:"#a5b96f"},
-  {name:"Iwo Road",x:2250,y:900,w:750,h:540,color:"#9caf68"},
-  {name:"Challenge",x:700,y:1660,w:700,h:480,color:"#8eb26b"},
-  {name:"Ring Road",x:1700,y:1630,w:700,h:510,color:"#91b06c"},
-  {name:"Jericho",x:2700,y:1640,w:650,h:500,color:"#7fa96a"}
-];
-
-const roads=[
-  {x:0,y:680,w:3600,h:150},
-  {x:0,y:1450,w:3600,h:150},
-  {x:720,y:0,w:150,h:2400},
-  {x:2050,y:0,w:150,h:2400},
-  {x:3250,y:0,w:150,h:2400},
-  {x:1200,y:0,w:110,h:2400},
-  {x:2900,y:0,w:110,h:2400}
-];
-
-const buildings=[
-  {id:"home",name:"Your House",district:"Family House",x:250,y:250,w:250,h:190,type:"house",enterable:true,owned:true,color:"#d8a26d"},
-  {id:"bodija_market",name:"Bodija Market",district:"Bodija",x:1060,y:250,w:270,h:180,type:"market",enterable:true,color:"#d5b467"},
-  {id:"ui_hostel",name:"University Hostel",district:"UI",x:2040,y:230,w:300,h:190,type:"school",enterable:true,color:"#c5c8b4"},
-  {id:"mokola_hotel",name:"Mokola Hotel",district:"Mokola",x:2820,y:250,w:300,h:190,type:"hotel",enterable:true,color:"#9b8ac3"},
-  {id:"dugbe_shop",name:"Dugbe Shopping Centre",district:"Dugbe",x:570,y:980,w:290,h:180,type:"shop",enterable:true,color:"#c9a66b"},
-  {id:"mapo_hall",name:"Mapo Hall",district:"Mapo",x:1510,y:970,w:290,h:200,type:"hall",enterable:true,color:"#c08e64"},
-  {id:"hospital",name:"General Hospital",district:"Ring Road",x:1850,y:1800,w:330,h:210,type:"hospital",enterable:true,color:"#d9ded9"},
-  {id:"bank",name:"First City Bank",district:"Dugbe",x:820,y:950,w:240,h:160,type:"bank",enterable:true,color:"#698fa9"},
-  {id:"restaurant",name:"Mama's Kitchen",district:"Challenge",x:890,y:1760,w:260,h:170,type:"restaurant",enterable:true,color:"#b66e52"}
-];
-
-const landmarks=[
-  {name:"Cocoa House",x:470,y:900,emoji:"🏢"},
-  {name:"Mapo Hill",x:1630,y:820,emoji:"🏛️"},
-  {name:"Agodi Gardens",x:2600,y:700,emoji:"🌳"},
-  {name:"UI Gate",x:1900,y:620,emoji:"🎓"},
-  {name:"Iwo Road Park",x:2450,y:1040,emoji:"🚌"},
-  {name:"Bodija Junction",x:930,y:680,emoji:"🚦"},
-  {name:"Challenge Bus Stop",x:750,y:1450,emoji:"🚌"},
-  {name:"Dugbe Junction",x:450,y:680,emoji:"🚦"}
-];
-
-/* =========================================================
-   GAME STATE
-   ========================================================= */
-
-const defaultState={
-  name:"David", cash:50000, bank:120000,
-  day:1, hour:8, minute:0, weather:"clear",
-  hunger:82, energy:88, hygiene:78, fun:70, social:68, bladder:70,
-  reputation:10, education:10, skill:10,
-  job:null, jobLevel:1,
-  homeId:"home",
-  car:null, ownedCars:[],
-  furniture:[], inventory:[],
-  followers:0, location:"Family House",
-  wanted:0, xp:0, level:1,
-  mission:null, missionProgress:0, missionReward:0,
-  totalEarned:0, totalSpent:0
+const state = JSON.parse(localStorage.getItem(SAVE_KEY) || "null") || {
+  name:"David",
+  cash:50000,
+  bank:120000,
+  health:100,
+  hunger:100,
+  energy:100,
+  hygiene:100,
+  social:100,
+  fun:100,
+  day:1,
+  minutes:8*60,
+  weather:"Sunny",
+  location:"Your House",
+  job:"Unemployed",
+  jobPay:0,
+  inside:false,
+  building:null,
+  driving:false,
+  ownedCar:"Toyota Corolla",
+  furniture:[],
+  xp:0,
+  level:1,
+  totalEarned:0,
+  totalSpent:0,
+  lastOutside:{
+    x:-50,
+    z:-34,
+    yaw:0
+  }
 };
 
-let state=JSON.parse(localStorage.getItem("ibadanLifeV2")||"null")||structuredClone(defaultState);
+/* =========================================================
+   THREE SETUP
+========================================================= */
 
-// Ensure required fields exist even on old saves
-if(!state.ownedCars) state.ownedCars=[];
-if(!state.furniture) state.furniture=[];
-if(state.car === undefined) state.car = null;
+const scene = new THREE.Scene();
 
-const player={
-  x:360, y:500,
-  angle:0,
-  vehicle:null,
-  inBuilding:null,
-  moving:false,
-  run:false,
-  ownedVehicleId:null
-};
+scene.background = new THREE.Color(0x8cc8e8);
 
-let camera={x:0, y:0, zoom:1};
-let keys={x:0, y:0};
+scene.fog = new THREE.FogExp2(
+  0x8cc8e8,
+  0.0022
+);
 
-let gamePaused=false;
-let phoneOpen=false;
-let currentPhonePage="home";
-let activeActivity=false;
-let activityTimer=null;
-let toastTimer=null;
-let cameraMode=0;
+const camera = new THREE.PerspectiveCamera(
+  62,
+  innerWidth/innerHeight,
+  0.1,
+  1200
+);
+
+camera.position.set(-62,12,-48);
+
+const renderer = new THREE.WebGLRenderer({
+  antialias:true,
+  powerPreference:"high-performance"
+});
+
+renderer.setPixelRatio(
+  Math.min(devicePixelRatio,1.7)
+);
+
+renderer.setSize(innerWidth,innerHeight);
+
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+
+document.getElementById("game").appendChild(renderer.domElement);
 
 /* =========================================================
-   VEHICLES
-   ========================================================= */
+   LIGHTING
+========================================================= */
 
-const VEHICLES=[
-  {id:"keke",name:"Keke NAPEP",price:80000,speed:4.5,color:"#e2bf3e",emoji:"🛺"},
-  {id:"corolla",name:"Toyota Corolla",price:2500000,speed:6,color:"#d7d7d7",emoji:"🚗"},
-  {id:"camry",name:"Toyota Camry",price:4500000,speed:6.5,color:"#171c24",emoji:"🚘"},
-  {id:"benz",name:"Mercedes C-Class",price:9000000,speed:7,color:"#b8bdc6",emoji:"🚙"},
-  {id:"range",name:"Range Rover Sport",price:18000000,speed:7.5,color:"#263328",emoji:"🚙"}
-];
+const hemi = new THREE.HemisphereLight(
+  0xcfefff,
+  0x32422e,
+  1.4
+);
 
-const traffic=[];
-const npcs=[];
+scene.add(hemi);
 
-function rand(a,b){ return Math.random()*(b-a)+a; }
-function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+const sun = new THREE.DirectionalLight(
+  0xffffff,
+  2.2
+);
 
-for(let i=0;i<36;i++){
-  traffic.push({
-    x:rand(0,WORLD_W),
-    y:pick([750,1520,795,1575]),
-    dir:Math.random()<.5?1:-1,
-    angle:0,
-    speed:rand(1.2,2.5),
-    type:pick(VEHICLES.slice(0,3)),
-    occupied:false,
-    owned:false
+sun.position.set(-120,180,80);
+sun.castShadow = true;
+
+sun.shadow.mapSize.set(2048,2048);
+
+sun.shadow.camera.left = -300;
+sun.shadow.camera.right = 300;
+sun.shadow.camera.top = 300;
+sun.shadow.camera.bottom = -300;
+
+scene.add(sun);
+
+/* =========================================================
+   GROUPS
+========================================================= */
+
+const world = new THREE.Group();
+const interiorWorld = new THREE.Group();
+
+scene.add(world);
+scene.add(interiorWorld);
+
+interiorWorld.visible = false;
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+const loader = new GLTFLoader();
+
+function mat(color,roughness=.8,metalness=0){
+  return new THREE.MeshStandardMaterial({
+    color,
+    roughness,
+    metalness
   });
 }
 
-const npcNames=["Aisha","Tunde","Kemi","Bola","Seyi","Mariam","Kunle","Tosin","Femi","Peace","Daniel","Esther","Yemi","Ayo","Chioma","Ola","Gbenga","Zainab"];
+function box(
+  w,
+  h,
+  d,
+  color,
+  x=0,
+  y=0,
+  z=0
+){
+  const m = new THREE.Mesh(
+    new THREE.BoxGeometry(w,h,d),
+    mat(color)
+  );
 
-for(let i=0;i<55;i++){
-  npcs.push({
-    x:rand(50,WORLD_W-50),
-    y:rand(50,WORLD_H-50),
-    vx:rand(-.5,.5),
-    vy:rand(-.5,.5),
-    name:pick(npcNames),
-    skin:pick(["#5a3828","#704631","#8a5639","#9d6849"]),
-    shirt:pick(["#d65a4a","#4d80bb","#dbb74e","#5ca36d","#9b6eb0","#e9e2d5"]),
-    timer:rand(1,5)
-  });
+  m.position.set(x,y,z);
+  m.castShadow=true;
+  m.receiveShadow=true;
+
+  return m;
 }
 
-/* =========================================================
-   FURNITURE
-   ========================================================= */
+function cylinder(
+  r,
+  h,
+  color,
+  x=0,
+  y=0,
+  z=0
+){
+  const m = new THREE.Mesh(
+    new THREE.CylinderGeometry(r,r,h,16),
+    mat(color)
+  );
 
-const FURNITURE=[
-  {id:"sofa",name:"Modern Sofa",price:35000,emoji:"🛋️",w:90,h:45},
-  {id:"bed",name:"King Bed",price:70000,emoji:"🛏️",w:95,h:55},
-  {id:"tv",name:"Smart TV",price:95000,emoji:"📺",w:55,h:35},
-  {id:"table",name:"Dining Table",price:45000,emoji:"🪑",w:70,h:45},
-  {id:"fridge",name:"Fridge",price:80000,emoji:"🧊",w:40,h:55},
-  {id:"plant",name:"Indoor Plant",price:15000,emoji:"🪴",w:35,h:40},
-  {id:"desk",name:"Study Desk",price:30000,emoji:"🖥️",w:65,h:45},
-  {id:"wardrobe",name:"Wardrobe",price:60000,emoji:"🚪",w:55,h:70},
-  {id:"rug",name:"Luxury Rug",price:25000,emoji:"🟥",w:110,h:70}
-];
+  m.position.set(x,y,z);
+  m.castShadow=true;
+  m.receiveShadow=true;
 
-/* =========================================================
-   JOBS
-   ========================================================= */
-
-const JOBS=[
-  {id:"buka",name:"Buka Attendant",salary:7000,icon:"🍲",req:0},
-  {id:"market",name:"Market Trader",salary:10000,icon:"🛒",req:0},
-  {id:"driver",name:"Danfo Driver",salary:14000,icon:"🚌",req:5},
-  {id:"security",name:"Security Officer",salary:16000,icon:"🛡️",req:5},
-  {id:"teacher",name:"Teacher",salary:22000,icon:"👨🏾‍🏫",req:15},
-  {id:"nurse",name:"Nurse",salary:30000,icon:"🧑🏾‍⚕️",req:25},
-  {id:"developer",name:"Software Developer",salary:50000,icon:"💻",req:30},
-  {id:"banker",name:"Bank Officer",salary:45000,icon:"🏦",req:30},
-  {id:"creator",name:"Content Creator",salary:25000,icon:"🎥",req:10}
-];
-
-/* =========================================================
-   MISSIONS
-   ========================================================= */
-
-const MISSIONS=[
-  {text:"Visit Bodija Market.",type:"visit",target:"Bodija",reward:5000},
-  {text:"Eat a proper meal.",type:"eat",target:1,reward:2500},
-  {text:"Drive your own car.",type:"drive",target:1,reward:4000},
-  {text:"Take a shower.",type:"bath",target:1,reward:3000},
-  {text:"Socialize with somebody.",type:"social",target:1,reward:3500},
-  {text:"Complete a work shift.",type:"work",target:1,reward:7000}
-];
-
-function createMission(){
-  state.mission=pick(MISSIONS);
-  state.missionProgress=0;
-  state.missionReward=state.mission.reward;
-  updateMission();
+  return m;
 }
 
-function updateMission(){
-  if(!state.mission)return;
-  document.getElementById("mission").style.display="block";
-  document.getElementById("missionText").textContent=
-    state.mission.text+"  •  "+state.missionProgress+"/"+state.mission.target;
-  if(state.missionProgress>=state.mission.target){
-    rewardMission();
-  }
+function formatMoney(n){
+  return "₦"+Math.round(n).toLocaleString();
 }
 
-function progressMission(type,value=1){
-  if(!state.mission)return;
-  if(state.mission.type===type){
-    state.missionProgress+=value;
-    updateMission();
-  }
+function clamp(v,a,b){
+  return Math.max(a,Math.min(b,v));
 }
 
-function rewardMission(){
-  const reward=state.missionReward;
-  state.cash+=reward;
-  state.xp+=20;
-  toast("🎯 Mission complete! +₦"+money(reward));
-  state.mission=null;
-  document.getElementById("mission").style.display="none";
-  setTimeout(createMission,1800);
+function distance2D(a,b){
+  return Math.hypot(
+    a.x-b.x,
+    a.z-b.z
+  );
 }
-
-/* =========================================================
-   UTILITY
-   ========================================================= */
-
-function money(n){ return "₦"+Math.round(n).toLocaleString("en-NG"); }
-function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
 
 function saveGame(){
-  localStorage.setItem("ibadanLifeV2",JSON.stringify(state));
-}
-
-function toast(message){
-  const el=document.getElementById("toast");
-  el.textContent=message;
-  el.classList.add("show");
-  clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>el.classList.remove("show"),2400);
-}
-
-function spend(amount){
-  if(state.cash<amount){
-    toast("❌ You don't have enough cash.");
-    return false;
-  }
-  state.cash-=amount;
-  state.totalSpent+=amount;
-  return true;
-}
-
-function earn(amount){
-  state.cash+=amount;
-  state.totalEarned+=amount;
-  state.xp+=Math.ceil(amount/1000);
-  checkLevel();
-}
-
-function checkLevel(){
-  const needed=state.level*100;
-  if(state.xp>=needed){
-    state.xp-=needed;
-    state.level++;
-    state.reputation++;
-    toast("⭐ LEVEL UP! You are now level "+state.level);
-  }
+  localStorage.setItem(
+    SAVE_KEY,
+    JSON.stringify(state)
+  );
 }
 
 /* =========================================================
-   TIME
-   ========================================================= */
+   GROUND
+========================================================= */
 
-let lastTime=performance.now();
+const ground = box(
+  550,
+  1,
+  550,
+  0x4e7747,
+  0,
+  -0.5,
+  0
+);
 
-function updateTime(dt){
-  state.minute+=dt*0.65;
-  if(state.minute>=60){ state.minute-=60; state.hour++; }
-  if(state.hour>=24){ state.hour=0; state.day++; }
-  if(Math.random()<0.0008){
-    state.weather=pick(["clear","clear","cloudy","rain"]);
-  }
-}
-
-function timeText(){
-  let h=state.hour;
-  const suffix=h>=12?"PM":"AM";
-  h=h%12; if(h===0)h=12;
-  return String(h).padStart(2,"0")+":"+String(Math.floor(state.minute)).padStart(2,"0")+" "+suffix;
-}
-
-function isNight(){ return state.hour>=19 || state.hour<6; }
+world.add(ground);
 
 /* =========================================================
-   NEEDS
-   ========================================================= */
+   ROADS
+========================================================= */
 
-function updateNeeds(dt){
-  if(activeActivity)return;
-  const factor=dt;
+function createRoad(x,z,w,d){
+  const road = box(
+    w,
+    .12,
+    d,
+    0x24272b,
+    x,
+    .02,
+    z
+  );
 
-  state.hunger=clamp(state.hunger-0.025*factor,0,100);
-  state.energy=clamp(state.energy-0.018*factor,0,100);
-  state.hygiene=clamp(state.hygiene-0.014*factor,0,100);
-  state.fun=clamp(state.fun-0.009*factor,0,100);
-  state.social=clamp(state.social-0.006*factor,0,100);
-  state.bladder=clamp(state.bladder-0.012*factor,0,100);
+  world.add(road);
 
-  if(player.vehicle){
-    state.fun=clamp(state.fun+0.002*factor,0,100);
+  /* road edges */
+  const edgeMat = mat(0x777777);
+
+  if(w>d){
+    for(let i=-w/2;i<w/2;i+=9){
+      const line = new THREE.Mesh(
+        new THREE.BoxGeometry(4,.025,.18),
+        edgeMat
+      );
+
+      line.position.set(
+        x+i,
+        .09,
+        z
+      );
+
+      world.add(line);
+    }
+  }else{
+    for(let i=-d/2;i<d/2;i+=9){
+      const line = new THREE.Mesh(
+        new THREE.BoxGeometry(.18,.025,4),
+        edgeMat
+      );
+
+      line.position.set(
+        x,
+        .09,
+        z+i
+      );
+
+      world.add(line);
+    }
   }
 }
+
+createRoad(0,0,550,15);
+createRoad(0,70,550,14);
+createRoad(0,-70,550,14);
+createRoad(0,0,15,550);
+createRoad(70,0,14,550);
+createRoad(-70,0,14,550);
+
+/* sidewalks */
+
+function sidewalk(x,z,w,d){
+  const s = box(
+    w,
+    .18,
+    d,
+    0x999b96,
+    x,
+    .08,
+    z
+  );
+
+  world.add(s);
+}
+
+sidewalk(0,10,550,5);
+sidewalk(0,-10,550,5);
+sidewalk(10,0,5,550);
+sidewalk(-10,0,5,550);
 
 /* =========================================================
    BUILDINGS
-   ========================================================= */
+========================================================= */
 
-function nearestBuilding(){
-  let best=null, dist=Infinity;
-  for(const b of buildings){
-    const cx=b.x+b.w/2, cy=b.y+b.h/2;
-    const d=Math.hypot(player.x-cx,player.y-cy);
-    if(d<dist){ dist=d; best=b; }
+const buildings = [];
+
+function createBuilding(
+  id,
+  name,
+  x,
+  z,
+  w,
+  d,
+  h,
+  color
+){
+
+  const group = new THREE.Group();
+
+  const body = box(
+    w,
+    h,
+    d,
+    color,
+    0,
+    h/2,
+    0
+  );
+
+  group.add(body);
+
+  /* roof */
+  const roof = box(
+    w+1,
+    .8,
+    d+1,
+    0x34363b,
+    0,
+    h+.4,
+    0
+  );
+
+  group.add(roof);
+
+  /* windows */
+  const windowMat = mat(0x8dd7ee,.25,.25);
+
+  for(let wx=-w/2+4; wx<w/2-2; wx+=5){
+    const win = new THREE.Mesh(
+      new THREE.BoxGeometry(
+        1.7,
+        2.1,
+        .08
+      ),
+      windowMat
+    );
+
+    win.position.set(
+      wx,
+      h*.62,
+      d/2+.05
+    );
+
+    group.add(win);
   }
-  return dist<150?best:null;
+
+  /* front door */
+  const door = new THREE.Mesh(
+    new THREE.BoxGeometry(
+      2.2,
+      3.5,
+      .12
+    ),
+    mat(0x5b3725)
+  );
+
+  door.position.set(
+    0,
+    1.75,
+    d/2+.08
+  );
+
+  group.add(door);
+
+  /* name sign */
+  const sign = new THREE.Mesh(
+    new THREE.BoxGeometry(
+      Math.min(w-4,18),
+      1.2,
+      .18
+    ),
+    mat(0x20252b)
+  );
+
+  sign.position.set(
+    0,
+    h*.84,
+    d/2+.13
+  );
+
+  group.add(sign);
+
+  group.position.set(x,0,z);
+
+  world.add(group);
+
+  const b = {
+    id,
+    name,
+    x,
+    z,
+    w,
+    d,
+    h,
+    group
+  };
+
+  buildings.push(b);
+
+  return b;
 }
 
+createBuilding(
+  "house",
+  "Your House",
+  -50,
+  -48,
+  24,
+  22,
+  12,
+  0xc58e61
+);
+
+createBuilding(
+  "market",
+  "Bodija Market",
+  55,
+  -45,
+  34,
+  25,
+  10,
+  0xd2b15d
+);
+
+createBuilding(
+  "hostel",
+  "University Hostel",
+  -48,
+  48,
+  28,
+  24,
+  15,
+  0xb9c1ca
+);
+
+createBuilding(
+  "hotel",
+  "Mokola Hotel",
+  48,
+  48,
+  30,
+  26,
+  20,
+  0x728ba1
+);
+
+createBuilding(
+  "shopping",
+  "Dugbe Shopping Centre",
+  125,
+  0,
+  36,
+  30,
+  16,
+  0x7d8d99
+);
+
+createBuilding(
+  "hospital",
+  "General Hospital",
+  -125,
+  0,
+  36,
+  30,
+  18,
+  0xe8e8e8
+);
+
+createBuilding(
+  "bank",
+  "First City Bank",
+  0,
+  125,
+  32,
+  24,
+  12,
+  0x4c687b
+);
+
+createBuilding(
+  "restaurant",
+  "Mama's Kitchen",
+  0,
+  -125,
+  30,
+  24,
+  10,
+  0xc17c4d
+);
+
+/* =========================================================
+   TREES
+========================================================= */
+
+function createTree(x,z,scale=1){
+
+  const g = new THREE.Group();
+
+  const trunk = cylinder(
+    .55,
+    4,
+    0x68472d
+  );
+
+  trunk.position.y=2;
+
+  g.add(trunk);
+
+  const crown = new THREE.Mesh(
+    new THREE.SphereGeometry(
+      3.3,
+      12,
+      10
+    ),
+    mat(0x2d733d)
+  );
+
+  crown.position.y=6;
+
+  crown.castShadow=true;
+
+  g.add(crown);
+
+  g.position.set(x,0,z);
+  g.scale.setScalar(scale);
+
+  world.add(g);
+}
+
+const treePositions=[
+  [-180,-160,1.2],
+  [-150,-110,.9],
+  [-180,160,1.1],
+  [-100,175,.8],
+  [165,-160,1.2],
+  [190,-110,.9],
+  [180,155,1.1],
+  [115,180,.9],
+  [-200,40,1],
+  [205,50,1],
+  [-40,200,.8],
+  [40,-200,1]
+];
+
+treePositions.forEach(t=>createTree(...t));
+
+/* =========================================================
+   STREET LIGHTS
+========================================================= */
+
+function streetLight(x,z){
+
+  const g = new THREE.Group();
+
+  const pole = cylinder(
+    .12,
+    7,
+    0x25282b
+  );
+
+  pole.position.y=3.5;
+
+  g.add(pole);
+
+  const arm = box(
+    2.2,
+    .12,
+    .12,
+    0x25282b,
+    1,
+    6.9,
+    0
+  );
+
+  g.add(arm);
+
+  const lamp = new THREE.Mesh(
+    new THREE.SphereGeometry(.25,10,8),
+    new THREE.MeshStandardMaterial({
+      color:0xffe6a3,
+      emissive:0xffb52e,
+      emissiveIntensity:1.8
+    })
+  );
+
+  lamp.position.set(2,6.7,0);
+
+  g.add(lamp);
+
+  g.position.set(x,0,z);
+
+  world.add(g);
+}
+
+for(let i=-220;i<=220;i+=55){
+  streetLight(i,12);
+  streetLight(i,-12);
+  streetLight(12,i);
+  streetLight(-12,i);
+}
+
+/* =========================================================
+   PLAYER FALLBACK MODEL
+========================================================= */
+
+function createFallbackHuman(){
+
+  const g = new THREE.Group();
+
+  g.userData.fallback=true;
+
+  const skin=mat(0x7b4a2d);
+  const shirt=mat(0x1677a9);
+  const pants=mat(0x172033);
+  const shoes=mat(0x151515);
+
+  const torso=box(
+    1.25,
+    1.7,
+    .7,
+    0x1677a9
+  );
+
+  torso.position.y=2.5;
+  torso.material=shirt;
+
+  g.add(torso);
+
+  const head=new THREE.Mesh(
+    new THREE.SphereGeometry(
+      .52,
+      16,
+      12
+    ),
+    skin
+  );
+
+  head.position.y=3.75;
+  head.castShadow=true;
+
+  g.add(head);
+
+  const leftArm=box(
+    .35,
+    1.5,
+    .35,
+    0x1677a9
+  );
+
+  leftArm.position.set(-.9,2.55,0);
+
+  const rightArm=leftArm.clone();
+  rightArm.position.x=.9;
+
+  g.add(leftArm);
+  g.add(rightArm);
+
+  const leftLeg=box(
+    .42,
+    1.7,
+    .42,
+    0x172033
+  );
+
+  leftLeg.position.set(-.34,.85,0);
+
+  const rightLeg=leftLeg.clone();
+  rightLeg.position.x=.34;
+
+  g.add(leftLeg);
+  g.add(rightLeg);
+
+  const shoe1=box(
+    .48,
+    .25,
+    .75,
+    0x151515
+  );
+
+  shoe1.position.set(
+    -.34,.1,.12
+  );
+
+  const shoe2=shoe1.clone();
+  shoe2.position.x=.34;
+
+  g.add(shoe1);
+  g.add(shoe2);
+
+  g.userData.parts={
+    leftArm,
+    rightArm,
+    leftLeg,
+    rightLeg
+  };
+
+  return g;
+}
+
+let player = createFallbackHuman();
+
+player.position.set(
+  state.lastOutside.x,
+  0,
+  state.lastOutside.z
+);
+
+player.rotation.y=state.lastOutside.yaw;
+
+player.scale.setScalar(.92);
+
+world.add(player);
+
+/* =========================================================
+   REAL PLAYER GLB
+========================================================= */
+
+let playerGLTF=null;
+let playerMixer=null;
+let playerActions={};
+let activePlayerAction=null;
+
+const PLAYER_URL =
+  "https://threejs.org/examples/models/gltf/Soldier.glb";
+
+function findAction(names){
+
+  for(const n of names){
+
+    const key=Object.keys(playerActions)
+      .find(k=>k.toLowerCase()===n.toLowerCase());
+
+    if(key) return playerActions[key];
+  }
+
+  const first=Object.keys(playerActions)[0];
+
+  return first ? playerActions[first] : null;
+}
+
+function setPlayerAction(names){
+
+  const action=findAction(names);
+
+  if(!action || action===activePlayerAction)
+    return;
+
+  if(activePlayerAction)
+    activePlayerAction.fadeOut(.18);
+
+  action.reset();
+  action.fadeIn(.18);
+  action.play();
+
+  activePlayerAction=action;
+}
+
+async function loadRealPlayer(){
+
+  try{
+
+    const gltf=await loader.loadAsync(
+      PLAYER_URL
+    );
+
+    playerGLTF=gltf;
+
+    const real=SkeletonUtils.clone(
+      gltf.scene
+    );
+
+    real.traverse(o=>{
+
+      if(o.isMesh){
+
+        o.castShadow=true;
+        o.receiveShadow=true;
+
+      }
+
+    });
+
+    real.scale.setScalar(.0125);
+
+    real.position.copy(player.position);
+    real.rotation.copy(player.rotation);
+
+    world.remove(player);
+    player=real;
+    world.add(player);
+
+    playerMixer=
+      new THREE.AnimationMixer(player);
+
+    for(const clip of gltf.animations){
+
+      const action=
+        playerMixer.clipAction(clip);
+
+      playerActions[clip.name]=action;
+    }
+
+    setPlayerAction(["Idle","idle"]);
+
+    return true;
+
+  }catch(err){
+
+    console.warn(
+      "Real player failed; fallback used.",
+      err
+    );
+
+    return false;
+  }
+}
+
+/* =========================================================
+   VEHICLES
+========================================================= */
+
+const vehicles=[];
+
+function createFallbackCar(
+  name,
+  color,
+  x,
+  z
+){
+
+  const g=new THREE.Group();
+
+  const body=box(
+    4.2,
+    1.05,
+    7.4,
+    color,
+    0,
+    1,
+    0
+  );
+
+  g.add(body);
+
+  const cabin=box(
+    3.1,
+    1.25,
+    3.4,
+    0x20252b,
+    0,
+    1.9,
+    -.3
+  );
+
+  g.add(cabin);
+
+  const wheelGeo=
+    new THREE.CylinderGeometry(
+      .62,
+      .62,
+      .42,
+      16
+    );
+
+  const wheelMat=
+    mat(0x111111);
+
+  [
+    [-2.05,.65,-2.25],
+    [2.05,.65,-2.25],
+    [-2.05,.65,2.25],
+    [2.05,.65,2.25]
+  ].forEach(p=>{
+
+    const w=new THREE.Mesh(
+      wheelGeo,
+      wheelMat
+    );
+
+    w.rotation.z=Math.PI/2;
+    w.position.set(...p);
+    w.castShadow=true;
+
+    g.add(w);
+  });
+
+  g.position.set(x,0,z);
+
+  g.userData={
+    name,
+    speed:0,
+    isPlayerCar:false,
+    fallback:true
+  };
+
+  world.add(g);
+  vehicles.push(g);
+
+  return g;
+}
+
+const carColors=[
+  0xd92727,
+  0x111111,
+  0xe5e5e5,
+  0x2468d9,
+  0xdaa520,
+  0xeeeeee
+];
+
+for(let i=0;i<8;i++){
+
+  const x=
+    i%2===0
+      ? -180+i*35
+      : 150-i*28;
+
+  const z=
+    i%2===0
+      ? 0
+      : 70;
+
+  createFallbackCar(
+    i===0
+      ?"Toyota Corolla"
+      :"Traffic Car",
+    carColors[i%carColors.length],
+    x,
+    z
+  );
+}
+
+/* owned car */
+const ownedCar=
+  createFallbackCar(
+    state.ownedCar,
+    0x1d72c9,
+    -34,
+    -32
+  );
+
+ownedCar.userData.isPlayerCar=true;
+
+/* =========================================================
+   REAL FERRARI MODEL
+========================================================= */
+
+async function loadRealCar(){
+
+  try{
+
+    const gltf=
+      await loader.loadAsync(
+        "https://threejs.org/examples/models/gltf/ferrari.glb"
+      );
+
+    const real=
+      SkeletonUtils.clone(
+        gltf.scene
+      );
+
+    real.traverse(o=>{
+
+      if(o.isMesh){
+
+        o.castShadow=true;
+        o.receiveShadow=true;
+
+      }
+
+    });
+
+    real.scale.setScalar(.045);
+
+    real.position.copy(
+      ownedCar.position
+    );
+
+    real.rotation.y=Math.PI;
+
+    real.userData={
+      ...ownedCar.userData,
+      name:state.ownedCar,
+      isPlayerCar:true,
+      real:true,
+      forwardOffset:Math.PI
+    };
+
+    world.remove(ownedCar);
+
+    const index=
+      vehicles.indexOf(ownedCar);
+
+    if(index>=0)
+      vehicles.splice(index,1);
+
+    world.add(real);
+    vehicles.push(real);
+
+    return real;
+
+  }catch(err){
+
+    console.warn(
+      "Real vehicle failed; fallback car used.",
+      err
+    );
+
+    return ownedCar;
+  }
+}
+
+/* =========================================================
+   NPCS
+========================================================= */
+
+const npcs=[];
+
+function createNPC(
+  x,
+  z
+){
+
+  const npc=
+    createFallbackHuman();
+
+  npc.scale.setScalar(.75);
+
+  npc.position.set(x,0,z);
+
+  npc.userData={
+    dir:
+      Math.random()*Math.PI*2,
+    speed:
+      .7+Math.random()*.7,
+    timer:
+      2+Math.random()*6,
+    mixer:null,
+    action:null
+  };
+
+  world.add(npc);
+  npcs.push(npc);
+
+  return npc;
+}
+
+for(let i=0;i<14;i++){
+
+  createNPC(
+    (Math.random()-.5)*420,
+    (Math.random()-.5)*420
+  );
+}
+
+/* =========================================================
+   BUILDING COLLISION
+========================================================= */
+
+function buildingContains(
+  b,
+  x,
+  z,
+  margin=1
+){
+
+  return (
+    x>b.x-b.w/2-margin &&
+    x<b.x+b.w/2+margin &&
+    z>b.z-b.d/2-margin &&
+    z<b.z+b.d/2+margin
+  );
+}
+
+function isNearDoor(
+  b,
+  x,
+  z
+){
+
+  const doorX=b.x;
+  const doorZ=b.z+b.d/2+2.2;
+
+  return Math.hypot(
+    x-doorX,
+    z-doorZ
+  )<5.5;
+}
+
+function nearestBuilding(){
+
+  let best=null;
+  let bestDist=Infinity;
+
+  for(const b of buildings){
+
+    const door={
+      x:b.x,
+      z:b.z+b.d/2+2.2
+    };
+
+    const d=Math.hypot(
+      player.position.x-door.x,
+      player.position.z-door.z
+    );
+
+    if(d<bestDist){
+
+      bestDist=d;
+      best=b;
+    }
+  }
+
+  return bestDist<6 ? best:null;
+}
+
+/* =========================================================
+   INTERIOR
+========================================================= */
+
+function clearInterior(){
+
+  while(interiorWorld.children.length){
+
+    interiorWorld.remove(
+      interiorWorld.children[
+        interiorWorld.children.length-1
+      ]
+    );
+  }
+}
+
+function createInterior(
+  building
+){
+
+  clearInterior();
+
+  const roomW=30;
+  const roomD=24;
+  const wallH=8;
+  const wallT=.7;
+
+  const floor=box(
+    roomW,
+    .3,
+    roomD,
+    0x8b7969,
+    0,
+    0,
+    0
+  );
+
+  interiorWorld.add(floor);
+
+  const back=box(
+    roomW,
+    wallH,
+    wallT,
+    0xd9d0c5,
+    0,
+    wallH/2,
+    -roomD/2
+  );
+
+  const left=box(
+    wallT,
+    wallH,
+    roomD,
+    0xd9d0c5,
+    -roomW/2,
+    wallH/2,
+    0
+  );
+
+  const right=box(
+    wallT,
+    wallH,
+    roomD,
+    0xd9d0c5,
+    roomW/2,
+    wallH/2,
+    0
+  );
+
+  const frontLeft=box(
+    roomW/2-2.5,
+    wallH,
+    wallT,
+    0xd9d0c5,
+    -(roomW/4+1.25),
+    wallH/2,
+    roomD/2
+  );
+
+  const frontRight=box(
+    roomW/2-2.5,
+    wallH,
+    wallT,
+    0xd9d0c5,
+    roomW/4+1.25,
+    wallH/2,
+    roomD/2
+  );
+
+  interiorWorld.add(
+    back,
+    left,
+    right,
+    frontLeft,
+    frontRight
+  );
+
+  /* exit door */
+  const exitDoor=box(
+    5,
+    5.8,
+    .3,
+    0x3d2518,
+    0,
+    2.9,
+    roomD/2+.25
+  );
+
+  exitDoor.userData.exitDoor=true;
+
+  interiorWorld.add(exitDoor);
+
+  /* bed */
+  const bed=box(
+    6,
+    1,
+    3.4,
+    0x513c34,
+    -7,
+    .7,
+    -5
+  );
+
+  const mattress=box(
+    5.7,
+    .45,
+    3.1,
+    0xe6e1d7,
+    -7,
+    1.4,
+    -5
+  );
+
+  interiorWorld.add(
+    bed,
+    mattress
+  );
+
+  /* sofa */
+  const sofa=box(
+    6,
+    1.5,
+    2,
+    0x5c2e2b,
+    7,
+    .9,
+    -3
+  );
+
+  interiorWorld.add(sofa);
+
+  /* table */
+  const table=box(
+    4,
+    .4,
+    2.4,
+    0x6b4328,
+    3,
+    1.8,
+    4
+  );
+
+  interiorWorld.add(table);
+
+  for(const [x,z] of [
+    [1.5,3.2],
+    [4.5,3.2],
+    [1.5,4.8],
+    [4.5,4.8]
+  ]){
+
+    const leg=box(
+      .25,
+      1.8,
+      .25,
+      0x4b2d1b,
+      x,
+      .9,
+      z
+    );
+
+    interiorWorld.add(leg);
+  }
+
+  /* TV */
+  const tv=box(
+    4,
+    2.5,
+    .25,
+    0x111111,
+    7,
+    3.2,
+    -5.5
+  );
+
+  interiorWorld.add(tv);
+
+  /* plant */
+  const pot=cylinder(
+    .65,
+    .8,
+    0x874d30,
+    -11,
+    .4,
+    5
+  );
+
+  const leaves=new THREE.Mesh(
+    new THREE.SphereGeometry(
+      1.5,
+      12,
+      10
+    ),
+    mat(0x318449)
+  );
+
+  leaves.position.set(
+    -11,
+    2,
+    5
+  );
+
+  interiorWorld.add(
+    pot,
+    leaves
+  );
+
+  /* labels */
+  buildingFurnitureVisuals(building);
+
+  interiorWorld.visible=true;
+}
+
+function buildingFurnitureVisuals(building){
+
+  if(!state.furniture.length)
+    return;
+
+  /* simple saved decoration representation */
+  for(const f of state.furniture){
+
+    const obj=box(
+      f.type==="TV"?3:2,
+      1,
+      1.5,
+      0x7a5434,
+      f.x,
+      .5,
+      f.z
+    );
+
+    obj.rotation.y=f.rotation||0;
+
+    interiorWorld.add(obj);
+  }
+}
+
+/* =========================================================
+   ENTER / EXIT BUILDINGS
+========================================================= */
+
 function enterBuilding(b){
-  if(!b)return;
-  player.inBuilding=b.id;
-  player.x=0; player.y=0;
-  if(b.id==="home"){ toast("🏠 Welcome home."); }
-  else { toast("🚪 Entered "+b.name); }
-  updateContext();
+
+  if(!b) return;
+
+  if(state.driving)
+    exitVehicle();
+
+  state.lastOutside={
+    x:player.position.x,
+    z:player.position.z,
+    yaw:player.rotation.y
+  };
+
+  state.inside=true;
+  state.building=b.id;
+  state.location=b.name;
+
+  world.visible=false;
+
+  createInterior(b);
+
+  player.position.set(
+    0,
+    0,
+    7
+  );
+
+  player.rotation.y=Math.PI;
+
+  player.visible=true;
+
+  interiorWorld.visible=true;
+
+  showHint(
+    "🏠 Inside "+b.name+" • Move around • Walk to EXIT"
+  );
+
+  saveGame();
 }
 
 function exitBuilding(){
-  const b=buildings.find(x=>x.id===player.inBuilding);
-  if(!b)return;
-  player.inBuilding=null;
-  player.x=b.x+b.w/2;
-  player.y=b.y+b.h+75;
-  toast("🚪 You left "+b.name);
-}
 
-function insideFurniturePosition(f,i){
-  const slots=[
-    [110,115],[245,115],[380,115],
-    [110,240],[245,240],[380,240],
-    [110,365],[245,365],[380,365]
-  ];
-  return slots[i%slots.length];
-}
+  if(!state.inside)
+    return;
 
-function drawInterior(b){
-  ctx.fillStyle="#202932";
-  ctx.fillRect(0,0,W,H);
+  clearInterior();
 
-  const scale=Math.min(W/520,H/430);
-  ctx.save();
-  ctx.translate(W/2-260*scale,H/2-215*scale);
-  ctx.scale(scale,scale);
+  interiorWorld.visible=false;
+  world.visible=true;
 
-  ctx.fillStyle="#b98457";
-  ctx.fillRect(25,25,470,380);
+  state.inside=false;
+  state.building=null;
 
-  ctx.fillStyle="#d8d0bc";
-  ctx.fillRect(25,25,470,25);
-  ctx.fillRect(25,380,470,25);
-  ctx.fillRect(25,25,25,380);
-  ctx.fillRect(470,25,25,380);
+  player.position.set(
+    state.lastOutside.x,
+    0,
+    state.lastOutside.z
+  );
 
-  ctx.fillStyle="#71a6c3";
-  ctx.fillRect(90,35,90,15);
-  ctx.fillRect(320,35,90,15);
+  player.rotation.y=
+    state.lastOutside.yaw;
 
-  ctx.fillStyle="#704b35";
-  ctx.fillRect(220,380,80,25);
+  state.location=
+    "Outside";
 
-  if(b.id==="home"){
-    ctx.fillStyle="#d5bd99";
-    ctx.fillRect(65,80,400,275);
-    ctx.fillStyle="#eee3cd";
-    ctx.fillRect(75,90,180,120);
-    ctx.fillRect(275,90,180,120);
-    ctx.fillStyle="#b58a63";
-    ctx.fillRect(75,225,180,120);
-    ctx.fillRect(275,225,180,120);
-  }
+  showHint(
+    "🚪 Back outside"
+  );
 
-  ctx.fillStyle="#111";
-  ctx.font="bold 16px system-ui";
-  ctx.fillText(b.name,70,70);
-
-  if(b.id==="home"){
-    state.furniture.forEach((f,i)=>{
-      const def=FURNITURE.find(x=>x.id===f.id);
-      if(!def)return;
-      const p=(f.x!==undefined)?[f.x,f.y]:insideFurniturePosition(def,i);
-
-      ctx.fillStyle="#0005";
-      ctx.fillRect(p[0]+4,p[1]+5,def.w,def.h);
-      ctx.fillStyle="#c5a27d";
-      ctx.fillRect(p[0],p[1],def.w,def.h);
-      ctx.font=Math.min(def.w*.5,32)+"px serif";
-      ctx.textAlign="center";
-      ctx.textBaseline="middle";
-      ctx.fillText(def.emoji,p[0]+def.w/2,p[1]+def.h/2);
-      ctx.textAlign="left";
-      ctx.textBaseline="alphabetic";
-    });
-  }else{
-    const generic={
-      market:["🛒","🍅","🥬","🧺"],
-      school:["📚","🪑","🖊️","🎓"],
-      hotel:["🛏️","🛋️","📺","🪴"],
-      hall:["🪑","🎤","🏛️"],
-      hospital:["🛏️","💊","🩺","🧑🏾‍⚕️"],
-      bank:["🏦","💳","💰"],
-      restaurant:["🍲","🍛","🪑","🍹"]
-    };
-    (generic[b.type]||["🪑","📦"]).forEach((e,i)=>{
-      const p=insideFurniturePosition({},i);
-      ctx.fillStyle="#fff";
-      ctx.font="36px serif";
-      ctx.fillText(e,p[0],p[1]);
-    });
-  }
-
-  ctx.restore();
-
-  // player
-  ctx.fillStyle="#7ce86f";
-  ctx.beginPath();
-  ctx.arc(W/2,H/2,15,0,Math.PI*2);
-  ctx.fill();
-  ctx.fillStyle="#fff";
-  ctx.font="bold 11px system-ui";
-  ctx.textAlign="center";
-  ctx.fillText("YOU",W/2,H/2-22);
-
-  ctx.fillStyle="#ffffff18";
-  ctx.fillRect(W/2-45,H-85,90,42);
-  ctx.fillStyle="#fff";
-  ctx.font="bold 11px system-ui";
-  ctx.fillText("🚪 EXIT",W/2,H-59);
-  ctx.textAlign="left";
+  saveGame();
 }
 
 /* =========================================================
-   VEHICLE SYSTEM — FIXED
-   ========================================================= */
+   INTERIOR COLLISION
+========================================================= */
 
-function nearestTraffic(){
-  let best=null,d=Infinity;
-  for(const v of traffic){
-    if(v.owned && !v.occupied){
-      // Owned cars take priority when near
-      const dist=Math.hypot(player.x-v.x,player.y-v.y);
-      if(dist<d){ d=dist; best=v; }
+function constrainInterior(){
+
+  const x=player.position.x;
+  const z=player.position.z;
+
+  const halfW=13.3;
+  const halfD=10.8;
+
+  player.position.x=
+    clamp(
+      x,
+      -halfW,
+      halfW
+    );
+
+  /* keep exit opening */
+  if(z>halfD){
+
+    if(Math.abs(player.position.x)>2.7){
+
+      player.position.z=halfD;
+
+    }else{
+
+      player.position.z=
+        Math.min(z,11.5);
+
     }
   }
-  if(best && d<140) return best;
 
-  // Fall back to any traffic
-  for(const v of traffic){
-    if(v.occupied) continue;
-    const dist=Math.hypot(player.x-v.x,player.y-v.y);
-    if(dist<d){ d=dist; best=v; }
-  }
-  return d<110?best:null;
+  player.position.z=
+    clamp(
+      player.position.z,
+      -halfD,
+      11.4
+    );
 }
 
-function boardVehicle(v, isOwned){
-  if(!v){ toast("No vehicle nearby."); return; }
-  player.vehicle=v;
-  v.occupied=true;
-  player.x=v.x;
-  player.y=v.y;
+/* =========================================================
+   OUTSIDE COLLISION
+========================================================= */
 
-  if(isOwned || v.owned){
-    toast("🚗 Boarded your "+v.type.name);
-    progressMission("drive");
-  }else{
-    toast("🚗 Boarded "+v.type.name);
-  }
-}
+function canMoveOutside(
+  x,
+  z
+){
 
-function exitVehicle(){
-  if(!player.vehicle)return;
-  player.vehicle.occupied=false;
-  player.x=player.vehicle.x+50;
-  player.y=player.vehicle.y+50;
-  player.vehicle=null;
-  toast("🚶 You left the vehicle.");
-}
+  if(
+    x<-270 ||
+    x>270 ||
+    z<-270 ||
+    z>270
+  ) return false;
 
-// Spawn or retrieve the player's owned car and teleport it nearby
-function callOwnedCar(){
-  if(!state.car){
-    toast("🚫 You don't own a car. Buy one in the phone.");
-    return false;
-  }
+  for(const b of buildings){
 
-  const def = VEHICLES.find(v => v.id === state.car);
-  if(!def){ toast("Car data missing."); return false; }
+    if(buildingContains(
+      b,
+      x,
+      z,
+      .9
+    )){
 
-  // Find existing owned instance of this car model
-  let owned = traffic.find(v => v.owned && v.type.id === state.car);
+      if(isNearDoor(
+        b,
+        x,
+        z
+      )){
 
-  if(!owned){
-    owned = {
-      x: player.x + 60,
-      y: player.y + 40,
-      dir: 1,
-      angle: 0,
-      speed: 0,
-      type: def,
-      occupied: false,
-      owned: true
-    };
-    traffic.push(owned);
-    toast("🚗 Your "+def.name+" has been delivered.");
-  } else {
-    // Teleport it next to the player
-    owned.x = player.x + 60;
-    owned.y = player.y + 40;
-    owned.occupied = false;
+        continue;
+      }
+
+      return false;
+    }
   }
 
-  boardVehicle(owned, true);
   return true;
-}
-
-function updateVehicle(dt){
-  if(!player.vehicle)return;
-
-  const v=player.vehicle;
-  const speed=v.type.speed*(player.run?1.35:1);
-
-  const mag=Math.hypot(keys.x,keys.y);
-
-  if(mag > 0.01){
-    const len=mag||1;
-    // dt-scaled movement — critical fix
-    v.x += (keys.x/len)*speed*dt*60;
-    v.y += (keys.y/len)*speed*dt*60;
-
-    v.x = clamp(v.x,20,WORLD_W-20);
-    v.y = clamp(v.y,20,WORLD_H-20);
-
-    player.x = v.x;
-    player.y = v.y;
-
-    v.angle = Math.atan2(keys.y,keys.x);
-  }
-}
-
-/* =========================================================
-   PLAYER MOVEMENT
-   ========================================================= */
-
-function updatePlayer(dt){
-  if(player.inBuilding){
-    return;
-  }
-  if(player.vehicle){
-    updateVehicle(dt);
-    return;
-  }
-
-  const magnitude=Math.hypot(keys.x,keys.y);
-
-  if(magnitude<.01){
-    player.moving=false;
-    return;
-  }
-
-  // dt-scaled movement — critical fix
-  const speed=(player.run?3.8:2.4);
-
-  const len=Math.max(1,magnitude);
-
-  player.x += (keys.x/len)*speed*dt*60;
-  player.y += (keys.y/len)*speed*dt*60;
-
-  player.x=clamp(player.x,25,WORLD_W-25);
-  player.y=clamp(player.y,25,WORLD_H-25);
-
-  player.angle=Math.atan2(keys.y,keys.x);
-  player.moving=true;
-}
-
-/* =========================================================
-   NPCs
-   ========================================================= */
-
-function updateNPCs(dt){
-  for(const n of npcs){
-    n.timer-=dt;
-
-    if(n.timer<=0){
-      n.timer=rand(1,5);
-      n.vx=rand(-.7,.7);
-      n.vy=rand(-.7,.7);
-    }
-
-    // dt-scaled
-    n.x += n.vx*dt*60;
-    n.y += n.vy*dt*60;
-
-    n.x=clamp(n.x,30,WORLD_W-30);
-    n.y=clamp(n.y,30,WORLD_H-30);
-  }
-}
-
-/* =========================================================
-   TRAFFIC
-   ========================================================= */
-
-function updateTraffic(dt){
-  for(const v of traffic){
-    if(v.occupied) continue;
-    if(v.owned){
-      // Owned cars don't drive themselves; only move when player drives them
-      continue;
-    }
-
-    // dt-scaled
-    v.x += v.dir*v.speed*dt*60;
-
-    if(v.x>WORLD_W+80)v.x=-80;
-    if(v.x<-80)v.x=WORLD_W+80;
-  }
-}
-
-/* =========================================================
-   WORLD RENDERING
-   ========================================================= */
-
-function screenToWorld(x,y){
-  return {
-    x:(x-W/2)/camera.zoom+camera.x,
-    y:(y-H/2)/camera.zoom+camera.y
-  };
-}
-
-function drawWorld(){
-  ctx.fillStyle="#82a967";
-  ctx.fillRect(0,0,W,H);
-
-  ctx.save();
-  ctx.translate(W/2-camera.x*camera.zoom,H/2-camera.y*camera.zoom);
-  ctx.scale(camera.zoom,camera.zoom);
-
-  drawTerrain();
-  drawRoads();
-  drawStreetDetails();
-  drawBuildings();
-  drawLandmarks();
-  drawNPCs();
-  drawTraffic();
-  drawPlayer();
-
-  ctx.restore();
-
-  drawWeather();
-  drawNight();
-}
-
-function drawTerrain(){
-  for(const d of districts){
-    ctx.fillStyle=d.color;
-    ctx.fillRect(d.x,d.y,d.w,d.h);
-
-    ctx.fillStyle="#ffffff08";
-    for(let i=0;i<10;i++){
-      const x=d.x+Math.random()*d.w;
-      const y=d.y+Math.random()*d.h;
-      ctx.fillRect(x,y,50,30);
-    }
-  }
-
-  ctx.strokeStyle="#8b805e";
-  ctx.lineWidth=25;
-  ctx.globalAlpha=.3;
-
-  for(let i=0;i<12;i++){
-    ctx.beginPath();
-    ctx.moveTo(rand(0,WORLD_W),rand(0,WORLD_H));
-    ctx.lineTo(rand(0,WORLD_W),rand(0,WORLD_H));
-    ctx.stroke();
-  }
-
-  ctx.globalAlpha=1;
-}
-
-function drawRoads(){
-  for(const r of roads){
-    ctx.fillStyle="#353b3d";
-    ctx.fillRect(r.x,r.y,r.w,r.h);
-
-    ctx.fillStyle="#4a4f50";
-
-    if(r.w>r.h){
-      ctx.fillRect(r.x,r.y,r.w,8);
-      ctx.fillRect(r.x,r.y+r.h-8,r.w,8);
-
-      ctx.strokeStyle="#d5b54a";
-      ctx.lineWidth=4;
-      ctx.setLineDash([30,30]);
-      ctx.beginPath();
-      ctx.moveTo(r.x,r.y+r.h/2);
-      ctx.lineTo(r.x+r.w,r.y+r.h/2);
-      ctx.stroke();
-      ctx.setLineDash([]);
-    }else{
-      ctx.fillRect(r.x,r.y,8,r.h);
-      ctx.fillRect(r.x+r.w-8,r.y,8,r.h);
-
-      ctx.strokeStyle="#d5b54a";
-      ctx.lineWidth=4;
-      ctx.setLineDash([30,30]);
-      ctx.beginPath();
-      ctx.moveTo(r.x+r.w/2,r.y);
-      ctx.lineTo(r.x+r.w/2,r.y+r.h);
-      ctx.stroke();
-      ctx.setLineDash([]);
-    }
-  }
-
-  for(const x of [720,1200,2050,2900,3250]){
-    for(let i=0;i<8;i++){
-      ctx.fillStyle="#ffffffb8";
-      ctx.fillRect(x-40+i*11,675,6,60);
-      ctx.fillRect(x-40+i*11,1445,6,60);
-    }
-  }
-}
-
-function drawStreetDetails(){
-  for(let x=180;x<WORLD_W;x+=250){
-    for(let y=180;y<WORLD_H;y+=360){
-      ctx.fillStyle="#493b2e";
-      ctx.fillRect(x,y,6,55);
-
-      ctx.strokeStyle="#493b2e";
-      ctx.lineWidth=3;
-      ctx.beginPath();
-      ctx.moveTo(x-35,y+10);
-      ctx.lineTo(x+40,y+10);
-      ctx.stroke();
-    }
-  }
-
-  for(let i=0;i<90;i++){
-    const x=(i*317)%WORLD_W;
-    const y=(i*193)%WORLD_H;
-
-    if(isOnRoad(x,y))continue;
-
-    ctx.fillStyle="#68472f";
-    ctx.fillRect(x-3,y,6,22);
-
-    ctx.fillStyle=i%2?"#2d7540":"#3d8847";
-    ctx.beginPath();
-    ctx.arc(x,y,17,0,Math.PI*2);
-    ctx.fill();
-
-    ctx.fillStyle="#ffffff08";
-    ctx.beginPath();
-    ctx.arc(x-5,y-5,10,0,Math.PI*2);
-    ctx.fill();
-  }
-}
-
-function isOnRoad(x,y){
-  return roads.some(r=>x>r.x&&x<r.x+r.w&&y>r.y&&y<r.y+r.h);
-}
-
-function drawBuildings(){
-  for(const b of buildings){
-    ctx.fillStyle="#0005";
-    ctx.fillRect(b.x+10,b.y+14,b.w,b.h);
-
-    ctx.fillStyle=b.color;
-    ctx.fillRect(b.x,b.y,b.w,b.h);
-
-    ctx.fillStyle="#503d32";
-    ctx.beginPath();
-    ctx.moveTo(b.x-10,b.y);
-    ctx.lineTo(b.x+b.w/2,b.y-35);
-    ctx.lineTo(b.x+b.w+10,b.y);
-    ctx.closePath();
-    ctx.fill();
-
-    for(let xx=b.x+25;xx<b.x+b.w-15;xx+=48){
-      for(let yy=b.y+30;yy<b.y+b.h-40;yy+=48){
-        ctx.fillStyle="#6d9eb7";
-        ctx.fillRect(xx,yy,22,18);
-        ctx.fillStyle="#ffffff18";
-        ctx.fillRect(xx+2,yy+2,8,6);
-      }
-    }
-
-    ctx.fillStyle="#5b3c2b";
-    ctx.fillRect(b.x+b.w/2-15,b.y+b.h-40,30,40);
-
-    ctx.fillStyle="#111c";
-    ctx.fillRect(b.x+10,b.y+8,b.w-20,22);
-    ctx.fillStyle="#fff";
-    ctx.font="bold 11px system-ui";
-    ctx.textAlign="center";
-    ctx.fillText(b.name,b.x+b.w/2,b.y+24);
-    ctx.textAlign="left";
-
-    if(b.enterable){
-      ctx.fillStyle="#72e36c";
-      ctx.beginPath();
-      ctx.arc(b.x+b.w/2,b.y+b.h+12,6,0,Math.PI*2);
-      ctx.fill();
-    }
-  }
-}
-
-function drawLandmarks(){
-  for(const l of landmarks){
-    ctx.fillStyle="#0005";
-    ctx.beginPath();
-    ctx.ellipse(l.x,l.y+25,45,16,0,0,Math.PI*2);
-    ctx.fill();
-
-    ctx.font="42px serif";
-    ctx.textAlign="center";
-    ctx.fillText(l.emoji,l.x,l.y);
-
-    ctx.font="bold 11px system-ui";
-    ctx.fillStyle="#fff";
-    ctx.fillText(l.name,l.x,l.y+42);
-  }
-  ctx.textAlign="left";
-}
-
-function drawNPCs(){
-  for(const n of npcs){
-    const walking=Math.hypot(n.vx,n.vy)>.2;
-    const bounce=walking?Math.sin(performance.now()/120+n.x)*2:0;
-
-    ctx.save();
-    ctx.translate(n.x,n.y+bounce);
-
-    ctx.fillStyle="#0005";
-    ctx.beginPath();
-    ctx.ellipse(0,15,12,5,0,0,Math.PI*2);
-    ctx.fill();
-
-    ctx.strokeStyle="#2d2d35";
-    ctx.lineWidth=5;
-    ctx.beginPath();
-    ctx.moveTo(-4,8);
-    ctx.lineTo(-6,20);
-    ctx.moveTo(4,8);
-    ctx.lineTo(6,20);
-    ctx.stroke();
-
-    ctx.fillStyle=n.shirt;
-    ctx.fillRect(-9,-5,18,18);
-
-    ctx.fillStyle=n.skin;
-    ctx.beginPath();
-    ctx.arc(0,-15,8,0,Math.PI*2);
-    ctx.fill();
-
-    ctx.fillStyle="#201611";
-    ctx.beginPath();
-    ctx.arc(0,-19,8,Math.PI,Math.PI*2);
-    ctx.fill();
-
-    ctx.restore();
-  }
-}
-
-function drawTraffic(){
-  for(const v of traffic){
-    ctx.save();
-    ctx.translate(v.x,v.y);
-    ctx.rotate(v.angle||0);
-
-    const w=v.type.id==="keke"?32:48;
-    const h=v.type.id==="keke"?20:25;
-
-    ctx.fillStyle="#0006";
-    ctx.fillRect(-w/2+5,-h/2+6,w,h);
-
-    ctx.fillStyle=v.type.color;
-    ctx.fillRect(-w/2,-h/2,w,h);
-
-    ctx.fillStyle="#263b4a";
-    ctx.fillRect(-w/2+7,-h/2+4,w-14,h-9);
-
-    ctx.fillStyle="#151515";
-    ctx.fillRect(-w/2-3,-h/2-3,7,7);
-    ctx.fillRect(w/2-4,-h/2-3,7,7);
-    ctx.fillRect(-w/2-3,h/2-4,7,7);
-    ctx.fillRect(w/2-4,h/2-4,7,7);
-
-    // Owned cars have a green outline so you know it's yours
-    if(v.owned){
-      ctx.strokeStyle="#72e36c";
-      ctx.lineWidth=2;
-      ctx.strokeRect(-w/2-2,-h/2-2,w+4,h+4);
-    }
-
-    ctx.restore();
-  }
-}
-
-function drawPlayer(){
-  if(player.vehicle)return;
-
-  const bob=player.moving?Math.sin(performance.now()/100)*2:0;
-
-  ctx.save();
-  ctx.translate(player.x,player.y+bob);
-
-  ctx.fillStyle="#0006";
-  ctx.beginPath();
-  ctx.ellipse(0,19,15,6,0,0,Math.PI*2);
-  ctx.fill();
-
-  ctx.strokeStyle="#161b23";
-  ctx.lineWidth=6;
-  ctx.beginPath();
-  ctx.moveTo(-5,9);
-  ctx.lineTo(-7,22);
-  ctx.moveTo(5,9);
-  ctx.lineTo(7,22);
-  ctx.stroke();
-
-  ctx.fillStyle="#2673d9";
-  ctx.fillRect(-11,-8,22,21);
-
-  ctx.fillStyle="#8c5b40";
-  ctx.beginPath();
-  ctx.arc(0,-19,10,0,Math.PI*2);
-  ctx.fill();
-
-  ctx.fillStyle="#21160f";
-  ctx.beginPath();
-  ctx.arc(0,-23,10,Math.PI,Math.PI*2);
-  ctx.fill();
-
-  ctx.fillStyle="#fff";
-  ctx.font="bold 10px system-ui";
-  ctx.textAlign="center";
-  ctx.fillText(state.name,0,-35);
-
-  ctx.restore();
-}
-
-/* =========================================================
-   WEATHER / NIGHT
-   ========================================================= */
-
-function drawWeather(){
-  if(state.weather==="rain"){
-    ctx.strokeStyle="#86bde866";
-    ctx.lineWidth=1;
-    for(let i=0;i<180;i++){
-      const x=(i*97+performance.now()/4)%W;
-      const y=(i*53+performance.now()/2)%H;
-      ctx.beginPath();
-      ctx.moveTo(x,y);
-      ctx.lineTo(x-4,y+13);
-      ctx.stroke();
-    }
-  }
-  if(state.weather==="cloudy"){
-    ctx.fillStyle="#26364333";
-    ctx.fillRect(0,0,W,H);
-  }
-}
-
-function drawNight(){
-  if(!isNight())return;
-  let alpha=.58;
-  if(state.hour>=5&&state.hour<7)alpha=.25;
-  if(state.hour>=19&&state.hour<21)alpha=.35;
-
-  ctx.fillStyle=`rgba(5,10,30,${alpha})`;
-  ctx.fillRect(0,0,W,H);
-
-  ctx.globalCompositeOperation="screen";
-  for(let x=0;x<W;x+=150){
-    const y=H*.45;
-    const gradient=ctx.createRadialGradient(x,y,0,x,y,70);
-    gradient.addColorStop(0,"rgba(255,215,120,.15)");
-    gradient.addColorStop(1,"rgba(255,215,120,0)");
-    ctx.fillStyle=gradient;
-    ctx.fillRect(x-70,y-70,140,140);
-  }
-  ctx.globalCompositeOperation="source-over";
-}
-
-/* =========================================================
-   CAMERA
-   ========================================================= */
-
-function updateCamera(dt){
-  let targetX=player.x, targetY=player.y;
-  if(cameraMode===1){
-    targetX+=Math.cos(player.angle)*150;
-    targetY+=Math.sin(player.angle)*150;
-  }
-
-  const lerp=Math.min(1, dt*6);
-  camera.x += (targetX-camera.x)*lerp;
-  camera.y += (targetY-camera.y)*lerp;
-
-  const viewW=W/camera.zoom;
-  const viewH=H/camera.zoom;
-
-  camera.x=clamp(camera.x,viewW/2,WORLD_W-viewW/2);
-  camera.y=clamp(camera.y,viewH/2,WORLD_H-viewH/2);
-}
-
-/* =========================================================
-   MINIMAP
-   ========================================================= */
-
-function drawMinimap(){
-  mapCtx.clearRect(0,0,180,180);
-  mapCtx.fillStyle="#15251a";
-  mapCtx.fillRect(0,0,180,180);
-
-  const sx=180/WORLD_W, sy=180/WORLD_H;
-
-  for(const r of roads){
-    mapCtx.fillStyle="#555c5c";
-    mapCtx.fillRect(r.x*sx,r.y*sy,r.w*sx,r.h*sy);
-  }
-
-  for(const b of buildings){
-    mapCtx.fillStyle=b.id==="home"?"#74df69":"#9b8060";
-    mapCtx.fillRect(b.x*sx,b.y*sy,b.w*sx,b.h*sy);
-  }
-
-  // Owned cars on minimap
-  for(const v of traffic){
-    if(v.owned){
-      mapCtx.fillStyle="#f0c040";
-      mapCtx.fillRect(v.x*sx-2,v.y*sy-2,4,4);
-    }
-  }
-
-  mapCtx.fillStyle="#70ef65";
-  mapCtx.beginPath();
-  mapCtx.arc(player.x*sx,player.y*sy,4,0,Math.PI*2);
-  mapCtx.fill();
-
-  mapCtx.strokeStyle="#70ef65";
-  mapCtx.beginPath();
-  mapCtx.moveTo(player.x*sx,player.y*sy);
-  mapCtx.lineTo((player.x+Math.cos(player.angle)*20)*sx,(player.y+Math.sin(player.angle)*20)*sy);
-  mapCtx.stroke();
-}
-
-/* =========================================================
-   LOCATION
-   ========================================================= */
-
-function updateLocation(){
-  let found="Ibadan";
-  if(player.inBuilding){
-    const b=buildings.find(x=>x.id===player.inBuilding);
-    if(b)found=b.name;
-  }else{
-    for(const d of districts){
-      if(player.x>d.x&&player.x<d.x+d.w&&player.y>d.y&&player.y<d.y+d.h){
-        found=d.name;
-        break;
-      }
-    }
-  }
-
-  if(state.location!==found){
-    state.location=found;
-    if(state.mission?.type==="visit" && state.mission.target===found){
-      progressMission("visit");
-    }
-  }
-
-  document.getElementById("locationBadge").textContent=found;
-}
-
-/* =========================================================
-   CONTEXT
-   ========================================================= */
-
-function updateContext(){
-  const el=document.getElementById("context");
-
-  if(player.inBuilding){
-    const b=buildings.find(x=>x.id===player.inBuilding);
-    if(b?.id==="home"){
-      el.textContent="🛋️ Tap ACTION to interact • Decorate with 📱";
-    }else{
-      el.textContent="🚪 Tap ACTION to interact • Exit below";
-    }
-    el.style.display="block";
-    return;
-  }
-
-  if(player.vehicle){
-    el.textContent="🚗 Tap VEHICLE to exit";
-    el.style.display="block";
-    return;
-  }
-
-  const b=nearestBuilding();
-  const v=nearestTraffic();
-
-  if(b){
-    el.textContent="🚪 Tap ACTION — Enter "+b.name;
-    el.style.display="block";
-  }else if(v){
-    el.textContent="🚗 Tap VEHICLE — Board "+v.type.name;
-    el.style.display="block";
-  }else{
-    el.style.display="none";
-  }
-}
-
-/* =========================================================
-   ACTION
-   ========================================================= */
-
-function doAction(){
-  if(player.inBuilding){
-    interactInside();
-    return;
-  }
-  if(player.vehicle){
-    exitVehicle();
-    return;
-  }
-  const b=nearestBuilding();
-  if(b){ enterBuilding(b); return; }
-  const v=nearestTraffic();
-  if(v){ boardVehicle(v); return; }
-  toast("Nothing useful nearby. Explore Ibadan.");
-}
-
-function interactInside(){
-  const b=buildings.find(x=>x.id===player.inBuilding);
-  if(!b)return;
-  if(b.id==="home"){ openHomeActions(); return; }
-  if(b.type==="market"){ openMarket(); return; }
-  if(b.type==="school"){ studyActivity(); return; }
-  if(b.type==="hotel"){ sleepActivity(); return; }
-  if(b.type==="hospital"){ healthActivity(); return; }
-  if(b.type==="bank"){ openPhonePage("bank"); openPhone(); return; }
-  if(b.type==="restaurant"){ eatActivity(); return; }
-  if(b.type==="hall"){ socialActivity(); return; }
-  if(b.type==="shop"){ openShop(); return; }
-  toast("You look around the building.");
-}
-
-/* =========================================================
-   HOME ACTIONS
-   ========================================================= */
-
-function openHomeActions(){ openModal("home"); }
-
-function openModal(type){
-  const modal=document.getElementById("modal");
-  const box=document.getElementById("modalBox");
-  modal.style.display="flex";
-
-  if(type==="home"){
-    box.innerHTML=`
-      <div class="modal-head">
-        <h2>🏠 Your Home</h2>
-        <button class="close" onclick="closeModal()">×</button>
-      </div>
-      <div class="panel">
-        <h3>What do you want to do?</h3>
-        <div class="item">
-          <div class="item-info"><div class="item-name">🍳 Prepare food</div><div class="item-desc">Cook something to restore hunger.</div></div>
-          <button class="btn" onclick="eatActivity()">COOK</button>
-        </div>
-        <div class="item">
-          <div class="item-info"><div class="item-name">🚿 Take a shower</div><div class="item-desc">Restore hygiene and feel fresh.</div></div>
-          <button class="btn" onclick="bathActivity()">SHOWER</button>
-        </div>
-        <div class="item">
-          <div class="item-info"><div class="item-name">🚽 Use bathroom</div><div class="item-desc">Take care of your bladder.</div></div>
-          <button class="btn" onclick="toiletActivity()">USE</button>
-        </div>
-        <div class="item">
-          <div class="item-info"><div class="item-name">💤 Sleep</div><div class="item-desc">Restore energy and advance the day.</div></div>
-          <button class="btn" onclick="sleepActivity()">SLEEP</button>
-        </div>
-      </div>
-    `;
-  }
-
-  if(type==="decorate"){
-    box.innerHTML=`
-      <div class="modal-head">
-        <h2>🛋️ Decorate Home</h2>
-        <button class="close" onclick="closeModal()">×</button>
-      </div>
-      <p style="font-size:11px;opacity:.6">Buy furniture and make your home yours.</p>
-      ${FURNITURE.map(f=>`
-        <div class="item">
-          <div class="item-info">
-            <div class="item-name">${f.emoji} ${f.name}</div>
-            <div class="item-desc">${money(f.price)}</div>
-          </div>
-          <button class="btn" onclick='placeFurniture(${JSON.stringify(f)})'>BUY</button>
-        </div>
-      `).join("")}
-    `;
-  }
-}
-
-function closeModal(){ document.getElementById("modal").style.display="none"; }
-
-/* =========================================================
-   FURNITURE PLACEMENT — grid-based (fixed)
-   ========================================================= */
-
-function placeFurniture(def){
-  if(!spend(def.price))return;
-
-  // Grid-based placement — 3x3 slots, avoid overlap
-  const slots=[
-    [110,115],[245,115],[380,115],
-    [110,240],[245,240],[380,240],
-    [110,365],[245,365],[380,365]
-  ];
-
-  const used = new Set(state.furniture.map(f=>`${f.gx},${f.gy}`));
-
-  let placed = false;
-  for(let i=0;i<slots.length;i++){
-    const gx=slots[i][0], gy=slots[i][1];
-    if(!used.has(`${gx},${gy}`)){
-      state.furniture.push({id:def.id, gx, gy, x:gx, y:gy});
-      placed = true;
-      break;
-    }
-  }
-
-  if(!placed){
-    toast("🏠 No space left. Your house is full!");
-    state.cash += def.price; // refund
-    return;
-  }
-
-  saveGame();
-  closeModal();
-  toast("🛋️ "+def.name+" added to your house.");
-}
-
-/* =========================================================
-   ACTIVITIES
-   ========================================================= */
-
-function startActivity(icon,title,desc,duration,finish){
-  if(activeActivity){
-    toast("You are already doing something.");
-    return;
-  }
-
-  activeActivity=true;
-  document.getElementById("activity").style.display="flex";
-  document.getElementById("activityIcon").textContent=icon;
-  document.getElementById("activityTitle").textContent=title;
-  document.getElementById("activityDesc").textContent=desc;
-
-  const bar=document.getElementById("activityProgress");
-  bar.style.width="0%";
-
-  const start=performance.now();
-
-  function tick(now){
-    const p=clamp((now-start)/duration,0,1);
-    bar.style.width=(p*100)+"%";
-    if(p<1){
-      activityTimer=requestAnimationFrame(tick);
-    }else{
-      activeActivity=false;
-      document.getElementById("activity").style.display="none";
-      finish();
-      saveGame();
-      updateHUD();
-    }
-  }
-  activityTimer=requestAnimationFrame(tick);
-}
-
-function eatActivity(){
-  closeModal();
-  startActivity("🍛","Eating","You sit down and enjoy a proper Nigerian meal.",2200,()=>{
-    state.hunger=clamp(state.hunger+35,0,100);
-    state.energy=clamp(state.energy+5,0,100);
-    state.bladder=clamp(state.bladder-8,0,100);
-    state.cash=Math.max(0,state.cash-500);
-    progressMission("eat");
-    toast("🍛 Meal finished. You feel better.");
-  });
-}
-
-function bathActivity(){
-  closeModal();
-  startActivity("🚿","Taking a shower","Hot water, soap and a fresh start.",2000,()=>{
-    state.hygiene=100;
-    state.fun=clamp(state.fun+8,0,100);
-    toast("🚿 Fresh! Hygiene restored.");
-    progressMission("bath");
-  });
-}
-
-function toiletActivity(){
-  closeModal();
-  startActivity("🚽","Bathroom","Taking care of business...",1300,()=>{
-    state.bladder=100;
-    toast("🚽 Problem solved.");
-  });
-}
-
-function sleepActivity(){
-  closeModal();
-  startActivity("💤","Sleeping","You rest until morning.",2500,()=>{
-    state.energy=100;
-    state.hunger=clamp(state.hunger-12,0,100);
-    state.hygiene=clamp(state.hygiene-7,0,100);
-    state.hour=7;
-    state.minute=0;
-    state.day++;
-    toast("🌅 Good morning. Day "+state.day);
-  });
-}
-
-function studyActivity(){
-  closeModal();
-  startActivity("📚","Studying","You focus and improve your knowledge.",3000,()=>{
-    state.education+=4;
-    state.skill+=2;
-    state.energy=clamp(state.energy-10,0,100);
-    state.fun=clamp(state.fun-4,0,100);
-    state.xp+=12;
-    checkLevel();
-    toast("📚 Study complete. Education increased.");
-  });
-}
-
-function healthActivity(){
-  closeModal();
-  startActivity("🩺","Health check","A quick hospital assessment.",1800,()=>{
-    state.energy=clamp(state.energy+12,0,100);
-    state.reputation+=1;
-    toast("🩺 Check complete.");
-  });
-}
-
-function socialActivity(){
-  closeModal();
-  startActivity("👋🏾","Socializing","You meet people and spend time together.",2300,()=>{
-    state.social=clamp(state.social+30,0,100);
-    state.fun=clamp(state.fun+12,0,100);
-    state.reputation++;
-    state.followers+=Math.floor(Math.random()*4);
-    progressMission("social");
-    toast("👥 Good vibes. Social life improved.");
-  });
-}
-
-/* =========================================================
-   MARKET
-   ========================================================= */
-
-function openMarket(){
-  openModal("market");
-  document.getElementById("modalBox").innerHTML=`
-    <div class="modal-head">
-      <h2>🛒 Bodija Market</h2>
-      <button class="close" onclick="closeModal()">×</button>
-    </div>
-    <div class="item">
-      <div class="item-info"><div class="item-name">🍛 Rice & Chicken</div><div class="item-desc">Big meal • +40 hunger</div></div>
-      <button class="btn" onclick="buyFood(1500)">₦1,500</button>
-    </div>
-    <div class="item">
-      <div class="item-info"><div class="item-name">🥤 Soft Drink</div><div class="item-desc">Refreshing • +8 fun</div></div>
-      <button class="btn" onclick="buyDrink()">₦500</button>
-    </div>
-    <div class="item">
-      <div class="item-info"><div class="item-name">👕 New Clothes</div><div class="item-desc">Improves style and reputation.</div></div>
-      <button class="btn" onclick="buyClothes()">₦8,000</button>
-    </div>
-  `;
-}
-
-function buyFood(price){
-  if(!spend(price))return;
-  state.hunger=clamp(state.hunger+40,0,100);
-  state.bladder=clamp(state.bladder-5,0,100);
-  closeModal();
-  toast("🍛 You bought food.");
-  progressMission("eat");
-}
-
-function buyDrink(){
-  if(!spend(500))return;
-  state.fun=clamp(state.fun+8,0,100);
-  state.bladder=clamp(state.bladder-4,0,100);
-  closeModal();
-  toast("🥤 Refreshing.");
-}
-
-function buyClothes(){
-  if(!spend(8000))return;
-  state.reputation+=5;
-  state.fun=clamp(state.fun+8,0,100);
-  closeModal();
-  toast("👕 Looking fresh!");
-}
-
-function openShop(){ openMarket(); }
-
-/* =========================================================
-   PHONE
-   ========================================================= */
-
-function openPhone(){
-  phoneOpen=true;
-  document.getElementById("phone").style.display="flex";
-  openPhonePage(currentPhonePage);
-}
-
-function closePhone(){
-  phoneOpen=false;
-  document.getElementById("phone").style.display="none";
-}
-
-function openPhonePage(page){
-  currentPhonePage=page;
-  const screen=document.getElementById("phoneScreen");
-
-  if(page==="home"){
-    screen.innerHTML=`
-      <div class="app-grid">
-        <button class="app" onclick="openPhonePage('bank')">🏦<span>Bank</span></button>
-        <button class="app" onclick="openPhonePage('jobs')">💼<span>Jobs</span></button>
-        <button class="app" onclick="openPhonePage('cars')">🚘<span>Cars</span></button>
-        <button class="app" onclick="openPhonePage('house')">🏠<span>House</span></button>
-        <button class="app" onclick="openPhonePage('decorate')">🛋️<span>Decorate</span></button>
-        <button class="app" onclick="openPhonePage('social')">👥<span>Social</span></button>
-        <button class="app" onclick="openPhonePage('map')">🗺️<span>Map</span></button>
-        <button class="app" onclick="openPhonePage('stats')">📊<span>Stats</span></button>
-        <button class="app" onclick="openPhonePage('settings')">⚙️<span>Settings</span></button>
-      </div>
-    `;
-    return;
-  }
-
-  screen.innerHTML=`<button class="phone-back" onclick="openPhonePage('home')">← Back to phone</button>`;
-
-  if(page==="bank")bankPage(screen);
-  if(page==="jobs")jobsPage(screen);
-  if(page==="cars")carsPage(screen);
-  if(page==="house")housePage(screen);
-  if(page==="decorate")decoratePage(screen);
-  if(page==="social")socialPage(screen);
-  if(page==="map")mapPage(screen);
-  if(page==="stats")statsPage(screen);
-  if(page==="settings")settingsPage(screen);
-}
-
-function bankPage(screen){
-  screen.innerHTML+=`
-    <div class="panel">
-      <h3>🏦 Banking</h3>
-      <div class="item"><div class="item-info"><div class="item-name">Cash</div><div class="item-desc">${money(state.cash)}</div></div></div>
-      <div class="item"><div class="item-info"><div class="item-name">Bank Balance</div><div class="item-desc">${money(state.bank)}</div></div></div>
-      <button class="btn" onclick="deposit()">Deposit ₦10,000</button>
-      <button class="btn dark" onclick="withdraw()">Withdraw ₦10,000</button>
-    </div>
-  `;
-}
-
-function deposit(){
-  if(state.cash<10000){ toast("Not enough cash."); return; }
-  state.cash-=10000;
-  state.bank+=10000;
-  toast("🏦 ₦10,000 deposited.");
-  openPhonePage("bank");
-}
-
-function withdraw(){
-  if(state.bank<10000){ toast("Not enough money in bank."); return; }
-  state.bank-=10000;
-  state.cash+=10000;
-  toast("🏦 ₦10,000 withdrawn.");
-  openPhonePage("bank");
-}
-
-function jobsPage(screen){
-  screen.innerHTML+=`
-    <div class="panel">
-      <h3>💼 Careers</h3>
-      ${JOBS.map(j=>{
-        const locked = state.skill < j.req;
-        const isCurrent = state.job === j.id;
-        return `
-          <div class="item">
-            <div class="item-info">
-              <div class="item-name">${j.icon} ${j.name} ${isCurrent?"✅":""}</div>
-              <div class="item-desc">
-                Daily pay: ${money(j.salary)} • Requirement: ${j.req} skill
-              </div>
-            </div>
-            <button class="btn ${locked?"dark":""}" onclick="takeJob('${j.id}')">
-              ${locked?"LOCKED":isCurrent?"WORK":"TAKE"}
-            </button>
-          </div>
-        `;
-      }).join("")}
-      ${state.job?`<button class="btn blue" onclick="workShift()" style="width:100%;margin-top:10px">💼 WORK A SHIFT NOW</button>`:""}
-    </div>
-  `;
-}
-
-function takeJob(id){
-  const j=JOBS.find(x=>x.id===id);
-  if(state.skill<j.req){ toast("🔒 Improve your skill first."); return; }
-
-  if(state.job === id){
-    // Already have this job → work a shift
-    workShift();
-    return;
-  }
-
-  state.job=id;
-  toast("💼 You are now a "+j.name);
-  openPhonePage("jobs");
-}
-
-function workShift(){
-  if(!state.job){ toast("Choose a job first."); openPhonePage("jobs"); return; }
-  const j=JOBS.find(x=>x.id===state.job);
-
-  closePhone();
-
-  startActivity(j.icon,"Working as "+j.name,"Complete your shift and earn your daily pay.",3500,()=>{
-    earn(j.salary);
-    state.energy=clamp(state.energy-18,0,100);
-    state.hunger=clamp(state.hunger-10,0,100);
-    state.skill+=1;
-    progressMission("work");
-    toast("💰 Shift complete. You earned "+money(j.salary));
-  });
-}
-
-function carsPage(screen){
-  screen.innerHTML+=`
-    <div class="panel">
-      <h3>🚘 Vehicle Dealership</h3>
-      ${state.car?`
-        <div class="item" style="background:#0a1a14;border:1px solid #72e36c55;border-radius:10px;padding:10px">
-          <div class="item-info">
-            <div class="item-name">✅ Active: ${VEHICLES.find(v=>v.id===state.car).name}</div>
-            <div class="item-desc">Tap VEHICLE button near your location to summon it.</div>
-          </div>
-        </div>
-      `:""}
-      ${VEHICLES.map(v=>{
-        const owned = state.ownedCars.includes(v.id);
-        const isActive = state.car === v.id;
-        return `
-          <div class="item">
-            <div class="item-info">
-              <div class="item-name">${v.emoji} ${v.name} ${isActive?"⭐":""}</div>
-              <div class="item-desc">${money(v.price)} • Speed ${v.speed}</div>
-            </div>
-            ${owned
-              ? `<button class="btn ${isActive?"dark":""}" onclick="setActiveCar('${v.id}')">${isActive?"ACTIVE":"USE"}</button>`
-              : `<button class="btn" onclick="buyCar('${v.id}')">BUY</button>`}
-          </div>
-        `;
-      }).join("")}
-    </div>
-  `;
-}
-
-function buyCar(id){
-  const v=VEHICLES.find(x=>x.id===id);
-  if(state.ownedCars.includes(id)){ toast("You already own this vehicle."); return; }
-  if(!spend(v.price))return;
-
-  state.ownedCars.push(id);
-  state.car=id;
-  saveGame();
-  toast("🚘 You bought a "+v.name+"! Tap VEHICLE to summon it.");
-  openPhonePage("cars");
-}
-
-function setActiveCar(id){
-  state.car = id;
-  saveGame();
-  toast("⭐ "+VEHICLES.find(v=>v.id===id).name+" is now active.");
-  openPhonePage("cars");
-}
-
-function housePage(screen){
-  screen.innerHTML+=`
-    <div class="panel">
-      <h3>🏠 Property</h3>
-      <div class="item">
-        <div class="item-info"><div class="item-name">Family House</div><div class="item-desc">Your current home</div></div>
-        <button class="btn">OWNED</button>
-      </div>
-      <div class="item">
-        <div class="item-info"><div class="item-name">🏢 Apartment</div><div class="item-desc">₦8,000,000</div></div>
-        <button class="btn" onclick="buyProperty(8000000)">BUY</button>
-      </div>
-      <div class="item">
-        <div class="item-info"><div class="item-name">🏡 Luxury Duplex</div><div class="item-desc">₦30,000,000</div></div>
-        <button class="btn" onclick="buyProperty(30000000)">BUY</button>
-      </div>
-    </div>
-  `;
-}
-
-function buyProperty(price){
-  if(!spend(price))return;
-  state.reputation+=10;
-  toast("🏠 New property purchased!");
-}
-
-function decoratePage(screen){
-  screen.innerHTML+=`
-    <div class="panel">
-      <h3>🛋️ Interior Designer</h3>
-      <p style="font-size:11px;opacity:.65">Buy furniture, then enter your house to see it inside.</p>
-      ${FURNITURE.map(f=>`
-        <div class="item">
-          <div class="item-info">
-            <div class="item-name">${f.emoji} ${f.name}</div>
-            <div class="item-desc">${money(f.price)}</div>
-          </div>
-          <button class="btn" onclick='placeFurniture(${JSON.stringify(f)})'>BUY</button>
-        </div>
-      `).join("")}
-    </div>
-  `;
-}
-
-function socialPage(screen){
-  screen.innerHTML+=`
-    <div class="panel">
-      <h3>👥 Social Life</h3>
-      <div class="item"><div class="item-info"><div class="item-name">Followers</div><div class="item-desc">${state.followers}</div></div></div>
-      <button class="btn" onclick="socialActivity()">👋🏾 MEET PEOPLE</button>
-    </div>
-  `;
-}
-
-function mapPage(screen){
-  screen.innerHTML+=`
-    <div class="panel">
-      <h3>🗺️ Ibadan Map</h3>
-      ${districts.map(d=>`
-        <div class="item">
-          <div class="item-info"><div class="item-name">📍 ${d.name}</div></div>
-          <button class="btn" onclick="travelTo('${d.name}')">GO</button>
-        </div>
-      `).join("")}
-    </div>
-  `;
-}
-
-function travelTo(name){
-  const d=districts.find(x=>x.name===name);
-  if(!d)return;
-  closePhone();
-  player.x=d.x+d.w/2;
-  player.y=d.y+d.h/2;
-  toast("📍 You travelled to "+name);
-}
-
-function statsPage(screen){
-  screen.innerHTML+=`
-    <div class="panel">
-      <h3>📊 Character</h3>
-      <div class="item"><div class="item-info"><div class="item-name">⭐ Level</div><div class="item-desc">${state.level} (XP ${state.xp}/${state.level*100})</div></div></div>
-      <div class="item"><div class="item-info"><div class="item-name">🎓 Education</div><div class="item-desc">${state.education}</div></div></div>
-      <div class="item"><div class="item-info"><div class="item-name">🧠 Skill</div><div class="item-desc">${state.skill}</div></div></div>
-      <div class="item"><div class="item-info"><div class="item-name">⭐ Reputation</div><div class="item-desc">${state.reputation}</div></div></div>
-      <div class="item"><div class="item-info"><div class="item-name">💼 Job</div><div class="item-desc">${state.job?JOBS.find(j=>j.id===state.job).name:"Unemployed"}</div></div></div>
-      <div class="item"><div class="item-info"><div class="item-name">🚗 Cars Owned</div><div class="item-desc">${state.ownedCars.length}</div></div></div>
-      <div class="item"><div class="item-info"><div class="item-name">💰 Lifetime Earnings</div><div class="item-desc">${money(state.totalEarned)}</div></div></div>
-    </div>
-  `;
-}
-
-function settingsPage(screen){
-  screen.innerHTML+=`
-    <div class="panel">
-      <h3>⚙️ Settings</h3>
-      <div class="item">
-        <div class="item-info"><div class="item-name">🎮 Control Mode</div><div class="item-desc">Mobile touch controls enabled.</div></div>
-      </div>
-      <button class="btn" onclick="saveGame();toast('💾 Saved!')">💾 Save Game</button>
-      <button class="btn dark" onclick="toggleCamera()">🎥 Camera View</button>
-    </div>
-  `;
-}
-
-/* =========================================================
-   HUD
-   ========================================================= */
-
-function updateHUD(){
-  document.getElementById("hudName").textContent=state.name;
-  document.getElementById("hudMoney").textContent=money(state.cash);
-  document.getElementById("timeLabel").textContent=timeText();
-
-  const weather={clear:"☀️ Clear",cloudy:"☁️ Cloudy",rain:"🌧️ Rain"};
-  document.getElementById("weatherLabel").textContent=weather[state.weather];
-
-  const needs=[["hunger","hungerText"],["energy","energyText"],["hygiene","hygieneText"],["fun","funText"],["social","socialText"]];
-  for(const [key,text] of needs){
-    document.getElementById(key+"Bar").style.width=state[key]+"%";
-    document.getElementById(text).textContent=Math.round(state[key]);
-  }
 }
 
 /* =========================================================
    JOYSTICK
-   ========================================================= */
+========================================================= */
 
-let joystickActive=false;
-let joystickCenter={x:0,y:0};
+const joystick=
+  document.getElementById("joystick");
 
-const joystick=document.getElementById("joystick");
-const stick=document.getElementById("stick");
+const stick=
+  document.getElementById("stick");
 
-function joystickStart(e){
-  joystickActive=true;
-  const r=joystick.getBoundingClientRect();
-  joystickCenter={x:r.left+r.width/2,y:r.top+r.height/2};
-  joystickMove(e);
-}
+let joy={
+  active:false,
+  id:null,
+  x:0,
+  y:0
+};
 
-function joystickMove(e){
-  if(!joystickActive)return;
-  const p=e.touches?e.touches[0]:e;
-  let dx=p.clientX-joystickCenter.x;
-  let dy=p.clientY-joystickCenter.y;
-  const max=45;
+function updateJoy(e){
+
+  const r=
+    joystick.getBoundingClientRect();
+
+  const cx=
+    r.left+r.width/2;
+
+  const cy=
+    r.top+r.height/2;
+
+  let dx=e.clientX-cx;
+  let dy=e.clientY-cy;
+
+  const max=40;
+
   const len=Math.hypot(dx,dy);
-  if(len>max){ dx=dx/len*max; dy=dy/len*max; }
-  stick.style.transform=`translate(${dx}px,${dy}px)`;
-  keys.x=dx/max;
-  keys.y=dy/max;
+
+  if(len>max){
+
+    dx=dx/len*max;
+    dy=dy/len*max;
+  }
+
+  joy.x=dx/max;
+  joy.y=dy/max;
+
+  stick.style.transform=
+    `translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px))`;
 }
 
-function joystickEnd(){
-  joystickActive=false;
-  keys.x=0;
-  keys.y=0;
-  stick.style.transform="translate(0,0)";
+joystick.addEventListener(
+  "pointerdown",
+  e=>{
+
+    joy.active=true;
+    joy.id=e.pointerId;
+
+    joystick.setPointerCapture(
+      e.pointerId
+    );
+
+    updateJoy(e);
+  }
+);
+
+joystick.addEventListener(
+  "pointermove",
+  e=>{
+
+    if(
+      joy.active &&
+      joy.id===e.pointerId
+    ){
+
+      updateJoy(e);
+    }
+  }
+);
+
+function endJoy(){
+
+  joy.active=false;
+  joy.x=0;
+  joy.y=0;
+
+  stick.style.transform=
+    "translate(-50%,-50%)";
 }
 
-joystick.addEventListener("touchstart",joystickStart,{passive:false});
-joystick.addEventListener("touchmove",joystickMove,{passive:false});
-joystick.addEventListener("touchend",joystickEnd);
-joystick.addEventListener("touchcancel",joystickEnd);
+joystick.addEventListener(
+  "pointerup",
+  endJoy
+);
+
+joystick.addEventListener(
+  "pointercancel",
+  endJoy
+);
 
 /* =========================================================
-   BUTTONS
-   ========================================================= */
+   RUN
+========================================================= */
 
-document.getElementById("actButton").onclick=doAction;
+let running=false;
 
-document.getElementById("vehicleButton").onclick=()=>{
-  if(player.vehicle){ exitVehicle(); return; }
+const runBtn=
+  document.getElementById("runBtn");
 
-  // If player owns a car, summon it right next to them
-  if(state.car){
-    callOwnedCar();
+function runStart(e){
+
+  e.preventDefault();
+  running=true;
+}
+
+function runEnd(e){
+
+  e.preventDefault();
+  running=false;
+}
+
+runBtn.addEventListener(
+  "pointerdown",
+  runStart
+);
+
+runBtn.addEventListener(
+  "pointerup",
+  runEnd
+);
+
+runBtn.addEventListener(
+  "pointercancel",
+  runEnd
+);
+
+runBtn.addEventListener(
+  "pointerleave",
+  runEnd
+);
+
+/* =========================================================
+   CAMERA SWIPE
+========================================================= */
+
+let cameraYaw=0;
+let cameraPitch=.38;
+
+let cameraTouch={
+  active:false,
+  id:null,
+  x:0,
+  y:0
+};
+
+renderer.domElement.addEventListener(
+  "pointerdown",
+  e=>{
+
+    if(
+      e.pointerType==="mouse" &&
+      e.button!==0
+    ) return;
+
+    cameraTouch.active=true;
+    cameraTouch.id=e.pointerId;
+    cameraTouch.x=e.clientX;
+    cameraTouch.y=e.clientY;
+
+    renderer.domElement.setPointerCapture(
+      e.pointerId
+    );
+  }
+);
+
+renderer.domElement.addEventListener(
+  "pointermove",
+  e=>{
+
+    if(
+      !cameraTouch.active ||
+      cameraTouch.id!==e.pointerId
+    ) return;
+
+    const dx=e.clientX-cameraTouch.x;
+    const dy=e.clientY-cameraTouch.y;
+
+    cameraTouch.x=e.clientX;
+    cameraTouch.y=e.clientY;
+
+    cameraYaw-=dx*.006;
+
+    cameraPitch=
+      clamp(
+        cameraPitch+dy*.004,
+        .12,
+        .72
+      );
+  }
+);
+
+function endCameraTouch(){
+  cameraTouch.active=false;
+}
+
+renderer.domElement.addEventListener(
+  "pointerup",
+  endCameraTouch
+);
+
+renderer.domElement.addEventListener(
+  "pointercancel",
+  endCameraTouch
+);
+
+/* =========================================================
+   PLAYER MOVEMENT
+========================================================= */
+
+function movePlayer(dt){
+
+  const inputX=joy.x;
+  const inputY=joy.y;
+
+  const strength=
+    Math.min(
+      1,
+      Math.hypot(
+        inputX,
+        inputY
+      )
+    );
+
+  if(strength<.08){
+
+    if(!state.driving)
+      setPlayerAction(["Idle","idle"]);
+
     return;
   }
 
-  // Otherwise board nearby traffic
-  const v=nearestTraffic();
-  if(v)boardVehicle(v);
-  else toast("🚗 No vehicle nearby.");
-};
+  const speed=
+    (running?10:5.3)*dt*strength;
 
-document.getElementById("runButton").ontouchstart=()=>{ player.run=true; };
-document.getElementById("runButton").ontouchend=()=>{ player.run=false; };
+  if(state.inside){
 
-document.getElementById("runButton").onclick=()=>{
-  player.run=!player.run;
-  toast(player.run?"🏃 Sprint ON":"🚶 Sprint OFF");
-};
+    const nx=
+      player.position.x+
+      inputX*speed;
 
-document.getElementById("cameraButton").onclick=toggleCamera;
+    const nz=
+      player.position.z+
+      inputY*speed;
 
-document.getElementById("pauseButton").onclick=()=>{
-  gamePaused=true;
-  document.getElementById("pause").style.display="flex";
-};
+    player.position.x=nx;
+    player.position.z=nz;
 
-document.getElementById("resumeButton").onclick=()=>{
-  gamePaused=false;
-  document.getElementById("pause").style.display="none";
-};
+    constrainInterior();
 
-document.getElementById("saveButton").onclick=()=>{
-  saveGame();
-  toast("💾 Game saved.");
-};
+  }else{
 
-document.getElementById("restartButton").onclick=()=>{
-  if(confirm("Start a completely new life?")){
-    localStorage.removeItem("ibadanLifeV2");
-    location.reload();
+    /*
+      Movement is screen-relative:
+      joystick up = forward relative to camera.
+    */
+
+    const forward=
+      new THREE.Vector3(
+        Math.sin(cameraYaw),
+        0,
+        Math.cos(cameraYaw)
+      );
+
+    const right=
+      new THREE.Vector3(
+        forward.z,
+        0,
+        -forward.x
+      );
+
+    const movement=
+      new THREE.Vector3();
+
+    movement
+      .addScaledVector(
+        right,
+        inputX
+      )
+      .addScaledVector(
+        forward,
+        inputY
+      );
+
+    movement.normalize();
+
+    const nx=
+      player.position.x+
+      movement.x*speed;
+
+    const nz=
+      player.position.z+
+      movement.z*speed;
+
+    if(
+      canMoveOutside(nx,nz)
+    ){
+
+      player.position.x=nx;
+      player.position.z=nz;
+
+    }
+
+    if(
+      movement.lengthSq()>.001
+    ){
+
+      const targetYaw=
+        Math.atan2(
+          movement.x,
+          movement.z
+        );
+
+      player.rotation.y=
+        THREE.MathUtils.lerp(
+          player.rotation.y,
+          targetYaw,
+          .25
+        );
+    }
   }
-};
 
-document.getElementById("sleepButton").onclick=()=>{
-  if(player.inBuilding) sleepActivity();
-  else toast("💤 Go home or enter a hotel to sleep.");
-};
+  if(playerMixer){
 
-document.getElementById("socialButton").onclick=()=>{
-  const n=npcs.find(x=>Math.hypot(x.x-player.x,x.y-player.y)<100);
-  if(n) socialActivity();
-  else toast("👥 Find someone nearby to socialize.");
-};
+    setPlayerAction(
+      running
+        ?["Run","run","Walk","walk"]
+        :["Walk","walk","Run","run"]
+    );
 
-document.getElementById("mapButton").onclick=()=>{
-  openPhonePage("map");
-  openPhone();
-};
+  }else{
 
-document.getElementById("phoneButton").onclick=openPhone;
-document.getElementById("closePhone").onclick=closePhone;
+    animateFallback(
+      running?1:0.6
+    );
+  }
+}
 
-document.getElementById("modal").addEventListener("click",e=>{
-  if(e.target.id==="modal")closeModal();
+function animateFallback(speed){
+
+  if(!player.userData?.fallback)
+    return;
+
+  const p=
+    player.userData.parts;
+
+  if(!p)
+    return;
+
+  const t=
+    performance.now()*.012*speed;
+
+  p.leftArm.rotation.x=
+    Math.sin(t)*.6;
+
+  p.rightArm.rotation.x=
+    -Math.sin(t)*.6;
+
+  p.leftLeg.rotation.x=
+    -Math.sin(t)*.65;
+
+  p.rightLeg.rotation.x=
+    Math.sin(t)*.65;
+}
+
+/* =========================================================
+   VEHICLE
+========================================================= */
+
+function nearestVehicle(){
+
+  let best=null;
+  let bestDist=Infinity;
+
+  for(const car of vehicles){
+
+    if(!car.visible) continue;
+
+    const d=
+      distance2D(
+        player.position,
+        car.position
+      );
+
+    if(d<bestDist){
+
+      bestDist=d;
+      best=car;
+    }
+  }
+
+  return bestDist<8 ? best:null;
+}
+
+function enterVehicle(car){
+
+  if(!car) return;
+
+  if(state.inside)
+    return;
+
+  state.driving=true;
+
+  car.userData.occupied=true;
+  car.userData.driver=true;
+
+  player.visible=false;
+
+  player.position.copy(
+    car.position
+  );
+
+  cameraYaw=
+    car.rotation.y;
+
+  state.location=
+    car.userData.name || "Vehicle";
+
+  document.getElementById(
+    "driveBadge"
+  ).style.display="block";
+
+  showHint(
+    "🚗 Driving • Use joystick to drive • EXIT to leave"
+  );
+}
+
+function exitVehicle(){
+
+  if(!state.driving)
+    return;
+
+  const car=
+    vehicles.find(
+      v=>v.userData?.driver
+    );
+
+  if(!car){
+
+    state.driving=false;
+    player.visible=true;
+
+    return;
+  }
+
+  const side=
+    new THREE.Vector3(
+      1.8,
+      0,
+      0
+    );
+
+  side.applyQuaternion(
+    car.quaternion
+  );
+
+  player.position.copy(
+    car.position
+  ).add(side);
+
+  player.position.y=0;
+
+  player.rotation.y=
+    car.rotation.y;
+
+  car.userData.driver=false;
+  car.userData.occupied=false;
+
+  player.visible=true;
+
+  state.driving=false;
+
+  document.getElementById(
+    "driveBadge"
+  ).style.display="none";
+
+  state.location="Outside";
+
+  saveGame();
+
+  showHint(
+    "🚶 You left the vehicle"
+  );
+}
+
+function updateDriving(dt){
+
+  const car=
+    vehicles.find(
+      v=>v.userData?.driver
+    );
+
+  if(!car){
+
+    state.driving=false;
+    player.visible=true;
+
+    return;
+  }
+
+  const throttle=
+    -joy.y;
+
+  const steer=
+    joy.x;
+
+  const acceleration=
+    throttle*18;
+
+  car.userData.speed=
+    car.userData.speed || 0;
+
+  car.userData.speed+=
+    acceleration*dt;
+
+  car.userData.speed*=
+    Math.pow(.90,dt*8);
+
+  car.userData.speed=
+    clamp(
+      car.userData.speed,
+      -9,
+      24
+    );
+
+  car.rotation.y-=
+    steer*
+    dt*
+    1.7*
+    (0.3+
+      Math.min(
+        1,
+        Math.abs(car.userData.speed)/8
+      )
+    );
+
+  const forward=
+    new THREE.Vector3(
+      Math.sin(car.rotation.y),
+      0,
+      Math.cos(car.rotation.y)
+    );
+
+  const next=
+    car.position.clone()
+      .addScaledVector(
+        forward,
+        car.userData.speed*dt
+      );
+
+  if(
+    canMoveOutside(
+      next.x,
+      next.z
+    )
+  ){
+
+    car.position.copy(next);
+
+  }else{
+
+    car.userData.speed*=-.25;
+
+  }
+
+  player.position.copy(
+    car.position
+  );
+
+  player.rotation.y=
+    car.rotation.y;
+
+  state.location=
+    car.userData.name ||
+    "Vehicle";
+}
+
+/* =========================================================
+   ACTION SYSTEM
+========================================================= */
+
+function performAction(){
+
+  if(state.driving){
+
+    exitVehicle();
+    return;
+  }
+
+  if(state.inside){
+
+    const z=player.position.z;
+
+    if(
+      z>8.5 &&
+      Math.abs(player.position.x)<3
+    ){
+
+      exitBuilding();
+      return;
+    }
+
+    const b=
+      buildings.find(
+        b=>b.id===state.building
+      );
+
+    if(!b) return;
+
+    switch(b.id){
+
+      case "house":
+        showModal(
+          "🏠 Your House",
+          "Rest, sleep, shower, decorate and manage your home."
+        );
+        break;
+
+      case "hospital":
+        healthCheck();
+        break;
+
+      case "restaurant":
+        eat();
+        break;
+
+      case "market":
+        showModal(
+          "🛒 Bodija Market",
+          "A busy Ibadan market. Buy food, household items and supplies."
+        );
+        break;
+
+      case "bank":
+        showModal(
+          "🏦 First City Bank",
+          "Bank balance: "+formatMoney(state.bank)
+        );
+        break;
+
+      default:
+        showModal(
+          b.name,
+          "Explore the building and interact with the environment."
+        );
+    }
+
+    return;
+  }
+
+  const b=
+    nearestBuilding();
+
+  if(b){
+
+    enterBuilding(b);
+    return;
+  }
+
+  const car=
+    nearestVehicle();
+
+  if(car){
+
+    enterVehicle(car);
+    return;
+  }
+
+  /* random useful action */
+  eat();
+}
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+function eat(){
+
+  if(state.cash<500){
+
+    showHint("💸 You need ₦500 to buy food.");
+    return;
+  }
+
+  state.cash-=500;
+  state.totalSpent+=500;
+
+  state.hunger=
+    clamp(
+      state.hunger+35,
+      0,100
+    );
+
+  state.fun=
+    clamp(
+      state.fun+5,
+      0,100
+    );
+
+  state.xp+=5;
+
+  saveGame();
+
+  showHint(
+    "🍛 You ate a proper meal • Hunger +35"
+  );
+}
+
+function shower(){
+
+  state.hygiene=
+    clamp(
+      state.hygiene+50,
+      0,100
+    );
+
+  saveGame();
+
+  showHint(
+    "🚿 Fresh again. Hygiene +50"
+  );
+}
+
+function sleep(){
+
+  state.energy=
+    clamp(
+      state.energy+70,
+      0,100
+    );
+
+  state.hunger=
+    clamp(
+      state.hunger-10,
+      0,100
+    );
+
+  advanceMinutes(7*60);
+
+  saveGame();
+
+  showHint(
+    "😴 You slept for 7 hours."
+  );
+}
+
+function healthCheck(){
+
+  state.health=
+    clamp(
+      state.health+20,
+      0,100
+    );
+
+  state.energy=
+    clamp(
+      state.energy-5,
+      0,100
+    );
+
+  saveGame();
+
+  showHint(
+    "🩺 Health check complete • Health +20"
+  );
+}
+
+/* =========================================================
+   TIME
+========================================================= */
+
+function advanceMinutes(m){
+
+  state.minutes+=m;
+
+  while(state.minutes>=1440){
+
+    state.minutes-=1440;
+    state.day++;
+
+  }
+}
+
+function updateTime(dt){
+
+  advanceMinutes(
+    dt*.55
+  );
+
+  const hour=
+    Math.floor(
+      state.minutes/60
+    );
+
+  const minute=
+    Math.floor(
+      state.minutes%60
+    );
+
+  const isNight=
+    hour<6 ||
+    hour>=19;
+
+  const targetSky=
+    isNight
+      ?0x091427
+      :(
+        hour<8
+          ?0x769db5
+          :0x8cc8e8
+      );
+
+  scene.background.lerp(
+    new THREE.Color(targetSky),
+    .02
+  );
+
+  scene.fog.color.copy(
+    scene.background
+  );
+
+  if(isNight){
+
+    hemi.intensity=
+      THREE.MathUtils.lerp(
+        hemi.intensity,
+        .42,
+        .02
+      );
+
+    sun.intensity=
+      THREE.MathUtils.lerp(
+        sun.intensity,
+        .25,
+        .02
+      );
+
+  }else{
+
+    hemi.intensity=
+      THREE.MathUtils.lerp(
+        hemi.intensity,
+        1.4,
+        .02
+      );
+
+    sun.intensity=
+      THREE.MathUtils.lerp(
+        sun.intensity,
+        2.2,
+        .02
+      );
+  }
+}
+
+/* =========================================================
+   NPC MOVEMENT
+========================================================= */
+
+function updateNPCs(dt){
+
+  if(state.inside)
+    return;
+
+  for(const npc of npcs){
+
+    npc.userData.timer-=dt;
+
+    if(
+      npc.userData.timer<=0
+    ){
+
+      npc.userData.timer=
+        2+Math.random()*6;
+
+      npc.userData.dir=
+        Math.random()*Math.PI*2;
+    }
+
+    const speed=
+      npc.userData.speed;
+
+    const nx=
+      npc.position.x+
+      Math.sin(
+        npc.userData.dir
+      )*
+      speed*
+      dt;
+
+    const nz=
+      npc.position.z+
+      Math.cos(
+        npc.userData.dir
+      )*
+      speed*
+      dt;
+
+    if(
+      canMoveOutside(nx,nz)
+    ){
+
+      npc.position.x=nx;
+      npc.position.z=nz;
+
+    }else{
+
+      npc.userData.dir+=
+        Math.PI/2;
+    }
+
+    npc.rotation.y=
+      npc.userData.dir;
+
+    animateNPC(npc);
+  }
+}
+
+function animateNPC(npc){
+
+  const p=
+    npc.userData.parts;
+
+  if(!p) return;
+
+  const t=
+    performance.now()*.008;
+
+  p.leftArm.rotation.x=
+    Math.sin(t)*.35;
+
+  p.rightArm.rotation.x=
+    -Math.sin(t)*.35;
+
+  p.leftLeg.rotation.x=
+    -Math.sin(t)*.4;
+
+  p.rightLeg.rotation.x=
+    Math.sin(t)*.4;
+}
+
+/* =========================================================
+   CAMERA
+========================================================= */
+
+function updateCamera(){
+
+  let target;
+
+  if(state.inside){
+
+    target=
+      new THREE.Vector3(
+        player.position.x,
+        2.7,
+        player.position.z
+      );
+
+    const radius=12;
+
+    const x=
+      target.x+
+      Math.sin(cameraYaw)*
+      radius;
+
+    const z=
+      target.z+
+      Math.cos(cameraYaw)*
+      radius;
+
+    const y=
+      target.y+
+      Math.sin(cameraPitch)*
+      radius;
+
+    camera.position.lerp(
+      new THREE.Vector3(
+        x,y,z
+      ),
+      .09
+    );
+
+    camera.lookAt(
+      target.x,
+      1.8,
+      target.z
+    );
+
+    return;
+  }
+
+  if(state.driving){
+
+    const car=
+      vehicles.find(
+        v=>v.userData?.driver
+      );
+
+    if(!car) return;
+
+    const forward=
+      new THREE.Vector3(
+        Math.sin(car.rotation.y),
+        0,
+        Math.cos(car.rotation.y)
+      );
+
+    const desired=
+      car.position.clone()
+        .addScaledVector(
+          forward,
+          -13
+        );
+
+    desired.y+=7;
+
+    camera.position.lerp(
+      desired,
+      .10
+    );
+
+    camera.lookAt(
+      car.position.x,
+      1.6,
+      car.position.z
+    );
+
+    return;
+  }
+
+  const target=
+    player.position.clone();
+
+  target.y+=2.2;
+
+  const radius=
+    running?8.8:10.5;
+
+  const desired=
+    new THREE.Vector3(
+      target.x+
+        Math.sin(cameraYaw)*
+        radius*
+        Math.cos(cameraPitch),
+
+      target.y+
+        Math.sin(cameraPitch)*
+        radius,
+
+      target.z+
+        Math.cos(cameraYaw)*
+        radius*
+        Math.cos(cameraPitch)
+    );
+
+  /* prevent camera going underground */
+  desired.y=
+    Math.max(
+      desired.y,
+      2.8
+    );
+
+  camera.position.lerp(
+    desired,
+    .10
+  );
+
+  camera.lookAt(
+    target.x,
+    target.y,
+    target.z
+  );
+}
+
+/* =========================================================
+   LOCATION
+========================================================= */
+
+function updateLocation(){
+
+  if(state.inside)
+    return;
+
+  if(state.driving)
+    return;
+
+  let closest=null;
+  let distance=Infinity;
+
+  for(const b of buildings){
+
+    const d=
+      Math.hypot(
+        player.position.x-b.x,
+        player.position.z-b.z
+      );
+
+    if(d<distance){
+
+      distance=d;
+      closest=b;
+    }
+  }
+
+  if(
+    closest &&
+    distance<35
+  ){
+
+    state.location=
+      "Near "+closest.name;
+
+  }else if(
+    Math.abs(player.position.x)<80 &&
+    Math.abs(player.position.z)<80
+  ){
+
+    state.location=
+      "Central Ibadan";
+
+  }else{
+
+    state.location=
+      "Ibadan";
+  }
+}
+
+/* =========================================================
+   HUD
+========================================================= */
+
+let hudTimer=0;
+
+function updateHUD(dt){
+
+  hudTimer+=dt;
+
+  if(hudTimer<.12)
+    return;
+
+  hudTimer=0;
+
+  document.getElementById(
+    "playerName"
+  ).textContent=
+    state.name;
+
+  document.getElementById(
+    "money"
+  ).textContent=
+    formatMoney(state.cash);
+
+  document.getElementById(
+    "health"
+  ).textContent=
+    "❤️ "+Math.round(state.health);
+
+  document.getElementById(
+    "energy"
+  ).textContent=
+    "⚡ "+Math.round(state.energy);
+
+  document.getElementById(
+    "hunger"
+  ).textContent=
+    "🍗 "+Math.round(state.hunger);
+
+  document.getElementById(
+    "hygiene"
+  ).textContent=
+    "🧼 "+Math.round(state.hygiene);
+
+  const hour=
+    Math.floor(
+      state.minutes/60
+    );
+
+  const minute=
+    Math.floor(
+      state.minutes%60
+    );
+
+  const hh=
+    String(
+      hour%12 || 12
+    ).padStart(2,"0");
+
+  const mm=
+    String(
+      minute
+    ).padStart(2,"0");
+
+  const ampm=
+    hour<12?"AM":"PM";
+
+  document.getElementById(
+    "clock"
+  ).textContent=
+    `DAY ${state.day} • ${hh}:${mm} ${ampm}`;
+
+  document.getElementById(
+    "location"
+  ).textContent=
+    state.location;
+
+  if(
+    state.inside
+  ){
+
+    showContextHint();
+
+  }else if(
+    !state.driving
+  ){
+
+    const b=
+      nearestBuilding();
+
+    const car=
+      nearestVehicle();
+
+    if(b){
+
+      showContextHint(
+        `🚪 ${b.name} • TAP ACTION to enter`
+      );
+
+    }else if(car){
+
+      showContextHint(
+        `🚗 ${car.userData.name||"Vehicle"} • TAP CAR to board`
+      );
+
+    }
+  }
+}
+
+let hintTimer=null;
+
+function showHint(text){
+
+  const h=
+    document.getElementById("hint");
+
+  h.textContent=text;
+  h.classList.add("show");
+
+  clearTimeout(hintTimer);
+
+  hintTimer=
+    setTimeout(
+      ()=>{
+        h.classList.remove("show");
+      },
+      2800
+    );
+}
+
+function showContextHint(text){
+
+  const h=
+    document.getElementById("hint");
+
+  h.textContent=text;
+  h.classList.add("show");
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+document.getElementById(
+  "actionBtn"
+).addEventListener(
+  "click",
+  performAction
+);
+
+document.getElementById(
+  "carBtn"
+).addEventListener(
+  "click",
+  ()=>{
+
+    if(state.driving){
+
+      exitVehicle();
+      return;
+    }
+
+    const car=
+      nearestVehicle();
+
+    if(car){
+
+      enterVehicle(car);
+
+    }else{
+
+      showHint(
+        "🚗 Move closer to a vehicle."
+      );
+    }
+  }
+);
+
+document.getElementById(
+  "exitBtn"
+).addEventListener(
+  "click",
+  ()=>{
+
+    if(state.driving){
+
+      exitVehicle();
+      return;
+    }
+
+    if(state.inside){
+
+      exitBuilding();
+      return;
+    }
+
+    showHint(
+      "Nothing to exit."
+    );
+  }
+);
+
+/* =========================================================
+   PHONE
+========================================================= */
+
+const phone=
+  document.getElementById("phone");
+
+document.getElementById(
+  "phoneBtn"
+).addEventListener(
+  "click",
+  ()=>{
+    phone.style.display="flex";
+  }
+);
+
+document.getElementById(
+  "phoneClose"
+).addEventListener(
+  "click",
+  ()=>{
+    phone.style.display="none";
+  }
+);
+
+document.querySelectorAll(
+  ".phoneItem"
+).forEach(btn=>{
+
+  btn.addEventListener(
+    "click",
+    ()=>{
+
+      const type=
+        btn.dataset.phone;
+
+      phone.style.display="none";
+
+      phoneAction(type);
+    }
+  );
 });
 
-function toggleCamera(){
-  cameraMode=(cameraMode+1)%2;
-  toast(cameraMode?"🎥 Follow camera":"🎥 Normal camera");
+function phoneAction(type){
+
+  if(type==="map"){
+
+    showModal(
+      "🗺️ Ibadan Map",
+      `
+      <b>Districts</b><br><br>
+      🏠 Family House<br>
+      🌳 Bodija<br>
+      🎓 University of Ibadan<br>
+      🚦 Mokola<br>
+      🏢 Dugbe<br>
+      ⛰️ Mapo<br>
+      🚌 Iwo Road<br>
+      🏙️ Challenge<br>
+      🏘️ Ring Road<br>
+      🌴 Jericho
+      `
+    );
+
+  }
+
+  else if(type==="jobs"){
+
+    showJobs();
+
+  }
+
+  else if(type==="house"){
+
+    showModal(
+      "🏠 House",
+      "Your home is fully enterable. Sleep, shower, decorate and explore your interior."
+    );
+
+  }
+
+  else if(type==="car"){
+
+    showModal(
+      "🚗 Garage",
+      `
+      Current vehicle: <b>${state.ownedCar}</b><br><br>
+      Owned vehicles can be summoned and driven around Ibadan.
+      `
+    );
+
+  }
+
+  else if(type==="stats"){
+
+    showModal(
+      "📊 Player Stats",
+      `
+      Level: <b>${state.level}</b><br>
+      XP: <b>${state.xp}</b><br>
+      Cash: <b>${formatMoney(state.cash)}</b><br>
+      Bank: <b>${formatMoney(state.bank)}</b><br>
+      Total earned: <b>${formatMoney(state.totalEarned)}</b><br>
+      Total spent: <b>${formatMoney(state.totalSpent)}</b><br>
+      Job: <b>${state.job}</b>
+      `
+    );
+
+  }
+
+  else if(type==="decorate"){
+
+    decorateHouse();
+
+  }
 }
 
 /* =========================================================
-   TAP-TO-MOVE
-   ========================================================= */
+   JOBS
+========================================================= */
 
-canvas.addEventListener("touchend",e=>{
-  if(e.touches.length)return;
-  const touch=e.changedTouches[0];
+function showJobs(){
 
-  // Don't fire if tap was on joystick
-  if(touch.clientX<160 && touch.clientY>H-180)return;
-  if(phoneOpen || player.inBuilding || player.vehicle) return;
+  showModal(
+    "💼 Jobs",
+    "Choose a career and start earning money.",
+    [
+      ["🧹 Buka Attendant","Buka Attendant",2500],
+      ["🛒 Market Trader","Market Trader",4000],
+      ["🚌 Danfo Driver","Danfo Driver",6000],
+      ["🛡️ Security Officer","Security Officer",5000],
+      ["👨‍🏫 Teacher","Teacher",8000],
+      ["👩‍⚕️ Nurse","Nurse",10000],
+      ["💻 Software Developer","Software Developer",18000],
+      ["🏦 Bank Officer","Bank Officer",15000],
+      ["📱 Content Creator","Content Creator",12000]
+    ]
+  );
+}
 
-  const p=screenToWorld(touch.clientX,touch.clientY);
-  const dx=p.x-player.x;
-  const dy=p.y-player.y;
-  const len=Math.hypot(dx,dy)||1;
+function takeJob(name,pay){
 
-  keys.x=dx/len;
-  keys.y=dy/len;
+  state.job=name;
+  state.jobPay=pay;
 
-  setTimeout(()=>{ keys.x=0; keys.y=0; },550);
-},{passive:true});
+  showHint(
+    `💼 Job selected: ${name} • Pay ₦${pay.toLocaleString()}`
+  );
+
+  saveGame();
+}
+
+function showModal(
+  title,
+  text,
+  buttons=[]
+){
+
+  document.getElementById(
+    "modalTitle"
+  ).textContent=title;
+
+  document.getElementById(
+    "modalText"
+  ).innerHTML=text;
+
+  const holder=
+    document.getElementById(
+      "modalButtons"
+    );
+
+  holder.innerHTML="";
+
+  buttons.forEach(b=>{
+
+    const btn=
+      document.createElement(
+        "button"
+      );
+
+    btn.className=
+      "modalBtn primary";
+
+    btn.textContent=b[0];
+
+    btn.onclick=()=>{
+
+      takeJob(
+        b[1],
+        b[2]
+      );
+
+      closeModal();
+    };
+
+    holder.appendChild(btn);
+  });
+
+  document.getElementById(
+    "modal"
+  ).style.display="flex";
+}
+
+function closeModal(){
+
+  document.getElementById(
+    "modal"
+  ).style.display="none";
+}
+
+document.getElementById(
+  "modalClose"
+).addEventListener(
+  "click",
+  closeModal
+);
 
 /* =========================================================
-   GAME LOOP
-   ========================================================= */
+   DECORATION
+========================================================= */
 
-function gameLoop(now){
-  const dt=Math.min((now-lastTime)/1000,.05);
-  lastTime=now;
+function decorateHouse(){
 
-  if(!gamePaused && !phoneOpen){
-    updateTime(dt);
-    updateNeeds(dt);
-    updatePlayer(dt);
-    updateTraffic(dt);
-    updateNPCs(dt);
-    updateCamera(dt);
-    updateLocation();
-    updateContext();
-    drawMinimap();
-    updateHUD();
+  if(
+    !state.inside ||
+    state.building!=="house"
+  ){
+
+    showModal(
+      "🛋️ Decoration",
+      "Enter Your House first, then use this option to place furniture."
+    );
+
+    return;
   }
 
-  // Always render
-  if(player.inBuilding){
-    const b=buildings.find(x=>x.id===player.inBuilding);
-    drawInterior(b);
-  }else{
-    drawWorld();
-  }
+  const items=[
+    ["🛋️ Sofa","Sofa"],
+    ["📺 TV","TV"],
+    ["🛏️ Bed","Bed"],
+    ["🪴 Plant","Plant"],
+    ["🪑 Table","Table"]
+  ];
 
-  requestAnimationFrame(gameLoop);
+  showModal(
+    "🛋️ Decorate",
+    "Add furniture to your house.",
+    items.map(
+      item=>[
+        item[0]+" "+item[1],
+        item[1],
+        0
+      ]
+    )
+  );
 }
+
+/* =========================================================
+   DECORATION OVERRIDE
+========================================================= */
+
+function addFurniture(type){
+
+  state.furniture.push({
+    type,
+    x:(Math.random()-.5)*12,
+    z:(Math.random()-.5)*7,
+    rotation:Math.random()*Math.PI
+  });
+
+  saveGame();
+
+  if(
+    state.inside &&
+    state.building==="house"
+  ){
+
+    createInterior(
+      buildings.find(
+        b=>b.id==="house"
+      )
+    );
+  }
+
+  showHint(
+    "🛋️ "+type+" added to your house."
+  );
+}
+
+/* =========================================================
+   KEYBOARD SUPPORT
+========================================================= */
+
+const keys={};
+
+window.addEventListener(
+  "keydown",
+  e=>{
+    keys[e.key.toLowerCase()]=true;
+
+    if(
+      e.key.toLowerCase()==="e"
+    )
+      performAction();
+
+    if(
+      e.key.toLowerCase()==="f"
+    ){
+
+      if(state.driving)
+        exitVehicle();
+      else
+        const c=nearestVehicle(),
+          b=nearestBuilding();
+
+      if(c) enterVehicle(c);
+      else if(b) enterBuilding(b);
+    }
+
+    if(
+      e.key.toLowerCase()==="q"
+    )
+      exitVehicle();
+
+  }
+);
+
+window.addEventListener(
+  "keyup",
+  e=>{
+    keys[e.key.toLowerCase()]=false;
+  }
+);
+
+/* desktop keyboard feeds joystick */
+
+function updateKeyboardInput(){
+
+  if(
+    joy.active ||
+    state.driving
+  ) return;
+
+  let x=0;
+  let y=0;
+
+  if(keys["a"]||keys["arrowleft"])
+    x-=1;
+
+  if(keys["d"]||keys["arrowright"])
+    x+=1;
+
+  if(keys["w"]||keys["arrowup"])
+    y+=1;
+
+  if(keys["s"]||keys["arrowdown"])
+    y-=1;
+
+  joy.x=x;
+  joy.y=y;
+
+  running=
+    !!keys["shift"];
+}
+
+/* =========================================================
+   NEEDS
+========================================================= */
+
+let needsTimer=0;
+
+function updateNeeds(dt){
+
+  needsTimer+=dt;
+
+  if(
+    needsTimer<5
+  ) return;
+
+  needsTimer=0;
+
+  state.hunger=
+    clamp(
+      state.hunger-.45,
+      0,100
+    );
+
+  state.energy=
+    clamp(
+      state.energy-.18,
+      0,100
+    );
+
+  state.hygiene=
+    clamp(
+      state.hygiene-.20,
+      0,100
+    );
+
+  state.social=
+    clamp(
+      state.social-.12,
+      0,100
+    );
+
+  if(state.hunger<15)
+    state.health=
+      clamp(
+        state.health-1,
+        0,100
+      );
+
+  saveGame();
+}
+
+/* =========================================================
+   RESIZE
+========================================================= */
+
+window.addEventListener(
+  "resize",
+  ()=>{
+    camera.aspect=
+      innerWidth/innerHeight;
+
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(
+      innerWidth,
+      innerHeight
+    );
+
+    renderer.setPixelRatio(
+      Math.min(devicePixelRatio,1.7)
+    );
+  }
+);
 
 /* =========================================================
    STARTUP
-   ========================================================= */
+========================================================= */
 
-function boot(){
-  setTimeout(()=>{
-    document.getElementById("loading").style.opacity="0";
-    setTimeout(()=>{ document.getElementById("loading").style.display="none"; },500);
-    if(!state.mission)createMission();
+async function boot(){
 
-    player.x=360;
-    player.y=500;
+  document.getElementById(
+    "loadingText"
+  ).textContent=
+    "Building Ibadan...";
 
-    toast("👋🏾 Welcome to Ibadan Life.");
-  },1600);
+  await new Promise(
+    r=>setTimeout(r,250)
+  );
+
+  document.getElementById(
+    "loadingText"
+  ).textContent=
+    "Loading 3D character...";
+
+  await loadRealPlayer();
+
+  document.getElementById(
+    "loadingText"
+  ).textContent=
+    "Loading vehicles...";
+
+  await loadRealCar();
+
+  document.getElementById(
+    "loadingText"
+  ).textContent=
+    "Starting Ibadan Life...";
+
+  player.position.set(
+    state.lastOutside.x,
+    0,
+    state.lastOutside.z
+  );
+
+  player.rotation.y=
+    state.lastOutside.yaw;
+
+  updateCamera();
+
+  await new Promise(
+    r=>setTimeout(r,400)
+  );
+
+  document.getElementById(
+    "loading"
+  ).style.display="none";
+
+  showHint(
+    "🐐 Welcome to Ibadan Life. Walk around and explore."
+  );
 }
 
-addEventListener("beforeunload",saveGame);
+/* =========================================================
+   MAIN LOOP
+========================================================= */
 
-boot();
-requestAnimationFrame(gameLoop);
+let last=performance.now();
+
+function loop(now){
+
+  const dt=
+    Math.min(
+      .05,
+      (now-last)/1000
+    );
+
+  last=now;
+
+  updateKeyboardInput();
+
+  updateTime(dt);
+
+  updateNeeds(dt);
+
+  if(state.driving){
+
+    updateDriving(dt);
+
+  }else{
+
+    movePlayer(dt);
+    updateNPCs(dt);
+  }
+
+  updateLocation();
+  updateCamera();
+  updateHUD(dt);
+
+  if(playerMixer)
+    playerMixer.update(dt);
+
+  renderer.render(
+    scene,
+    camera
+  );
+
+  requestAnimationFrame(loop);
+}
 
 /* =========================================================
-   EXPOSE FOR INLINE HANDLERS
-   ========================================================= */
+   PREVENT MOBILE PAGE BEHAVIOUR
+========================================================= */
 
-window.closeModal=closeModal;
-window.placeFurniture=placeFurniture;
-window.openPhonePage=openPhonePage;
-window.buyFood=buyFood;
-window.buyDrink=buyDrink;
-window.buyClothes=buyClothes;
-window.takeJob=takeJob;
-window.workShift=workShift;
-window.buyCar=buyCar;
-window.setActiveCar=setActiveCar;
-window.buyProperty=buyProperty;
-window.deposit=deposit;
-window.withdraw=withdraw;
-window.travelTo=travelTo;
-window.socialActivity=socialActivity;
-window.eatActivity=eatActivity;
-window.bathActivity=bathActivity;
-window.toiletActivity=toiletActivity;
-window.sleepActivity=sleepActivity;
-window.studyActivity=studyActivity;
-window.healthActivity=healthActivity;
-window.saveGame=saveGame;
-window.toggleCamera=toggleCamera;
+document.addEventListener(
+  "contextmenu",
+  e=>e.preventDefault()
+);
+
+document.addEventListener(
+  "gesturestart",
+  e=>e.preventDefault()
+);
+
+document.addEventListener(
+  "touchmove",
+  e=>{
+    if(e.target===renderer.domElement)
+      e.preventDefault();
+  },
+  {passive:false}
+);
+
+/* =========================================================
+   START
+========================================================= */
+
+boot().then(
+  ()=>{
+    requestAnimationFrame(loop);
+  }
+);
+
 </script>
-
 </body>
 </html>
