@@ -33,6 +33,7 @@ button{
   color:inherit;
   border:0;
   outline:0;
+  cursor:pointer;
 }
 
 #game{
@@ -208,6 +209,7 @@ button{
   width:50%;
   border-radius:20px;
   background:#71e66c;
+  transition:width .3s;
 }
 
 #locationBadge{
@@ -297,6 +299,7 @@ button{
   background:#ffffff18;
   border:2px solid #ffffff30;
   box-shadow:0 8px 20px #0008;
+  transition:transform .05s;
 }
 
 .action-grid{
@@ -564,22 +567,6 @@ button{
   transform:translate(-50%,0);
 }
 
-#interiorBar{
-  position:fixed;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  z-index:90;
-  display:none;
-  background:#07111dee;
-  border:1px solid #ffffff20;
-  border-radius:18px;
-  padding:14px;
-  min-width:220px;
-  text-align:center;
-  box-shadow:0 20px 70px #000;
-}
-
 #activity{
   position:fixed;
   inset:0;
@@ -629,34 +616,6 @@ button{
   width:0;
   height:100%;
   background:#6be469;
-}
-
-#keyboard{
-  display:none;
-  position:fixed;
-  inset:auto 0 0;
-  z-index:300;
-  background:#111820;
-  padding:8px;
-}
-
-.keyrow{
-  display:flex;
-  gap:5px;
-  margin:4px 0;
-}
-
-.key{
-  flex:1;
-  height:43px;
-  border-radius:7px;
-  background:#26323c;
-  color:white;
-  font-size:13px;
-}
-
-.key.special{
-  flex:1.5;
 }
 
 #pause{
@@ -714,7 +673,7 @@ button{
 
 <div id="loading">
   <div class="logo">IBADAN <span>LIFE</span></div>
-  <div class="loading-sub">LIVE YOUR STORY • v2.0</div>
+  <div class="loading-sub">LIVE YOUR STORY • v2.1</div>
   <div class="loading-bar"><i></i></div>
 </div>
 
@@ -803,10 +762,6 @@ button{
   </div>
 </div>
 
-<div id="interiorBar">
-  <div id="interiorText">You are inside.</div>
-</div>
-
 <div id="toast"></div>
 
 <div id="pause">
@@ -823,8 +778,7 @@ button{
 
 <script>
 /* =========================================================
-   IBADAN LIFE v2
-   MOBILE-FIRST GTA-STYLE LIFE SIMULATOR
+   IBADAN LIFE v2.1 — BUG-FIXED
    ========================================================= */
 
 const canvas = document.getElementById("game");
@@ -877,88 +831,15 @@ const roads=[
 ];
 
 const buildings=[
-  {
-    id:"home",
-    name:"Your House",
-    district:"Family House",
-    x:250,y:250,w:250,h:190,
-    type:"house",
-    enterable:true,
-    owned:true,
-    color:"#d8a26d"
-  },
-  {
-    id:"bodija_market",
-    name:"Bodija Market",
-    district:"Bodija",
-    x:1060,y:250,w:270,h:180,
-    type:"market",
-    enterable:true,
-    color:"#d5b467"
-  },
-  {
-    id:"ui_hostel",
-    name:"University Hostel",
-    district:"UI",
-    x:2040,y:230,w:300,h:190,
-    type:"school",
-    enterable:true,
-    color:"#c5c8b4"
-  },
-  {
-    id:"mokola_hotel",
-    name:"Mokola Hotel",
-    district:"Mokola",
-    x:2820,y:250,w:300,h:190,
-    type:"hotel",
-    enterable:true,
-    color:"#9b8ac3"
-  },
-  {
-    id:"dugbe_shop",
-    name:"Dugbe Shopping Centre",
-    district:"Dugbe",
-    x:570,y:980,w:290,h:180,
-    type:"shop",
-    enterable:true,
-    color:"#c9a66b"
-  },
-  {
-    id:"mapo_hall",
-    name:"Mapo Hall",
-    district:"Mapo",
-    x:1510,y:970,w:290,h:200,
-    type:"hall",
-    enterable:true,
-    color:"#c08e64"
-  },
-  {
-    id:"hospital",
-    name:"General Hospital",
-    district:"Ring Road",
-    x:1850,y:1800,w:330,h:210,
-    type:"hospital",
-    enterable:true,
-    color:"#d9ded9"
-  },
-  {
-    id:"bank",
-    name:"First City Bank",
-    district:"Dugbe",
-    x:820,y:950,w:240,h:160,
-    type:"bank",
-    enterable:true,
-    color:"#698fa9"
-  },
-  {
-    id:"restaurant",
-    name:"Mama's Kitchen",
-    district:"Challenge",
-    x:890,y:1760,w:260,h:170,
-    type:"restaurant",
-    enterable:true,
-    color:"#b66e52"
-  }
+  {id:"home",name:"Your House",district:"Family House",x:250,y:250,w:250,h:190,type:"house",enterable:true,owned:true,color:"#d8a26d"},
+  {id:"bodija_market",name:"Bodija Market",district:"Bodija",x:1060,y:250,w:270,h:180,type:"market",enterable:true,color:"#d5b467"},
+  {id:"ui_hostel",name:"University Hostel",district:"UI",x:2040,y:230,w:300,h:190,type:"school",enterable:true,color:"#c5c8b4"},
+  {id:"mokola_hotel",name:"Mokola Hotel",district:"Mokola",x:2820,y:250,w:300,h:190,type:"hotel",enterable:true,color:"#9b8ac3"},
+  {id:"dugbe_shop",name:"Dugbe Shopping Centre",district:"Dugbe",x:570,y:980,w:290,h:180,type:"shop",enterable:true,color:"#c9a66b"},
+  {id:"mapo_hall",name:"Mapo Hall",district:"Mapo",x:1510,y:970,w:290,h:200,type:"hall",enterable:true,color:"#c08e64"},
+  {id:"hospital",name:"General Hospital",district:"Ring Road",x:1850,y:1800,w:330,h:210,type:"hospital",enterable:true,color:"#d9ded9"},
+  {id:"bank",name:"First City Bank",district:"Dugbe",x:820,y:950,w:240,h:160,type:"bank",enterable:true,color:"#698fa9"},
+  {id:"restaurant",name:"Mama's Kitchen",district:"Challenge",x:890,y:1760,w:260,h:170,type:"restaurant",enterable:true,color:"#b66e52"}
 ];
 
 const landmarks=[
@@ -977,69 +858,44 @@ const landmarks=[
    ========================================================= */
 
 const defaultState={
-  name:"David",
-  cash:50000,
-  bank:120000,
-  day:1,
-  hour:8,
-  minute:0,
-  weather:"clear",
-  hunger:82,
-  energy:88,
-  hygiene:78,
-  fun:70,
-  social:68,
-  bladder:70,
-  reputation:10,
-  education:10,
-  skill:10,
-  job:null,
-  jobLevel:1,
+  name:"David", cash:50000, bank:120000,
+  day:1, hour:8, minute:0, weather:"clear",
+  hunger:82, energy:88, hygiene:78, fun:70, social:68, bladder:70,
+  reputation:10, education:10, skill:10,
+  job:null, jobLevel:1,
   homeId:"home",
-  car:null,
-  ownedCars:[],
-  furniture:[],
-  inventory:[],
-  followers:0,
-  location:"Family House",
-  wanted:0,
-  xp:0,
-  level:1,
-  mission:null,
-  missionProgress:0,
-  missionReward:0,
-  totalEarned:0,
-  totalSpent:0
+  car:null, ownedCars:[],
+  furniture:[], inventory:[],
+  followers:0, location:"Family House",
+  wanted:0, xp:0, level:1,
+  mission:null, missionProgress:0, missionReward:0,
+  totalEarned:0, totalSpent:0
 };
 
 let state=JSON.parse(localStorage.getItem("ibadanLifeV2")||"null")||structuredClone(defaultState);
 
+// Ensure required fields exist even on old saves
+if(!state.ownedCars) state.ownedCars=[];
+if(!state.furniture) state.furniture=[];
+if(state.car === undefined) state.car = null;
+
 const player={
-  x:360,
-  y:500,
+  x:360, y:500,
   angle:0,
-  speed:2.5,
   vehicle:null,
   inBuilding:null,
   moving:false,
-  run:false
+  run:false,
+  ownedVehicleId:null
 };
 
-let camera={
-  x:0,
-  y:0,
-  zoom:1
-};
-
-let keys={
-  x:0,
-  y:0
-};
+let camera={x:0, y:0, zoom:1};
+let keys={x:0, y:0};
 
 let gamePaused=false;
 let phoneOpen=false;
 let currentPhonePage="home";
-let activeActivity=null;
+let activeActivity=false;
 let activityTimer=null;
 let toastTimer=null;
 let cameraMode=0;
@@ -1059,29 +915,23 @@ const VEHICLES=[
 const traffic=[];
 const npcs=[];
 
-function rand(a,b){
-  return Math.random()*(b-a)+a;
-}
-
-function pick(a){
-  return a[Math.floor(Math.random()*a.length)];
-}
+function rand(a,b){ return Math.random()*(b-a)+a; }
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
 
 for(let i=0;i<36;i++){
   traffic.push({
     x:rand(0,WORLD_W),
     y:pick([750,1520,795,1575]),
     dir:Math.random()<.5?1:-1,
+    angle:0,
     speed:rand(1.2,2.5),
-    type:pick(VEHICLES.slice(0,3))
+    type:pick(VEHICLES.slice(0,3)),
+    occupied:false,
+    owned:false
   });
 }
 
-const npcNames=[
-  "Aisha","Tunde","Kemi","Bola","Seyi","Mariam",
-  "Kunle","Tosin","Femi","Peace","Daniel","Esther",
-  "Yemi","Ayo","Chioma","Ola","Gbenga","Zainab"
-];
+const npcNames=["Aisha","Tunde","Kemi","Bola","Seyi","Mariam","Kunle","Tosin","Femi","Peace","Daniel","Esther","Yemi","Ayo","Chioma","Ola","Gbenga","Zainab"];
 
 for(let i=0;i<55;i++){
   npcs.push({
@@ -1092,7 +942,6 @@ for(let i=0;i<55;i++){
     name:pick(npcNames),
     skin:pick(["#5a3828","#704631","#8a5639","#9d6849"]),
     shirt:pick(["#d65a4a","#4d80bb","#dbb74e","#5ca36d","#9b6eb0","#e9e2d5"]),
-    state:"walking",
     timer:rand(1,5)
   });
 }
@@ -1134,42 +983,12 @@ const JOBS=[
    ========================================================= */
 
 const MISSIONS=[
-  {
-    text:"Visit Bodija Market.",
-    type:"visit",
-    target:"Bodija",
-    reward:5000
-  },
-  {
-    text:"Eat a proper meal.",
-    type:"eat",
-    target:1,
-    reward:2500
-  },
-  {
-    text:"Take a vehicle trip.",
-    type:"drive",
-    target:1,
-    reward:4000
-  },
-  {
-    text:"Improve your hygiene.",
-    type:"bath",
-    target:1,
-    reward:3000
-  },
-  {
-    text:"Socialize with somebody.",
-    type:"social",
-    target:1,
-    reward:3500
-  },
-  {
-    text:"Earn money from work.",
-    type:"work",
-    target:1,
-    reward:7000
-  }
+  {text:"Visit Bodija Market.",type:"visit",target:"Bodija",reward:5000},
+  {text:"Eat a proper meal.",type:"eat",target:1,reward:2500},
+  {text:"Drive your own car.",type:"drive",target:1,reward:4000},
+  {text:"Take a shower.",type:"bath",target:1,reward:3000},
+  {text:"Socialize with somebody.",type:"social",target:1,reward:3500},
+  {text:"Complete a work shift.",type:"work",target:1,reward:7000}
 ];
 
 function createMission(){
@@ -1181,11 +1000,9 @@ function createMission(){
 
 function updateMission(){
   if(!state.mission)return;
-
   document.getElementById("mission").style.display="block";
   document.getElementById("missionText").textContent=
     state.mission.text+"  •  "+state.missionProgress+"/"+state.mission.target;
-
   if(state.missionProgress>=state.mission.target){
     rewardMission();
   }
@@ -1205,6 +1022,7 @@ function rewardMission(){
   state.xp+=20;
   toast("🎯 Mission complete! +₦"+money(reward));
   state.mission=null;
+  document.getElementById("mission").style.display="none";
   setTimeout(createMission,1800);
 }
 
@@ -1212,17 +1030,11 @@ function rewardMission(){
    UTILITY
    ========================================================= */
 
-function money(n){
-  return "₦"+Math.round(n).toLocaleString("en-NG");
-}
-
-function clamp(v,a,b){
-  return Math.max(a,Math.min(b,v));
-}
+function money(n){ return "₦"+Math.round(n).toLocaleString("en-NG"); }
+function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
 
 function saveGame(){
   localStorage.setItem("ibadanLifeV2",JSON.stringify(state));
-  toast("💾 Game saved.");
 }
 
 function toast(message){
@@ -1268,18 +1080,9 @@ let lastTime=performance.now();
 
 function updateTime(dt){
   state.minute+=dt*0.65;
-
-  if(state.minute>=60){
-    state.minute-=60;
-    state.hour++;
-  }
-
-  if(state.hour>=24){
-    state.hour=0;
-    state.day++;
-  }
-
-  if(Math.random()<0.00015){
+  if(state.minute>=60){ state.minute-=60; state.hour++; }
+  if(state.hour>=24){ state.hour=0; state.day++; }
+  if(Math.random()<0.0008){
     state.weather=pick(["clear","clear","cloudy","rain"]);
   }
 }
@@ -1287,14 +1090,11 @@ function updateTime(dt){
 function timeText(){
   let h=state.hour;
   const suffix=h>=12?"PM":"AM";
-  h=h%12;
-  if(h===0)h=12;
+  h=h%12; if(h===0)h=12;
   return String(h).padStart(2,"0")+":"+String(Math.floor(state.minute)).padStart(2,"0")+" "+suffix;
 }
 
-function isNight(){
-  return state.hour>=19 || state.hour<6;
-}
+function isNight(){ return state.hour>=19 || state.hour<6; }
 
 /* =========================================================
    NEEDS
@@ -1302,8 +1102,7 @@ function isNight(){
 
 function updateNeeds(dt){
   if(activeActivity)return;
-
-  const factor=dt/60;
+  const factor=dt;
 
   state.hunger=clamp(state.hunger-0.025*factor,0,100);
   state.energy=clamp(state.energy-0.018*factor,0,100);
@@ -1318,51 +1117,34 @@ function updateNeeds(dt){
 }
 
 /* =========================================================
-   BUILDING SYSTEM
+   BUILDINGS
    ========================================================= */
 
 function nearestBuilding(){
-  let best=null;
-  let dist=Infinity;
-
+  let best=null, dist=Infinity;
   for(const b of buildings){
-    const cx=b.x+b.w/2;
-    const cy=b.y+b.h/2;
+    const cx=b.x+b.w/2, cy=b.y+b.h/2;
     const d=Math.hypot(player.x-cx,player.y-cy);
-    if(d<dist){
-      dist=d;
-      best=b;
-    }
+    if(d<dist){ dist=d; best=b; }
   }
-
   return dist<150?best:null;
 }
 
 function enterBuilding(b){
   if(!b)return;
-
   player.inBuilding=b.id;
-  player.x=0;
-  player.y=0;
-
-  if(b.id==="home"){
-    toast("🏠 Welcome home.");
-  }else{
-    toast("🚪 Entered "+b.name);
-  }
-
+  player.x=0; player.y=0;
+  if(b.id==="home"){ toast("🏠 Welcome home."); }
+  else { toast("🚪 Entered "+b.name); }
   updateContext();
 }
 
 function exitBuilding(){
   const b=buildings.find(x=>x.id===player.inBuilding);
   if(!b)return;
-
   player.inBuilding=null;
-
   player.x=b.x+b.w/2;
   player.y=b.y+b.h+75;
-
   toast("🚪 You left "+b.name);
 }
 
@@ -1384,35 +1166,28 @@ function drawInterior(b){
   ctx.translate(W/2-260*scale,H/2-215*scale);
   ctx.scale(scale,scale);
 
-  // floor
   ctx.fillStyle="#b98457";
   ctx.fillRect(25,25,470,380);
 
-  // walls
   ctx.fillStyle="#d8d0bc";
   ctx.fillRect(25,25,470,25);
   ctx.fillRect(25,380,470,25);
   ctx.fillRect(25,25,25,380);
   ctx.fillRect(470,25,25,380);
 
-  // windows
   ctx.fillStyle="#71a6c3";
   ctx.fillRect(90,35,90,15);
   ctx.fillRect(320,35,90,15);
 
-  // door
   ctx.fillStyle="#704b35";
   ctx.fillRect(220,380,80,25);
 
-  // rooms
   if(b.id==="home"){
     ctx.fillStyle="#d5bd99";
     ctx.fillRect(65,80,400,275);
-
     ctx.fillStyle="#eee3cd";
     ctx.fillRect(75,90,180,120);
     ctx.fillRect(275,90,180,120);
-
     ctx.fillStyle="#b58a63";
     ctx.fillRect(75,225,180,120);
     ctx.fillRect(275,225,180,120);
@@ -1422,25 +1197,20 @@ function drawInterior(b){
   ctx.font="bold 16px system-ui";
   ctx.fillText(b.name,70,70);
 
-  // furniture
   if(b.id==="home"){
     state.furniture.forEach((f,i)=>{
       const def=FURNITURE.find(x=>x.id===f.id);
       if(!def)return;
-
-      const p=f.x!==undefined?[f.x,f.y]:insideFurniturePosition(def,i);
+      const p=(f.x!==undefined)?[f.x,f.y]:insideFurniturePosition(def,i);
 
       ctx.fillStyle="#0005";
       ctx.fillRect(p[0]+4,p[1]+5,def.w,def.h);
-
       ctx.fillStyle="#c5a27d";
       ctx.fillRect(p[0],p[1],def.w,def.h);
-
       ctx.font=Math.min(def.w*.5,32)+"px serif";
       ctx.textAlign="center";
       ctx.textBaseline="middle";
       ctx.fillText(def.emoji,p[0]+def.w/2,p[1]+def.h/2);
-
       ctx.textAlign="left";
       ctx.textBaseline="alphabetic";
     });
@@ -1454,7 +1224,6 @@ function drawInterior(b){
       bank:["🏦","💳","💰"],
       restaurant:["🍲","🍛","🪑","🍹"]
     };
-
     (generic[b.type]||["🪑","📦"]).forEach((e,i)=>{
       const p=insideFurniturePosition({},i);
       ctx.fillStyle="#fff";
@@ -1470,13 +1239,11 @@ function drawInterior(b){
   ctx.beginPath();
   ctx.arc(W/2,H/2,15,0,Math.PI*2);
   ctx.fill();
-
   ctx.fillStyle="#fff";
   ctx.font="bold 11px system-ui";
   ctx.textAlign="center";
   ctx.fillText("YOU",W/2,H/2-22);
 
-  // exit
   ctx.fillStyle="#ffffff18";
   ctx.fillRect(W/2-45,H-85,90,42);
   ctx.fillStyle="#fff";
@@ -1486,85 +1253,88 @@ function drawInterior(b){
 }
 
 /* =========================================================
-   DECORATION
-   ========================================================= */
-
-function openDecorate(){
-  if(player.inBuilding!=="home"){
-    toast("Enter your house first.");
-    return;
-  }
-
-  openModal("decorate");
-}
-
-function placeFurniture(def){
-  if(!spend(def.price))return;
-
-  state.furniture.push({
-    id:def.id,
-    x:100+Math.random()*280,
-    y:90+Math.random()*230
-  });
-
-  saveGame();
-  closeModal();
-  toast("🛋️ "+def.name+" added to your house.");
-}
-
-/* =========================================================
-   VEHICLE SYSTEM
+   VEHICLE SYSTEM — FIXED
    ========================================================= */
 
 function nearestTraffic(){
   let best=null,d=Infinity;
-
   for(const v of traffic){
-    const dist=Math.hypot(player.x-v.x,player.y-v.y);
-    if(dist<d){
-      d=dist;
-      best=v;
+    if(v.owned && !v.occupied){
+      // Owned cars take priority when near
+      const dist=Math.hypot(player.x-v.x,player.y-v.y);
+      if(dist<d){ d=dist; best=v; }
     }
   }
+  if(best && d<140) return best;
 
+  // Fall back to any traffic
+  for(const v of traffic){
+    if(v.occupied) continue;
+    const dist=Math.hypot(player.x-v.x,player.y-v.y);
+    if(dist<d){ d=dist; best=v; }
+  }
   return d<110?best:null;
 }
 
-function nearestOwnedVehicle(){
-  let best=null,d=Infinity;
-
-  for(const v of traffic){
-    const dist=Math.hypot(player.x-v.x,player.y-v.y);
-    if(dist<d){
-      d=dist;
-      best=v;
-    }
-  }
-
-  return d<110?best:null;
-}
-
-function boardVehicle(v){
-  if(!v){
-    toast("No vehicle nearby.");
-    return;
-  }
-
+function boardVehicle(v, isOwned){
+  if(!v){ toast("No vehicle nearby."); return; }
   player.vehicle=v;
   v.occupied=true;
   player.x=v.x;
   player.y=v.y;
 
-  toast("🚗 Boarded "+v.type.name);
-  progressMission("drive");
+  if(isOwned || v.owned){
+    toast("🚗 Boarded your "+v.type.name);
+    progressMission("drive");
+  }else{
+    toast("🚗 Boarded "+v.type.name);
+  }
 }
 
 function exitVehicle(){
   if(!player.vehicle)return;
-
   player.vehicle.occupied=false;
+  player.x=player.vehicle.x+50;
+  player.y=player.vehicle.y+50;
   player.vehicle=null;
   toast("🚶 You left the vehicle.");
+}
+
+// Spawn or retrieve the player's owned car and teleport it nearby
+function callOwnedCar(){
+  if(!state.car){
+    toast("🚫 You don't own a car. Buy one in the phone.");
+    return false;
+  }
+
+  const def = VEHICLES.find(v => v.id === state.car);
+  if(!def){ toast("Car data missing."); return false; }
+
+  // Find existing owned instance of this car model
+  let owned = traffic.find(v => v.owned && v.type.id === state.car);
+
+  if(!owned){
+    owned = {
+      x: player.x + 60,
+      y: player.y + 40,
+      dir: 1,
+      angle: 0,
+      speed: 0,
+      type: def,
+      occupied: false,
+      owned: true
+    };
+    traffic.push(owned);
+    toast("🚗 Your "+def.name+" has been delivered.");
+  } else {
+    // Teleport it next to the player
+    owned.x = player.x + 60;
+    owned.y = player.y + 40;
+    owned.occupied = false;
+  }
+
+  boardVehicle(owned, true);
+  return true;
 }
 
 function updateVehicle(dt){
@@ -1573,18 +1343,21 @@ function updateVehicle(dt){
   const v=player.vehicle;
   const speed=v.type.speed*(player.run?1.35:1);
 
-  if(Math.abs(keys.x)+Math.abs(keys.y)>0){
-    const len=Math.hypot(keys.x,keys.y)||1;
-    v.x+=keys.x/len*speed;
-    v.y+=keys.y/len*speed;
+  const mag=Math.hypot(keys.x,keys.y);
 
-    v.x=clamp(v.x,20,WORLD_W-20);
-    v.y=clamp(v.y,20,WORLD_H-20);
+  if(mag > 0.01){
+    const len=mag||1;
+    // dt-scaled movement — critical fix
+    v.x += (keys.x/len)*speed*dt*60;
+    v.y += (keys.y/len)*speed*dt*60;
 
-    player.x=v.x;
-    player.y=v.y;
+    v.x = clamp(v.x,20,WORLD_W-20);
+    v.y = clamp(v.y,20,WORLD_H-20);
 
-    v.angle=Math.atan2(keys.y,keys.x);
+    player.x = v.x;
+    player.y = v.y;
+
+    v.angle = Math.atan2(keys.y,keys.x);
   }
 }
 
@@ -1593,7 +1366,10 @@ function updateVehicle(dt){
    ========================================================= */
 
 function updatePlayer(dt){
-  if(player.inBuilding || player.vehicle){
+  if(player.inBuilding){
+    return;
+  }
+  if(player.vehicle){
     updateVehicle(dt);
     return;
   }
@@ -1605,12 +1381,13 @@ function updatePlayer(dt){
     return;
   }
 
+  // dt-scaled movement — critical fix
   const speed=(player.run?3.8:2.4);
 
   const len=Math.max(1,magnitude);
 
-  player.x+=keys.x/len*speed;
-  player.y+=keys.y/len*speed;
+  player.x += (keys.x/len)*speed*dt*60;
+  player.y += (keys.y/len)*speed*dt*60;
 
   player.x=clamp(player.x,25,WORLD_W-25);
   player.y=clamp(player.y,25,WORLD_H-25);
@@ -1620,7 +1397,7 @@ function updatePlayer(dt){
 }
 
 /* =========================================================
-   NPCS
+   NPCs
    ========================================================= */
 
 function updateNPCs(dt){
@@ -1633,8 +1410,9 @@ function updateNPCs(dt){
       n.vy=rand(-.7,.7);
     }
 
-    n.x+=n.vx;
-    n.y+=n.vy;
+    // dt-scaled
+    n.x += n.vx*dt*60;
+    n.y += n.vy*dt*60;
 
     n.x=clamp(n.x,30,WORLD_W-30);
     n.y=clamp(n.y,30,WORLD_H-30);
@@ -1647,9 +1425,14 @@ function updateNPCs(dt){
 
 function updateTraffic(dt){
   for(const v of traffic){
-    if(v.occupied)continue;
+    if(v.occupied) continue;
+    if(v.owned){
+      // Owned cars don't drive themselves; only move when player drives them
+      continue;
+    }
 
-    v.x+=v.dir*v.speed;
+    // dt-scaled
+    v.x += v.dir*v.speed*dt*60;
 
     if(v.x>WORLD_W+80)v.x=-80;
     if(v.x<-80)v.x=WORLD_W+80;
@@ -1659,13 +1442,6 @@ function updateTraffic(dt){
 /* =========================================================
    WORLD RENDERING
    ========================================================= */
-
-function worldToScreen(x,y){
-  return {
-    x:(x-camera.x)*camera.zoom+W/2,
-    y:(y-camera.y)*camera.zoom+H/2
-  };
-}
 
 function screenToWorld(x,y){
   return {
@@ -1679,8 +1455,6 @@ function drawWorld(){
   ctx.fillRect(0,0,W,H);
 
   ctx.save();
-
-  // camera
   ctx.translate(W/2-camera.x*camera.zoom,H/2-camera.y*camera.zoom);
   ctx.scale(camera.zoom,camera.zoom);
 
@@ -1704,7 +1478,6 @@ function drawTerrain(){
     ctx.fillStyle=d.color;
     ctx.fillRect(d.x,d.y,d.w,d.h);
 
-    // grass patches
     ctx.fillStyle="#ffffff08";
     for(let i=0;i<10;i++){
       const x=d.x+Math.random()*d.w;
@@ -1713,7 +1486,6 @@ function drawTerrain(){
     }
   }
 
-  // dirt paths
   ctx.strokeStyle="#8b805e";
   ctx.lineWidth=25;
   ctx.globalAlpha=.3;
@@ -1762,7 +1534,6 @@ function drawRoads(){
     }
   }
 
-  // zebra crossings
   for(const x of [720,1200,2050,2900,3250]){
     for(let i=0;i<8;i++){
       ctx.fillStyle="#ffffffb8";
@@ -1773,7 +1544,6 @@ function drawRoads(){
 }
 
 function drawStreetDetails(){
-  // utility poles
   for(let x=180;x<WORLD_W;x+=250){
     for(let y=180;y<WORLD_H;y+=360){
       ctx.fillStyle="#493b2e";
@@ -1788,7 +1558,6 @@ function drawStreetDetails(){
     }
   }
 
-  // trees
   for(let i=0;i<90;i++){
     const x=(i*317)%WORLD_W;
     const y=(i*193)%WORLD_H;
@@ -1822,7 +1591,6 @@ function drawBuildings(){
     ctx.fillStyle=b.color;
     ctx.fillRect(b.x,b.y,b.w,b.h);
 
-    // roof
     ctx.fillStyle="#503d32";
     ctx.beginPath();
     ctx.moveTo(b.x-10,b.y);
@@ -1831,7 +1599,6 @@ function drawBuildings(){
     ctx.closePath();
     ctx.fill();
 
-    // windows
     for(let xx=b.x+25;xx<b.x+b.w-15;xx+=48){
       for(let yy=b.y+30;yy<b.y+b.h-40;yy+=48){
         ctx.fillStyle="#6d9eb7";
@@ -1841,11 +1608,9 @@ function drawBuildings(){
       }
     }
 
-    // door
     ctx.fillStyle="#5b3c2b";
     ctx.fillRect(b.x+b.w/2-15,b.y+b.h-40,30,40);
 
-    // sign
     ctx.fillStyle="#111c";
     ctx.fillRect(b.x+10,b.y+8,b.w-20,22);
     ctx.fillStyle="#fff";
@@ -1878,7 +1643,6 @@ function drawLandmarks(){
     ctx.fillStyle="#fff";
     ctx.fillText(l.name,l.x,l.y+42);
   }
-
   ctx.textAlign="left";
 }
 
@@ -1890,13 +1654,11 @@ function drawNPCs(){
     ctx.save();
     ctx.translate(n.x,n.y+bounce);
 
-    // shadow
     ctx.fillStyle="#0005";
     ctx.beginPath();
     ctx.ellipse(0,15,12,5,0,0,Math.PI*2);
     ctx.fill();
 
-    // legs
     ctx.strokeStyle="#2d2d35";
     ctx.lineWidth=5;
     ctx.beginPath();
@@ -1906,17 +1668,14 @@ function drawNPCs(){
     ctx.lineTo(6,20);
     ctx.stroke();
 
-    // body
     ctx.fillStyle=n.shirt;
     ctx.fillRect(-9,-5,18,18);
 
-    // head
     ctx.fillStyle=n.skin;
     ctx.beginPath();
     ctx.arc(0,-15,8,0,Math.PI*2);
     ctx.fill();
 
-    // hair
     ctx.fillStyle="#201611";
     ctx.beginPath();
     ctx.arc(0,-19,8,Math.PI,Math.PI*2);
@@ -1941,16 +1700,21 @@ function drawTraffic(){
     ctx.fillStyle=v.type.color;
     ctx.fillRect(-w/2,-h/2,w,h);
 
-    // windows
     ctx.fillStyle="#263b4a";
     ctx.fillRect(-w/2+7,-h/2+4,w-14,h-9);
 
-    // wheels
     ctx.fillStyle="#151515";
     ctx.fillRect(-w/2-3,-h/2-3,7,7);
     ctx.fillRect(w/2-4,-h/2-3,7,7);
     ctx.fillRect(-w/2-3,h/2-4,7,7);
     ctx.fillRect(w/2-4,h/2-4,7,7);
+
+    // Owned cars have a green outline so you know it's yours
+    if(v.owned){
+      ctx.strokeStyle="#72e36c";
+      ctx.lineWidth=2;
+      ctx.strokeRect(-w/2-2,-h/2-2,w+4,h+4);
+    }
 
     ctx.restore();
   }
@@ -1971,7 +1735,6 @@ function drawPlayer(){
 
   ctx.strokeStyle="#161b23";
   ctx.lineWidth=6;
-
   ctx.beginPath();
   ctx.moveTo(-5,9);
   ctx.lineTo(-7,22);
@@ -2008,18 +1771,15 @@ function drawWeather(){
   if(state.weather==="rain"){
     ctx.strokeStyle="#86bde866";
     ctx.lineWidth=1;
-
     for(let i=0;i<180;i++){
       const x=(i*97+performance.now()/4)%W;
       const y=(i*53+performance.now()/2)%H;
-
       ctx.beginPath();
       ctx.moveTo(x,y);
       ctx.lineTo(x-4,y+13);
       ctx.stroke();
     }
   }
-
   if(state.weather==="cloudy"){
     ctx.fillStyle="#26364333";
     ctx.fillRect(0,0,W,H);
@@ -2028,18 +1788,14 @@ function drawWeather(){
 
 function drawNight(){
   if(!isNight())return;
-
   let alpha=.58;
-
   if(state.hour>=5&&state.hour<7)alpha=.25;
   if(state.hour>=19&&state.hour<21)alpha=.35;
 
   ctx.fillStyle=`rgba(5,10,30,${alpha})`;
   ctx.fillRect(0,0,W,H);
 
-  // street lights
   ctx.globalCompositeOperation="screen";
-
   for(let x=0;x<W;x+=150){
     const y=H*.45;
     const gradient=ctx.createRadialGradient(x,y,0,x,y,70);
@@ -2048,7 +1804,6 @@ function drawNight(){
     ctx.fillStyle=gradient;
     ctx.fillRect(x-70,y-70,140,140);
   }
-
   ctx.globalCompositeOperation="source-over";
 }
 
@@ -2056,17 +1811,16 @@ function drawNight(){
    CAMERA
    ========================================================= */
 
-function updateCamera(){
-  let targetX=player.x;
-  let targetY=player.y;
-
+function updateCamera(dt){
+  let targetX=player.x, targetY=player.y;
   if(cameraMode===1){
     targetX+=Math.cos(player.angle)*150;
     targetY+=Math.sin(player.angle)*150;
   }
 
-  camera.x+=(targetX-camera.x)*.08;
-  camera.y+=(targetY-camera.y)*.08;
+  const lerp=Math.min(1, dt*6);
+  camera.x += (targetX-camera.x)*lerp;
+  camera.y += (targetY-camera.y)*lerp;
 
   const viewW=W/camera.zoom;
   const viewH=H/camera.zoom;
@@ -2081,12 +1835,10 @@ function updateCamera(){
 
 function drawMinimap(){
   mapCtx.clearRect(0,0,180,180);
-
   mapCtx.fillStyle="#15251a";
   mapCtx.fillRect(0,0,180,180);
 
-  const sx=180/WORLD_W;
-  const sy=180/WORLD_H;
+  const sx=180/WORLD_W, sy=180/WORLD_H;
 
   for(const r of roads){
     mapCtx.fillStyle="#555c5c";
@@ -2098,6 +1850,14 @@ function drawMinimap(){
     mapCtx.fillRect(b.x*sx,b.y*sy,b.w*sx,b.h*sy);
   }
 
+  // Owned cars on minimap
+  for(const v of traffic){
+    if(v.owned){
+      mapCtx.fillStyle="#f0c040";
+      mapCtx.fillRect(v.x*sx-2,v.y*sy-2,4,4);
+    }
+  }
+
   mapCtx.fillStyle="#70ef65";
   mapCtx.beginPath();
   mapCtx.arc(player.x*sx,player.y*sy,4,0,Math.PI*2);
@@ -2106,10 +1866,7 @@ function drawMinimap(){
   mapCtx.strokeStyle="#70ef65";
   mapCtx.beginPath();
   mapCtx.moveTo(player.x*sx,player.y*sy);
-  mapCtx.lineTo(
-    (player.x+Math.cos(player.angle)*20)*sx,
-    (player.y+Math.sin(player.angle)*20)*sy
-  );
+  mapCtx.lineTo((player.x+Math.cos(player.angle)*20)*sx,(player.y+Math.sin(player.angle)*20)*sy);
   mapCtx.stroke();
 }
 
@@ -2119,7 +1876,6 @@ function drawMinimap(){
 
 function updateLocation(){
   let found="Ibadan";
-
   if(player.inBuilding){
     const b=buildings.find(x=>x.id===player.inBuilding);
     if(b)found=b.name;
@@ -2134,9 +1890,7 @@ function updateLocation(){
 
   if(state.location!==found){
     state.location=found;
-
-    if(state.mission?.type==="visit" &&
-       state.mission.target===found){
+    if(state.mission?.type==="visit" && state.mission.target===found){
       progressMission("visit");
     }
   }
@@ -2145,7 +1899,7 @@ function updateLocation(){
 }
 
 /* =========================================================
-   CONTEXT ACTION
+   CONTEXT
    ========================================================= */
 
 function updateContext(){
@@ -2153,13 +1907,17 @@ function updateContext(){
 
   if(player.inBuilding){
     const b=buildings.find(x=>x.id===player.inBuilding);
-
     if(b?.id==="home"){
       el.textContent="🛋️ Tap ACTION to interact • Decorate with 📱";
     }else{
       el.textContent="🚪 Tap ACTION to interact • Exit below";
     }
+    el.style.display="block";
+    return;
+  }
 
+  if(player.vehicle){
+    el.textContent="🚗 Tap VEHICLE to exit";
     el.style.display="block";
     return;
   }
@@ -2179,7 +1937,7 @@ function updateContext(){
 }
 
 /* =========================================================
-   ACTION SYSTEM
+   ACTION
    ========================================================= */
 
 function doAction(){
@@ -2187,73 +1945,29 @@ function doAction(){
     interactInside();
     return;
   }
-
+  if(player.vehicle){
+    exitVehicle();
+    return;
+  }
   const b=nearestBuilding();
-
-  if(b){
-    enterBuilding(b);
-    return;
-  }
-
+  if(b){ enterBuilding(b); return; }
   const v=nearestTraffic();
-
-  if(v){
-    boardVehicle(v);
-    return;
-  }
-
+  if(v){ boardVehicle(v); return; }
   toast("Nothing useful nearby. Explore Ibadan.");
 }
 
 function interactInside(){
   const b=buildings.find(x=>x.id===player.inBuilding);
   if(!b)return;
-
-  if(b.id==="home"){
-    openHomeActions();
-    return;
-  }
-
-  if(b.type==="market"){
-    openMarket();
-    return;
-  }
-
-  if(b.type==="school"){
-    studyActivity();
-    return;
-  }
-
-  if(b.type==="hotel"){
-    sleepActivity();
-    return;
-  }
-
-  if(b.type==="hospital"){
-    healthActivity();
-    return;
-  }
-
-  if(b.type==="bank"){
-    openPhonePage("bank");
-    return;
-  }
-
-  if(b.type==="restaurant"){
-    eatActivity();
-    return;
-  }
-
-  if(b.type==="hall"){
-    socialActivity();
-    return;
-  }
-
-  if(b.type==="shop"){
-    openShop();
-    return;
-  }
-
+  if(b.id==="home"){ openHomeActions(); return; }
+  if(b.type==="market"){ openMarket(); return; }
+  if(b.type==="school"){ studyActivity(); return; }
+  if(b.type==="hotel"){ sleepActivity(); return; }
+  if(b.type==="hospital"){ healthActivity(); return; }
+  if(b.type==="bank"){ openPhonePage("bank"); openPhone(); return; }
+  if(b.type==="restaurant"){ eatActivity(); return; }
+  if(b.type==="hall"){ socialActivity(); return; }
+  if(b.type==="shop"){ openShop(); return; }
   toast("You look around the building.");
 }
 
@@ -2261,14 +1975,11 @@ function interactInside(){
    HOME ACTIONS
    ========================================================= */
 
-function openHomeActions(){
-  openModal("home");
-}
+function openHomeActions(){ openModal("home"); }
 
 function openModal(type){
   const modal=document.getElementById("modal");
   const box=document.getElementById("modalBox");
-
   modal.style.display="flex";
 
   if(type==="home"){
@@ -2277,39 +1988,22 @@ function openModal(type){
         <h2>🏠 Your Home</h2>
         <button class="close" onclick="closeModal()">×</button>
       </div>
-
       <div class="panel">
         <h3>What do you want to do?</h3>
-
         <div class="item">
-          <div class="item-info">
-            <div class="item-name">🍳 Prepare food</div>
-            <div class="item-desc">Cook something to restore hunger.</div>
-          </div>
+          <div class="item-info"><div class="item-name">🍳 Prepare food</div><div class="item-desc">Cook something to restore hunger.</div></div>
           <button class="btn" onclick="eatActivity()">COOK</button>
         </div>
-
         <div class="item">
-          <div class="item-info">
-            <div class="item-name">🚿 Take a shower</div>
-            <div class="item-desc">Restore hygiene and feel fresh.</div>
-          </div>
+          <div class="item-info"><div class="item-name">🚿 Take a shower</div><div class="item-desc">Restore hygiene and feel fresh.</div></div>
           <button class="btn" onclick="bathActivity()">SHOWER</button>
         </div>
-
         <div class="item">
-          <div class="item-info">
-            <div class="item-name">🚽 Use bathroom</div>
-            <div class="item-desc">Take care of your bladder.</div>
-          </div>
+          <div class="item-info"><div class="item-name">🚽 Use bathroom</div><div class="item-desc">Take care of your bladder.</div></div>
           <button class="btn" onclick="toiletActivity()">USE</button>
         </div>
-
         <div class="item">
-          <div class="item-info">
-            <div class="item-name">💤 Sleep</div>
-            <div class="item-desc">Restore energy and advance the day.</div>
-          </div>
+          <div class="item-info"><div class="item-name">💤 Sleep</div><div class="item-desc">Restore energy and advance the day.</div></div>
           <button class="btn" onclick="sleepActivity()">SLEEP</button>
         </div>
       </div>
@@ -2322,11 +2016,7 @@ function openModal(type){
         <h2>🛋️ Decorate Home</h2>
         <button class="close" onclick="closeModal()">×</button>
       </div>
-
-      <p style="font-size:11px;opacity:.6">
-        Buy furniture and make your home yours.
-      </p>
-
+      <p style="font-size:11px;opacity:.6">Buy furniture and make your home yours.</p>
       ${FURNITURE.map(f=>`
         <div class="item">
           <div class="item-info">
@@ -2340,8 +2030,43 @@ function openModal(type){
   }
 }
 
-function closeModal(){
-  document.getElementById("modal").style.display="none";
+function closeModal(){ document.getElementById("modal").style.display="none"; }
+
+/* =========================================================
+   FURNITURE PLACEMENT — grid-based (fixed)
+   ========================================================= */
+
+function placeFurniture(def){
+  if(!spend(def.price))return;
+
+  // Grid-based placement — 3x3 slots, avoid overlap
+  const slots=[
+    [110,115],[245,115],[380,115],
+    [110,240],[245,240],[380,240],
+    [110,365],[245,365],[380,365]
+  ];
+
+  const used = new Set(state.furniture.map(f=>`${f.gx},${f.gy}`));
+
+  let placed = false;
+  for(let i=0;i<slots.length;i++){
+    const gx=slots[i][0], gy=slots[i][1];
+    if(!used.has(`${gx},${gy}`)){
+      state.furniture.push({id:def.id, gx, gy, x:gx, y:gy});
+      placed = true;
+      break;
+    }
+  }
+
+  if(!placed){
+    toast("🏠 No space left. Your house is full!");
+    state.cash += def.price; // refund
+    return;
+  }
+
+  saveGame();
+  closeModal();
+  toast("🛋️ "+def.name+" added to your house.");
 }
 
 /* =========================================================
@@ -2355,7 +2080,6 @@ function startActivity(icon,title,desc,duration,finish){
   }
 
   activeActivity=true;
-
   document.getElementById("activity").style.display="flex";
   document.getElementById("activityIcon").textContent=icon;
   document.getElementById("activityTitle").textContent=title;
@@ -2369,7 +2093,6 @@ function startActivity(icon,title,desc,duration,finish){
   function tick(now){
     const p=clamp((now-start)/duration,0,1);
     bar.style.width=(p*100)+"%";
-
     if(p<1){
       activityTimer=requestAnimationFrame(tick);
     }else{
@@ -2380,141 +2103,88 @@ function startActivity(icon,title,desc,duration,finish){
       updateHUD();
     }
   }
-
   activityTimer=requestAnimationFrame(tick);
 }
 
 function eatActivity(){
   closeModal();
-
-  startActivity(
-    "🍛",
-    "Eating",
-    "You sit down and enjoy a proper Nigerian meal.",
-    2200,
-    ()=>{
-      state.hunger=clamp(state.hunger+35,0,100);
-      state.energy=clamp(state.energy+5,0,100);
-      state.bladder=clamp(state.bladder-8,0,100);
-      state.cash=Math.max(0,state.cash-500);
-      progressMission("eat");
-      toast("🍛 Meal finished. You feel better.");
-    }
-  );
+  startActivity("🍛","Eating","You sit down and enjoy a proper Nigerian meal.",2200,()=>{
+    state.hunger=clamp(state.hunger+35,0,100);
+    state.energy=clamp(state.energy+5,0,100);
+    state.bladder=clamp(state.bladder-8,0,100);
+    state.cash=Math.max(0,state.cash-500);
+    progressMission("eat");
+    toast("🍛 Meal finished. You feel better.");
+  });
 }
 
 function bathActivity(){
   closeModal();
-
-  startActivity(
-    "🚿",
-    "Taking a shower",
-    "Hot water, soap and a fresh start.",
-    2000,
-    ()=>{
-      state.hygiene=100;
-      state.fun=clamp(state.fun+8,0,100);
-      toast("🚿 Fresh! Hygiene restored.");
-      progressMission("bath");
-    }
-  );
+  startActivity("🚿","Taking a shower","Hot water, soap and a fresh start.",2000,()=>{
+    state.hygiene=100;
+    state.fun=clamp(state.fun+8,0,100);
+    toast("🚿 Fresh! Hygiene restored.");
+    progressMission("bath");
+  });
 }
 
 function toiletActivity(){
   closeModal();
-
-  startActivity(
-    "🚽",
-    "Bathroom",
-    "Taking care of business...",
-    1300,
-    ()=>{
-      state.bladder=100;
-      toast("🚽 Problem solved.");
-    }
-  );
+  startActivity("🚽","Bathroom","Taking care of business...",1300,()=>{
+    state.bladder=100;
+    toast("🚽 Problem solved.");
+  });
 }
 
 function sleepActivity(){
   closeModal();
-
-  startActivity(
-    "💤",
-    "Sleeping",
-    "You rest until morning.",
-    2500,
-    ()=>{
-      state.energy=100;
-      state.hunger=clamp(state.hunger-12,0,100);
-      state.hygiene=clamp(state.hygiene-7,0,100);
-
-      state.hour=7;
-      state.minute=0;
-      state.day++;
-
-      toast("🌅 Good morning. Day "+state.day);
-    }
-  );
+  startActivity("💤","Sleeping","You rest until morning.",2500,()=>{
+    state.energy=100;
+    state.hunger=clamp(state.hunger-12,0,100);
+    state.hygiene=clamp(state.hygiene-7,0,100);
+    state.hour=7;
+    state.minute=0;
+    state.day++;
+    toast("🌅 Good morning. Day "+state.day);
+  });
 }
 
 function studyActivity(){
   closeModal();
-
-  startActivity(
-    "📚",
-    "Studying",
-    "You focus and improve your knowledge.",
-    3000,
-    ()=>{
-      state.education+=4;
-      state.skill+=2;
-      state.energy=clamp(state.energy-10,0,100);
-      state.fun=clamp(state.fun-4,0,100);
-      state.xp+=12;
-      checkLevel();
-
-      toast("📚 Study complete. Education increased.");
-    }
-  );
+  startActivity("📚","Studying","You focus and improve your knowledge.",3000,()=>{
+    state.education+=4;
+    state.skill+=2;
+    state.energy=clamp(state.energy-10,0,100);
+    state.fun=clamp(state.fun-4,0,100);
+    state.xp+=12;
+    checkLevel();
+    toast("📚 Study complete. Education increased.");
+  });
 }
 
 function healthActivity(){
   closeModal();
-
-  startActivity(
-    "🩺",
-    "Health check",
-    "A quick hospital assessment.",
-    1800,
-    ()=>{
-      state.energy=clamp(state.energy+12,0,100);
-      state.reputation+=1;
-      toast("🩺 Check complete.");
-    }
-  );
+  startActivity("🩺","Health check","A quick hospital assessment.",1800,()=>{
+    state.energy=clamp(state.energy+12,0,100);
+    state.reputation+=1;
+    toast("🩺 Check complete.");
+  });
 }
 
 function socialActivity(){
   closeModal();
-
-  startActivity(
-    "👋🏾",
-    "Socializing",
-    "You meet people and spend time together.",
-    2300,
-    ()=>{
-      state.social=clamp(state.social+30,0,100);
-      state.fun=clamp(state.fun+12,0,100);
-      state.reputation++;
-      state.followers+=Math.floor(Math.random()*4);
-      progressMission("social");
-      toast("👥 Good vibes. Social life improved.");
-    }
-  );
+  startActivity("👋🏾","Socializing","You meet people and spend time together.",2300,()=>{
+    state.social=clamp(state.social+30,0,100);
+    state.fun=clamp(state.fun+12,0,100);
+    state.reputation++;
+    state.followers+=Math.floor(Math.random()*4);
+    progressMission("social");
+    toast("👥 Good vibes. Social life improved.");
+  });
 }
 
 /* =========================================================
-   MARKET / SHOP
+   MARKET
    ========================================================= */
 
 function openMarket(){
@@ -2524,28 +2194,16 @@ function openMarket(){
       <h2>🛒 Bodija Market</h2>
       <button class="close" onclick="closeModal()">×</button>
     </div>
-
     <div class="item">
-      <div class="item-info">
-        <div class="item-name">🍛 Rice & Chicken</div>
-        <div class="item-desc">Big meal • +40 hunger</div>
-      </div>
+      <div class="item-info"><div class="item-name">🍛 Rice & Chicken</div><div class="item-desc">Big meal • +40 hunger</div></div>
       <button class="btn" onclick="buyFood(1500)">₦1,500</button>
     </div>
-
     <div class="item">
-      <div class="item-info">
-        <div class="item-name">🥤 Soft Drink</div>
-        <div class="item-desc">Refreshing • +8 fun</div>
-      </div>
+      <div class="item-info"><div class="item-name">🥤 Soft Drink</div><div class="item-desc">Refreshing • +8 fun</div></div>
       <button class="btn" onclick="buyDrink()">₦500</button>
     </div>
-
     <div class="item">
-      <div class="item-info">
-        <div class="item-name">👕 New Clothes</div>
-        <div class="item-desc">Improves style and reputation.</div>
-      </div>
+      <div class="item-info"><div class="item-name">👕 New Clothes</div><div class="item-desc">Improves style and reputation.</div></div>
       <button class="btn" onclick="buyClothes()">₦8,000</button>
     </div>
   `;
@@ -2553,7 +2211,6 @@ function openMarket(){
 
 function buyFood(price){
   if(!spend(price))return;
-
   state.hunger=clamp(state.hunger+40,0,100);
   state.bladder=clamp(state.bladder-5,0,100);
   closeModal();
@@ -2563,7 +2220,6 @@ function buyFood(price){
 
 function buyDrink(){
   if(!spend(500))return;
-
   state.fun=clamp(state.fun+8,0,100);
   state.bladder=clamp(state.bladder-4,0,100);
   closeModal();
@@ -2572,16 +2228,13 @@ function buyDrink(){
 
 function buyClothes(){
   if(!spend(8000))return;
-
   state.reputation+=5;
-  state.fun+=8;
+  state.fun=clamp(state.fun+8,0,100);
   closeModal();
   toast("👕 Looking fresh!");
 }
 
-function openShop(){
-  openMarket();
-}
+function openShop(){ openMarket(); }
 
 /* =========================================================
    PHONE
@@ -2605,83 +2258,39 @@ function openPhonePage(page){
   if(page==="home"){
     screen.innerHTML=`
       <div class="app-grid">
-
-        <button class="app" onclick="openPhonePage('bank')">
-          🏦<span>Bank</span>
-        </button>
-
-        <button class="app" onclick="openPhonePage('jobs')">
-          💼<span>Jobs</span>
-        </button>
-
-        <button class="app" onclick="openPhonePage('cars')">
-          🚘<span>Cars</span>
-        </button>
-
-        <button class="app" onclick="openPhonePage('house')">
-          🏠<span>House</span>
-        </button>
-
-        <button class="app" onclick="openPhonePage('decorate')">
-          🛋️<span>Decorate</span>
-        </button>
-
-        <button class="app" onclick="openPhonePage('social')">
-          👥<span>Social</span>
-        </button>
-
-        <button class="app" onclick="openPhonePage('map')">
-          🗺️<span>Map</span>
-        </button>
-
-        <button class="app" onclick="openPhonePage('stats')">
-          📊<span>Stats</span>
-        </button>
-
-        <button class="app" onclick="openPhonePage('settings')">
-          ⚙️<span>Settings</span>
-        </button>
-
+        <button class="app" onclick="openPhonePage('bank')">🏦<span>Bank</span></button>
+        <button class="app" onclick="openPhonePage('jobs')">💼<span>Jobs</span></button>
+        <button class="app" onclick="openPhonePage('cars')">🚘<span>Cars</span></button>
+        <button class="app" onclick="openPhonePage('house')">🏠<span>House</span></button>
+        <button class="app" onclick="openPhonePage('decorate')">🛋️<span>Decorate</span></button>
+        <button class="app" onclick="openPhonePage('social')">👥<span>Social</span></button>
+        <button class="app" onclick="openPhonePage('map')">🗺️<span>Map</span></button>
+        <button class="app" onclick="openPhonePage('stats')">📊<span>Stats</span></button>
+        <button class="app" onclick="openPhonePage('settings')">⚙️<span>Settings</span></button>
       </div>
     `;
+    return;
   }
 
-  if(page!=="home"){
-    screen.innerHTML=`
-      <button class="phone-back" onclick="openPhonePage('home')">
-        ← Back to phone
-      </button>
-    `;
+  screen.innerHTML=`<button class="phone-back" onclick="openPhonePage('home')">← Back to phone</button>`;
 
-    if(page==="bank")bankPage(screen);
-    if(page==="jobs")jobsPage(screen);
-    if(page==="cars")carsPage(screen);
-    if(page==="house")housePage(screen);
-    if(page==="decorate")decoratePage(screen);
-    if(page==="social")socialPage(screen);
-    if(page==="map")mapPage(screen);
-    if(page==="stats")statsPage(screen);
-    if(page==="settings")settingsPage(screen);
-  }
+  if(page==="bank")bankPage(screen);
+  if(page==="jobs")jobsPage(screen);
+  if(page==="cars")carsPage(screen);
+  if(page==="house")housePage(screen);
+  if(page==="decorate")decoratePage(screen);
+  if(page==="social")socialPage(screen);
+  if(page==="map")mapPage(screen);
+  if(page==="stats")statsPage(screen);
+  if(page==="settings")settingsPage(screen);
 }
 
 function bankPage(screen){
   screen.innerHTML+=`
     <div class="panel">
       <h3>🏦 Banking</h3>
-      <div class="item">
-        <div class="item-info">
-          <div class="item-name">Cash</div>
-          <div class="item-desc">${money(state.cash)}</div>
-        </div>
-      </div>
-      <div class="item">
-        <div class="item-info">
-          <div class="item-name">Bank Balance</div>
-          <div class="item-desc">${money(state.bank)}</div>
-        </div>
-      </div>
-
+      <div class="item"><div class="item-info"><div class="item-name">Cash</div><div class="item-desc">${money(state.cash)}</div></div></div>
+      <div class="item"><div class="item-info"><div class="item-name">Bank Balance</div><div class="item-desc">${money(state.bank)}</div></div></div>
       <button class="btn" onclick="deposit()">Deposit ₦10,000</button>
       <button class="btn dark" onclick="withdraw()">Withdraw ₦10,000</button>
     </div>
@@ -2689,11 +2298,7 @@ function bankPage(screen){
 }
 
 function deposit(){
-  if(state.cash<10000){
-    toast("Not enough cash.");
-    return;
-  }
-
+  if(state.cash<10000){ toast("Not enough cash."); return; }
   state.cash-=10000;
   state.bank+=10000;
   toast("🏦 ₦10,000 deposited.");
@@ -2701,11 +2306,7 @@ function deposit(){
 }
 
 function withdraw(){
-  if(state.bank<10000){
-    toast("Not enough money in bank.");
-    return;
-  }
-
+  if(state.bank<10000){ toast("Not enough money in bank."); return; }
   state.bank-=10000;
   state.cash+=10000;
   toast("🏦 ₦10,000 withdrawn.");
@@ -2716,97 +2317,106 @@ function jobsPage(screen){
   screen.innerHTML+=`
     <div class="panel">
       <h3>💼 Careers</h3>
-      ${JOBS.map(j=>`
-        <div class="item">
-          <div class="item-info">
-            <div class="item-name">${j.icon} ${j.name}</div>
-            <div class="item-desc">
-              Daily pay: ${money(j.salary)} • Requirement: ${j.req} skill
+      ${JOBS.map(j=>{
+        const locked = state.skill < j.req;
+        const isCurrent = state.job === j.id;
+        return `
+          <div class="item">
+            <div class="item-info">
+              <div class="item-name">${j.icon} ${j.name} ${isCurrent?"✅":""}</div>
+              <div class="item-desc">
+                Daily pay: ${money(j.salary)} • Requirement: ${j.req} skill
+              </div>
             </div>
+            <button class="btn ${locked?"dark":""}" onclick="takeJob('${j.id}')">
+              ${locked?"LOCKED":isCurrent?"WORK":"TAKE"}
+            </button>
           </div>
-          <button class="btn ${state.skill<j.req?"dark":""}"
-                  onclick="takeJob('${j.id}')">
-            ${state.skill<j.req?"LOCKED":"WORK"}
-          </button>
-        </div>
-      `).join("")}
+        `;
+      }).join("")}
+      ${state.job?`<button class="btn blue" onclick="workShift()" style="width:100%;margin-top:10px">💼 WORK A SHIFT NOW</button>`:""}
     </div>
   `;
 }
 
 function takeJob(id){
   const j=JOBS.find(x=>x.id===id);
+  if(state.skill<j.req){ toast("🔒 Improve your skill first."); return; }
 
-  if(state.skill<j.req){
-    toast("🔒 Improve your skill first.");
+  if(state.job === id){
+    // Already have this job → work a shift
+    workShift();
     return;
   }
 
-  state.job=j.id;
+  state.job=id;
   toast("💼 You are now a "+j.name);
   openPhonePage("jobs");
 }
 
 function workShift(){
-  if(!state.job){
-    toast("Choose a job first.");
-    openPhonePage("jobs");
-    return;
-  }
-
+  if(!state.job){ toast("Choose a job first."); openPhonePage("jobs"); return; }
   const j=JOBS.find(x=>x.id===state.job);
 
   closePhone();
 
-  startActivity(
-    j.icon,
-    "Working as "+j.name,
-    "Complete your shift and earn your daily pay.",
-    3500,
-    ()=>{
-      earn(j.salary);
-      state.energy=clamp(state.energy-18,0,100);
-      state.hunger=clamp(state.hunger-10,0,100);
-      state.skill+=1;
-      progressMission("work");
-      toast("💰 Shift complete. You earned "+money(j.salary));
-    }
-  );
+  startActivity(j.icon,"Working as "+j.name,"Complete your shift and earn your daily pay.",3500,()=>{
+    earn(j.salary);
+    state.energy=clamp(state.energy-18,0,100);
+    state.hunger=clamp(state.hunger-10,0,100);
+    state.skill+=1;
+    progressMission("work");
+    toast("💰 Shift complete. You earned "+money(j.salary));
+  });
 }
 
 function carsPage(screen){
   screen.innerHTML+=`
     <div class="panel">
       <h3>🚘 Vehicle Dealership</h3>
-      ${VEHICLES.map(v=>`
-        <div class="item">
+      ${state.car?`
+        <div class="item" style="background:#0a1a14;border:1px solid #72e36c55;border-radius:10px;padding:10px">
           <div class="item-info">
-            <div class="item-name">${v.emoji} ${v.name}</div>
-            <div class="item-desc">${money(v.price)} • Speed ${v.speed}</div>
+            <div class="item-name">✅ Active: ${VEHICLES.find(v=>v.id===state.car).name}</div>
+            <div class="item-desc">Tap VEHICLE button near your location to summon it.</div>
           </div>
-          <button class="btn" onclick="buyCar('${v.id}')">
-            BUY
-          </button>
         </div>
-      `).join("")}
+      `:""}
+      ${VEHICLES.map(v=>{
+        const owned = state.ownedCars.includes(v.id);
+        const isActive = state.car === v.id;
+        return `
+          <div class="item">
+            <div class="item-info">
+              <div class="item-name">${v.emoji} ${v.name} ${isActive?"⭐":""}</div>
+              <div class="item-desc">${money(v.price)} • Speed ${v.speed}</div>
+            </div>
+            ${owned
+              ? `<button class="btn ${isActive?"dark":""}" onclick="setActiveCar('${v.id}')">${isActive?"ACTIVE":"USE"}</button>`
+              : `<button class="btn" onclick="buyCar('${v.id}')">BUY</button>`}
+          </div>
+        `;
+      }).join("")}
     </div>
   `;
 }
 
 function buyCar(id){
   const v=VEHICLES.find(x=>x.id===id);
-
-  if(state.ownedCars.includes(id)){
-    toast("You already own this vehicle.");
-    return;
-  }
-
+  if(state.ownedCars.includes(id)){ toast("You already own this vehicle."); return; }
   if(!spend(v.price))return;
 
   state.ownedCars.push(id);
   state.car=id;
+  saveGame();
+  toast("🚘 You bought a "+v.name+"! Tap VEHICLE to summon it.");
+  openPhonePage("cars");
+}
 
-  toast("🚘 You bought a "+v.name);
+function setActiveCar(id){
+  state.car = id;
+  saveGame();
+  toast("⭐ "+VEHICLES.find(v=>v.id===id).name+" is now active.");
   openPhonePage("cars");
 }
 
@@ -2814,33 +2424,17 @@ function housePage(screen){
   screen.innerHTML+=`
     <div class="panel">
       <h3>🏠 Property</h3>
-
       <div class="item">
-        <div class="item-info">
-          <div class="item-name">Family House</div>
-          <div class="item-desc">Your current home</div>
-        </div>
+        <div class="item-info"><div class="item-name">Family House</div><div class="item-desc">Your current home</div></div>
         <button class="btn">OWNED</button>
       </div>
-
       <div class="item">
-        <div class="item-info">
-          <div class="item-name">🏢 Apartment</div>
-          <div class="item-desc">₦8,000,000</div>
-        </div>
-        <button class="btn" onclick="buyProperty(8000000)">
-          BUY
-        </button>
+        <div class="item-info"><div class="item-name">🏢 Apartment</div><div class="item-desc">₦8,000,000</div></div>
+        <button class="btn" onclick="buyProperty(8000000)">BUY</button>
       </div>
-
       <div class="item">
-        <div class="item-info">
-          <div class="item-name">🏡 Luxury Duplex</div>
-          <div class="item-desc">₦30,000,000</div>
-        </div>
-        <button class="btn" onclick="buyProperty(30000000)">
-          BUY
-        </button>
+        <div class="item-info"><div class="item-name">🏡 Luxury Duplex</div><div class="item-desc">₦30,000,000</div></div>
+        <button class="btn" onclick="buyProperty(30000000)">BUY</button>
       </div>
     </div>
   `;
@@ -2848,7 +2442,6 @@ function housePage(screen){
 
 function buyProperty(price){
   if(!spend(price))return;
-
   state.reputation+=10;
   toast("🏠 New property purchased!");
 }
@@ -2857,10 +2450,7 @@ function decoratePage(screen){
   screen.innerHTML+=`
     <div class="panel">
       <h3>🛋️ Interior Designer</h3>
-      <p style="font-size:11px;opacity:.65">
-        Buy furniture, then enter your house to see it inside.
-      </p>
-
+      <p style="font-size:11px;opacity:.65">Buy furniture, then enter your house to see it inside.</p>
       ${FURNITURE.map(f=>`
         <div class="item">
           <div class="item-info">
@@ -2878,16 +2468,8 @@ function socialPage(screen){
   screen.innerHTML+=`
     <div class="panel">
       <h3>👥 Social Life</h3>
-      <div class="item">
-        <div class="item-info">
-          <div class="item-name">Followers</div>
-          <div class="item-desc">${state.followers}</div>
-        </div>
-      </div>
-
-      <button class="btn" onclick="socialActivity()">
-        👋🏾 MEET PEOPLE
-      </button>
+      <div class="item"><div class="item-info"><div class="item-name">Followers</div><div class="item-desc">${state.followers}</div></div></div>
+      <button class="btn" onclick="socialActivity()">👋🏾 MEET PEOPLE</button>
     </div>
   `;
 }
@@ -2898,12 +2480,8 @@ function mapPage(screen){
       <h3>🗺️ Ibadan Map</h3>
       ${districts.map(d=>`
         <div class="item">
-          <div class="item-info">
-            <div class="item-name">📍 ${d.name}</div>
-          </div>
-          <button class="btn" onclick="travelTo('${d.name}')">
-            GO
-          </button>
+          <div class="item-info"><div class="item-name">📍 ${d.name}</div></div>
+          <button class="btn" onclick="travelTo('${d.name}')">GO</button>
         </div>
       `).join("")}
     </div>
@@ -2913,12 +2491,9 @@ function mapPage(screen){
 function travelTo(name){
   const d=districts.find(x=>x.name===name);
   if(!d)return;
-
   closePhone();
-
   player.x=d.x+d.w/2;
   player.y=d.y+d.h/2;
-
   toast("📍 You travelled to "+name);
 }
 
@@ -2926,41 +2501,13 @@ function statsPage(screen){
   screen.innerHTML+=`
     <div class="panel">
       <h3>📊 Character</h3>
-
-      <div class="item">
-        <div class="item-info">
-          <div class="item-name">⭐ Level</div>
-          <div class="item-desc">${state.level}</div>
-        </div>
-      </div>
-
-      <div class="item">
-        <div class="item-info">
-          <div class="item-name">🎓 Education</div>
-          <div class="item-desc">${state.education}</div>
-        </div>
-      </div>
-
-      <div class="item">
-        <div class="item-info">
-          <div class="item-name">🧠 Skill</div>
-          <div class="item-desc">${state.skill}</div>
-        </div>
-      </div>
-
-      <div class="item">
-        <div class="item-info">
-          <div class="item-name">⭐ Reputation</div>
-          <div class="item-desc">${state.reputation}</div>
-        </div>
-      </div>
-
-      <div class="item">
-        <div class="item-info">
-          <div class="item-name">💰 Lifetime Earnings</div>
-          <div class="item-desc">${money(state.totalEarned)}</div>
-        </div>
-      </div>
+      <div class="item"><div class="item-info"><div class="item-name">⭐ Level</div><div class="item-desc">${state.level} (XP ${state.xp}/${state.level*100})</div></div></div>
+      <div class="item"><div class="item-info"><div class="item-name">🎓 Education</div><div class="item-desc">${state.education}</div></div></div>
+      <div class="item"><div class="item-info"><div class="item-name">🧠 Skill</div><div class="item-desc">${state.skill}</div></div></div>
+      <div class="item"><div class="item-info"><div class="item-name">⭐ Reputation</div><div class="item-desc">${state.reputation}</div></div></div>
+      <div class="item"><div class="item-info"><div class="item-name">💼 Job</div><div class="item-desc">${state.job?JOBS.find(j=>j.id===state.job).name:"Unemployed"}</div></div></div>
+      <div class="item"><div class="item-info"><div class="item-name">🚗 Cars Owned</div><div class="item-desc">${state.ownedCars.length}</div></div></div>
+      <div class="item"><div class="item-info"><div class="item-name">💰 Lifetime Earnings</div><div class="item-desc">${money(state.totalEarned)}</div></div></div>
     </div>
   `;
 }
@@ -2969,15 +2516,10 @@ function settingsPage(screen){
   screen.innerHTML+=`
     <div class="panel">
       <h3>⚙️ Settings</h3>
-
       <div class="item">
-        <div class="item-info">
-          <div class="item-name">🎮 Control Mode</div>
-          <div class="item-desc">Mobile touch controls enabled.</div>
-        </div>
+        <div class="item-info"><div class="item-name">🎮 Control Mode</div><div class="item-desc">Mobile touch controls enabled.</div></div>
       </div>
-
-      <button class="btn" onclick="saveGame()">💾 Save Game</button>
+      <button class="btn" onclick="saveGame();toast('💾 Saved!')">💾 Save Game</button>
       <button class="btn dark" onclick="toggleCamera()">🎥 Camera View</button>
     </div>
   `;
@@ -2990,25 +2532,12 @@ function settingsPage(screen){
 function updateHUD(){
   document.getElementById("hudName").textContent=state.name;
   document.getElementById("hudMoney").textContent=money(state.cash);
-
   document.getElementById("timeLabel").textContent=timeText();
 
-  const weather={
-    clear:"☀️ Clear",
-    cloudy:"☁️ Cloudy",
-    rain:"🌧️ Rain"
-  };
-
+  const weather={clear:"☀️ Clear",cloudy:"☁️ Cloudy",rain:"🌧️ Rain"};
   document.getElementById("weatherLabel").textContent=weather[state.weather];
 
-  const needs=[
-    ["hunger","hungerText"],
-    ["energy","energyText"],
-    ["hygiene","hygieneText"],
-    ["fun","funText"],
-    ["social","socialText"]
-  ];
-
+  const needs=[["hunger","hungerText"],["energy","energyText"],["hygiene","hygieneText"],["fun","funText"],["social","socialText"]];
   for(const [key,text] of needs){
     document.getElementById(key+"Bar").style.width=state[key]+"%";
     document.getElementById(text).textContent=Math.round(state[key]);
@@ -3016,7 +2545,7 @@ function updateHUD(){
 }
 
 /* =========================================================
-   MOBILE JOYSTICK
+   JOYSTICK
    ========================================================= */
 
 let joystickActive=false;
@@ -3027,34 +2556,20 @@ const stick=document.getElementById("stick");
 
 function joystickStart(e){
   joystickActive=true;
-
   const r=joystick.getBoundingClientRect();
-  joystickCenter={
-    x:r.left+r.width/2,
-    y:r.top+r.height/2
-  };
-
+  joystickCenter={x:r.left+r.width/2,y:r.top+r.height/2};
   joystickMove(e);
 }
 
 function joystickMove(e){
   if(!joystickActive)return;
-
   const p=e.touches?e.touches[0]:e;
-
   let dx=p.clientX-joystickCenter.x;
   let dy=p.clientY-joystickCenter.y;
-
   const max=45;
   const len=Math.hypot(dx,dy);
-
-  if(len>max){
-    dx=dx/len*max;
-    dy=dy/len*max;
-  }
-
+  if(len>max){ dx=dx/len*max; dy=dy/len*max; }
   stick.style.transform=`translate(${dx}px,${dy}px)`;
-
   keys.x=dx/max;
   keys.y=dy/max;
 }
@@ -3078,24 +2593,22 @@ joystick.addEventListener("touchcancel",joystickEnd);
 document.getElementById("actButton").onclick=doAction;
 
 document.getElementById("vehicleButton").onclick=()=>{
-  if(player.vehicle){
-    exitVehicle();
+  if(player.vehicle){ exitVehicle(); return; }
+
+  // If player owns a car, summon it right next to them
+  if(state.car){
+    callOwnedCar();
     return;
   }
 
+  // Otherwise board nearby traffic
   const v=nearestTraffic();
-
   if(v)boardVehicle(v);
   else toast("🚗 No vehicle nearby.");
 };
 
-document.getElementById("runButton").ontouchstart=()=>{
-  player.run=true;
-};
-
-document.getElementById("runButton").ontouchend=()=>{
-  player.run=false;
-};
+document.getElementById("runButton").ontouchstart=()=>{ player.run=true; };
+document.getElementById("runButton").ontouchend=()=>{ player.run=false; };
 
 document.getElementById("runButton").onclick=()=>{
   player.run=!player.run;
@@ -3114,7 +2627,10 @@ document.getElementById("resumeButton").onclick=()=>{
   document.getElementById("pause").style.display="none";
 };
 
-document.getElementById("saveButton").onclick=saveGame;
+document.getElementById("saveButton").onclick=()=>{
+  saveGame();
+  toast("💾 Game saved.");
+};
 
 document.getElementById("restartButton").onclick=()=>{
   if(confirm("Start a completely new life?")){
@@ -3124,21 +2640,14 @@ document.getElementById("restartButton").onclick=()=>{
 };
 
 document.getElementById("sleepButton").onclick=()=>{
-  if(player.inBuilding){
-    sleepActivity();
-  }else{
-    toast("💤 Go home or enter a hotel to sleep.");
-  }
+  if(player.inBuilding) sleepActivity();
+  else toast("💤 Go home or enter a hotel to sleep.");
 };
 
 document.getElementById("socialButton").onclick=()=>{
   const n=npcs.find(x=>Math.hypot(x.x-player.x,x.y-player.y)<100);
-
-  if(n){
-    socialActivity();
-  }else{
-    toast("👥 Find someone nearby to socialize.");
-  }
+  if(n) socialActivity();
+  else toast("👥 Find someone nearby to socialize.");
 };
 
 document.getElementById("mapButton").onclick=()=>{
@@ -3159,45 +2668,27 @@ function toggleCamera(){
 }
 
 /* =========================================================
-   TOUCH TAP / INTERACTION
+   TAP-TO-MOVE
    ========================================================= */
 
 canvas.addEventListener("touchend",e=>{
   if(e.touches.length)return;
-
   const touch=e.changedTouches[0];
 
-  // Don't interfere with joystick area.
+  // Don't fire if tap was on joystick
   if(touch.clientX<160 && touch.clientY>H-180)return;
+  if(phoneOpen || player.inBuilding || player.vehicle) return;
 
-  // Tap world to move.
-  if(!phoneOpen && !player.inBuilding){
-    const p=screenToWorld(touch.clientX,touch.clientY);
+  const p=screenToWorld(touch.clientX,touch.clientY);
+  const dx=p.x-player.x;
+  const dy=p.y-player.y;
+  const len=Math.hypot(dx,dy)||1;
 
-    const dx=p.x-player.x;
-    const dy=p.y-player.y;
-    const len=Math.hypot(dx,dy)||1;
+  keys.x=dx/len;
+  keys.y=dy/len;
 
-    keys.x=dx/len;
-    keys.y=dy/len;
-
-    setTimeout(()=>{
-      keys.x=0;
-      keys.y=0;
-    },550);
-  }
+  setTimeout(()=>{ keys.x=0; keys.y=0; },550);
 },{passive:true});
-
-/* =========================================================
-   OPTIONAL MOBILE KEYBOARD
-   ========================================================= */
-
-function openMobileKeyboard(callback){
-  const keyboard=document.getElementById("keyboard");
-  if(!keyboard)return;
-
-  keyboard.style.display="block";
-}
 
 /* =========================================================
    GAME LOOP
@@ -3208,34 +2699,24 @@ function gameLoop(now){
   lastTime=now;
 
   if(!gamePaused && !phoneOpen){
-
     updateTime(dt);
     updateNeeds(dt);
     updatePlayer(dt);
     updateTraffic(dt);
     updateNPCs(dt);
-    updateCamera();
+    updateCamera(dt);
     updateLocation();
     updateContext();
-
     drawMinimap();
     updateHUD();
+  }
 
-    if(player.inBuilding){
-      const b=buildings.find(x=>x.id===player.inBuilding);
-      drawInterior(b);
-    }else{
-      drawWorld();
-    }
-
+  // Always render
+  if(player.inBuilding){
+    const b=buildings.find(x=>x.id===player.inBuilding);
+    drawInterior(b);
   }else{
-    // Still draw static screen while paused.
-    if(player.inBuilding){
-      const b=buildings.find(x=>x.id===player.inBuilding);
-      drawInterior(b);
-    }else{
-      drawWorld();
-    }
+    drawWorld();
   }
 
   requestAnimationFrame(gameLoop);
@@ -3248,11 +2729,7 @@ function gameLoop(now){
 function boot(){
   setTimeout(()=>{
     document.getElementById("loading").style.opacity="0";
-
-    setTimeout(()=>{
-      document.getElementById("loading").style.display="none";
-    },500);
-
+    setTimeout(()=>{ document.getElementById("loading").style.display="none"; },500);
     if(!state.mission)createMission();
 
     player.x=360;
@@ -3262,13 +2739,13 @@ function boot(){
   },1600);
 }
 
-window.addEventListener("beforeunload",saveGame);
+addEventListener("beforeunload",saveGame);
 
 boot();
 requestAnimationFrame(gameLoop);
 
 /* =========================================================
-   EXPOSE FUNCTIONS FOR BUTTONS
+   EXPOSE FOR INLINE HANDLERS
    ========================================================= */
 
 window.closeModal=closeModal;
@@ -3278,7 +2755,9 @@ window.buyFood=buyFood;
 window.buyDrink=buyDrink;
 window.buyClothes=buyClothes;
 window.takeJob=takeJob;
+window.workShift=workShift;
 window.buyCar=buyCar;
+window.setActiveCar=setActiveCar;
 window.buyProperty=buyProperty;
 window.deposit=deposit;
 window.withdraw=withdraw;
@@ -3290,6 +2769,8 @@ window.toiletActivity=toiletActivity;
 window.sleepActivity=sleepActivity;
 window.studyActivity=studyActivity;
 window.healthActivity=healthActivity;
+window.saveGame=saveGame;
+window.toggleCamera=toggleCamera;
 </script>
 
 </body>
